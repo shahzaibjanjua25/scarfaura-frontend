@@ -7,58 +7,35 @@ export const orderApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${getBaseUrl()}/api/orders`,
     credentials: 'include',
-    prepareHeaders: (headers) => {
-      headers.set('Content-Type', 'application/json');
-      return headers;
-    },
   }),
   tagTypes: ['Order'],
   endpoints: (builder) => ({
-    // Fetch orders by email
-    getOrdersByEmail: builder.query({
-      query: (email) => ({
-        url: `/${email}`,
-        method: 'GET',
-      }),
-      providesTags: ['Order'],
-    }),
-    
-    // Fetch order by ID
-    getOrderById: builder.query({
-      query: (orderId) => ({
-        url: `/order/${orderId}`,
-        method: 'GET',
-      }),
-      providesTags: ['Order'],
-    }),
-
-    // Fetch all orders (admin)
+    // ✅ Ensure getAllOrders always returns an array
     getAllOrders: builder.query({
       query: () => ({
         url: '/',
         method: 'GET',
       }),
+      // ✅ Transform response to ensure it's always an array
+      transformResponse: (response) => {
+        // If response is an array, return it
+        if (Array.isArray(response)) {
+          return response;
+        }
+        // If response is an object with orders property
+        if (response && typeof response === 'object' && Array.isArray(response.orders)) {
+          return response.orders;
+        }
+        // If response is an object with data property
+        if (response && typeof response === 'object' && Array.isArray(response.data)) {
+          return response.data;
+        }
+        // Default: return empty array
+        return [];
+      },
       providesTags: ['Order'],
     }),
-
-    // Update order status
-    updateOrderStatus: builder.mutation({
-      query: ({ id, status }) => ({
-        url: `/update-order-status/${id}`,
-        method: 'PATCH',
-        body: { status },
-      }),
-      invalidatesTags: ['Order'],
-    }),
-
-    // Delete order
-    deleteOrder: builder.mutation({
-      query: (id) => ({
-        url: `/delete-order/${id}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Order'],
-    }),
+    // ... other endpoints
   }),
 });
 

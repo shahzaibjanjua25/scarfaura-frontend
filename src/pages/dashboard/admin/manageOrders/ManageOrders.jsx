@@ -11,14 +11,25 @@ const ManageOrders = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
   
-  const { data: orders = [], isLoading, isError, error, refetch } = useGetAllOrdersQuery();
+  // ✅ FIX: Ensure data is always an array
+  const { 
+    data, 
+    isLoading, 
+    isError, 
+    error, 
+    refetch 
+  } = useGetAllOrdersQuery();
+
+  // ✅ Ensure orders is always an array
+  const orders = Array.isArray(data) ? data : [];
+  
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
   const [deleteOrder] = useDeleteOrderMutation();
 
   const DELIVERY_CHARGE = 200;
   const orderStatuses = ['pending', 'processing', 'shipped', 'Delivered', 'cancelled'];
 
-  // Handle status update with better error handling
+  // Handle status update
   const handleStatusUpdate = async (orderId, newStatus) => {
     setUpdatingId(orderId);
     try {
@@ -27,7 +38,6 @@ const ManageOrders = () => {
       refetch();
     } catch (err) {
       console.error('Update error:', err);
-      // Extract error message from response
       const errorMessage = err?.data?.message || err?.message || 'Failed to update order status';
       toast.error(errorMessage);
     } finally {
@@ -35,9 +45,8 @@ const ManageOrders = () => {
     }
   };
 
-  // Handle delete with better error handling
+  // Handle delete
   const handleDeleteOrder = async (orderId) => {
-    // Show confirmation dialog
     if (!window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
       return;
     }
@@ -49,7 +58,6 @@ const ManageOrders = () => {
       refetch();
     } catch (err) {
       console.error('Delete error:', err);
-      // Extract error message from response
       const errorMessage = err?.data?.message || err?.message || 'Failed to delete order';
       toast.error(errorMessage);
     } finally {
@@ -67,7 +75,6 @@ const ManageOrders = () => {
   const getOrderTotal = (order) => {
     let subtotal = 0;
     
-    // Calculate subtotal from direct amount or products
     if (order.totalAmount || order.totalPrice || order.amount) {
       subtotal = order.totalAmount || order.totalPrice || order.amount;
     } else if (order.products && order.products.length > 0) {
@@ -87,7 +94,7 @@ const ManageOrders = () => {
     }).format(amount);
   };
 
-  // Loading state with better UI
+  // Loading state
   if (isLoading) {
     return (
       <div className="flex flex-col justify-center items-center h-64">
@@ -97,7 +104,7 @@ const ManageOrders = () => {
     );
   }
 
-  // Error state with detailed error message
+  // Error state
   if (isError) {
     const errorMessage = error?.data?.message || error?.message || 'Failed to load orders';
     return (
@@ -120,8 +127,8 @@ const ManageOrders = () => {
     );
   }
 
-  // Empty state
-  if (orders.length === 0) {
+  // ✅ FIX: Empty state - Check if orders array is empty
+  if (!orders || orders.length === 0) {
     return (
       <div className="text-center py-16 bg-gray-50 rounded-lg">
         <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -174,19 +181,19 @@ const ManageOrders = () => {
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               {orders.map((order) => (
-                <tr key={order._id} className={deletingId === order._id ? 'opacity-50' : ''}>
+                <tr key={order._id || order.id} className={deletingId === order._id ? 'opacity-50' : ''}>
                   <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                    #{order.orderId || order._id.slice(-6)}
+                    #{order.orderId || order._id?.slice(-6) || 'N/A'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     {order.email || 'N/A'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {new Date(order.createdAt).toLocaleDateString()}
+                    {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                     <select
-                      value={order.status}
+                      value={order.status || 'pending'}
                       onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
                       disabled={updatingId === order._id}
                       className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm ${
