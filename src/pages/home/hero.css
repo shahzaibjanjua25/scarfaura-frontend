@@ -1,4 +1,7 @@
-/* Color Palette Section */
+/* ============================================================
+   Color Palette Section - Elegant Design
+   ============================================================ */
+
 .color-palette-section {
   padding: 4rem 1.25rem;
   background: #FAFAF8;
@@ -8,6 +11,8 @@
   max-width: 1280px;
   margin: 0 auto;
 }
+
+/* ========== Header ========== */
 
 .color-palette-header {
   text-align: center;
@@ -78,11 +83,15 @@
   opacity: 0.5;
 }
 
+/* ========== Grid ========== */
+
 .color-palette-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1.25rem;
 }
+
+/* ========== Color Card ========== */
 
 .color-card {
   background: #FFFFFF;
@@ -97,6 +106,8 @@
   box-shadow: 0 8px 32px rgba(44, 36, 30, 0.10);
   transform: translateY(-4px);
 }
+
+/* ========== Image ========== */
 
 .color-image-wrapper {
   position: relative;
@@ -115,7 +126,11 @@
 .color-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(44, 36, 30, 0.08) 0%, transparent 50%);
+  background: linear-gradient(
+    to top,
+    rgba(44, 36, 30, 0.08) 0%,
+    transparent 50%
+  );
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
@@ -124,6 +139,8 @@
 .color-card:hover .color-overlay {
   opacity: 1;
 }
+
+/* ========== Color Info ========== */
 
 .color-info {
   padding: 1rem 0.875rem 1.125rem;
@@ -164,6 +181,8 @@
   color: #C9A87C;
 }
 
+/* ========== Shop Button ========== */
+
 .color-shop-btn {
   display: inline-flex;
   align-items: center;
@@ -196,6 +215,8 @@
   transform: translateX(4px);
 }
 
+/* ========== Responsive ========== */
+
 @media (min-width: 480px) {
   .color-palette-grid {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -220,20 +241,26 @@
   .color-palette-section {
     padding: 6rem 3rem;
   }
+  
   .color-palette-header {
     margin-bottom: 4.5rem;
   }
+  
   .color-palette-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 2rem;
   }
+  
   .color-info {
     padding: 1.25rem 1.25rem 1.5rem;
   }
+  
   .color-name {
     font-size: 0.95rem;
   }
 }
+
+/* ========== Accessibility ========== */
 
 @media (prefers-reduced-motion: reduce) {
   .color-card,
@@ -244,18 +271,23 @@
   .color-arrow {
     transition: none !important;
   }
+  
   .color-card:hover {
     transform: none !important;
   }
+  
   .color-card:hover .color-image {
     transform: none !important;
   }
 }
 
+/* ========== Touch Devices ========== */
+
 @media (hover: none) {
   .color-overlay {
     opacity: 0.4;
   }
+  
   .color-card:hover {
     transform: none !important;
   }

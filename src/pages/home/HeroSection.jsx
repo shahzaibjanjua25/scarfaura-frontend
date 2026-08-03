@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import card1 from '../../assets/card-1.png';
 import card2 from '../../assets/card-2.png';
 import card3 from '../../assets/card-3.png';
-import './CategoriesSection.css';
+import './hero.css';
+// import 
 
-// ✅ Helper function to get hex color for the dot - MOVED TO TOP
+// ✅ Helper function to get hex color for the dot
 const getColorHex = (colorValue) => {
   const colorMap = {
     'brown': '#8B7355',
@@ -63,7 +64,12 @@ const cardVariants = {
   }
 };
 
-// Colors from your filters - exactly matching the colors array
+// ✅ Check if images are loading
+console.log('🟢 card1:', card1);
+console.log('🟢 card2:', card2);
+console.log('🟢 card3:', card3);
+
+// Colors from your filters
 const colorCards = [
   { id: 1, name: 'Brown', value: 'brown', image: card1 },
   { id: 2, name: 'Black', value: 'black', image: card2 },
@@ -85,7 +91,7 @@ const colorCards = [
   { id: 18, name: 'Sage Green', value: 'sagegreen', image: card3 },
 ];
 
-// Display only unique colors (remove duplicates)
+// ✅ Display only unique colors
 const uniqueColors = [];
 const seen = new Set();
 colorCards.forEach(color => {
@@ -95,6 +101,9 @@ colorCards.forEach(color => {
   }
 });
 
+console.log('🟢 uniqueColors:', uniqueColors);
+console.log('🟢 uniqueColors length:', uniqueColors.length);
+
 const HeroSection = () => {
   const navigate = useNavigate();
 
@@ -103,6 +112,17 @@ const HeroSection = () => {
       state: { color: colorValue }
     });
   };
+
+  // ✅ If no colors, show a message
+  if (uniqueColors.length === 0) {
+    return (
+      <section className="color-palette-section">
+        <div className="color-palette-container">
+          <p>No colors available</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="color-palette-section">
@@ -133,9 +153,9 @@ const HeroSection = () => {
 
         {/* Color Grid */}
         <div className="color-palette-grid">
-          {uniqueColors.map((color) => (
+          {uniqueColors.map((color, index) => (
             <motion.div
-              key={color.id}
+              key={color.id || index}
               className="color-card"
               variants={cardVariants}
               initial="hidden"
@@ -146,13 +166,21 @@ const HeroSection = () => {
             >
               {/* Color Image */}
               <div className="color-image-wrapper">
-                <motion.img
-                  src={color.image}
-                  alt={color.name}
-                  className="color-image"
-                  whileHover={{ scale: 1.08 }}
-                  transition={{ duration: 0.4 }}
-                />
+                {color.image ? (
+                  <motion.img
+                    src={color.image}
+                    alt={color.name}
+                    className="color-image"
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.4 }}
+                    onError={(e) => {
+                      console.error('❌ Image failed to load:', color.image);
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="color-image-placeholder">No Image</div>
+                )}
                 <div className="color-overlay" />
               </div>
 
