@@ -16,14 +16,14 @@ const filters = {
         'Chiffon',
         'Dark Brown'
     ],
-    colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green','Brown',],
+    colors: ['all', 'brown', 'black', 'maroon', 'zinc', 'navy blue', 'white', 'skin', 'burgundy', 'purple', 'grey', 'plum', 'red', 'gold', 'blue', 'silver', 'beige', 'green', 'sagegreen'],
     priceRanges: [
-        { label: 'Under PKR 1000', min: 0, max: 1000 },
-        { label: 'PKR 1000 - PKR 2000', min: 1000, max: 2000 },
-        { label: 'PKR 2000 - PKR 3000', min: 2000, max: 3000 },
+        { label: 'PKR 550', min: 0, max: 550 },
+        { label: 'PKR 800 - PKR 1500', min: 800, max: 1500 },
+        { label: 'PKR 1500 - PKR 3000', min: 1500, max: 3000 },
         { label: 'PKR 3000 and above', min: 3000, max: Infinity }
     ],
-//  age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10']
+    //  age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10']
 };
 
 const ShopPage = () => {
