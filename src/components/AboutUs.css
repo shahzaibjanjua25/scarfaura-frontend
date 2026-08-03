@@ -1,0 +1,165 @@
+/* AboutUs.css */
+.about-us-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  padding-top: 80px; /* Adjust based on your navbar height */
+}
+
+.about-hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+              url('https://images.unsplash.com/photo-1605152276897-4f618f831968?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+}
+
+.hero-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.about-intro, .why-choose-us, .visit-us {
+  margin-bottom: 50px;
+}
+
+.about-intro h2, .why-choose-us h2, .visit-us h2 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.feature-card {
+  background: #f9f9f9;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 15px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.quality-icon {
+  background-image: url('../assets/quality-icon.png');
+}
+
+.trendy-icon {
+  background-image: url('../assets/trendy-icon.png');
+}
+
+.affordable-icon {
+  background-image: url('../assets/affordable-icon.png');
+}
+
+.feature-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #e74c3c;
+}
+
+.contact-info {
+  background: #f5f5f5;
+  padding: 25px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-info p {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  background-size: contain;
+}
+
+.location-icon {
+  background-image: url('../assets/location-icon.png');
+}
+
+.phone-icon {
+  background-image: url('../assets/phone-icon.png');
+}
+
+.email-icon {
+  background-image: url('../assets/email-icon.png');
+}
+
+.closing-message {
+  text-align: center;
+  margin: 50px 0;
+  font-size: 1.1rem;
+}
+
+.cta-button {
+  display: inline-block;
+  background: #e74c3c;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+  background: #c0392b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .about-hero {
+    height: 200px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}

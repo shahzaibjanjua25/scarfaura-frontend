@@ -1,0 +1,112 @@
+import React, { useState, useEffect } from 'react';
+import productsData from '../../data/products.json';
+import ProductCards from './ProductCards';
+import ShopFiltering from './ShopFiltering';
+
+const filters = {
+    categories: [
+        'all',
+        'Tops and tees',
+        'Shirts and polos',
+        'Bottoms',
+        'Jacket and coats',
+        'New Arrivals (Boys)',
+        'New Arrivals (Girls)',
+        'Kids Shirts',
+        'Kids Casuals',
+        'Sweatshirts and hoodies'
+    ],
+    colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green'],
+    priceRanges: [
+        { label: 'Under PKR 1000', min: 0, max: 1000 },
+        { label: 'PKR 1000 - PKR 2000', min: 1000, max: 2000 },
+        { label: 'PKR 2000 - PKR 3000', min: 2000, max: 3000 },
+        { label: 'PKR 3000 and above', min: 3000, max: Infinity }
+    ],
+ age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10']
+};
+
+const ShopPage = () => {
+    const [products, setProducts] = useState(productsData);
+    const [filtersState, setFiltersState] = useState({
+        category: 'all',
+        color: 'all',
+        priceRange: '',
+        age:''
+    });
+
+    const applyFilters = () => {
+        let filteredProducts = productsData;
+
+        // Filter by category
+        if (filtersState.category && filtersState.category !== 'all') {
+            filteredProducts = filteredProducts.filter(
+                product => product.category === filtersState.category
+            );
+        }
+
+        // Filter by color
+        if (filtersState.color && filtersState.color !== 'all') {
+            filteredProducts = filteredProducts.filter(
+                product => product.color === filtersState.color
+            );
+        }
+         if (filtersState.age && filtersState.age !== 'all') {
+            filteredProducts = filteredProducts.filter(
+                product => product.age === filtersState.age
+            );
+        }
+
+        // Filter by price range
+        if (filtersState.priceRange) {
+            const [minPrice, maxPrice] = filtersState.priceRange.split('-').map(Number);
+            filteredProducts = filteredProducts.filter(
+                product => product.price >= minPrice && product.price <= maxPrice
+            );
+        }
+
+        setProducts(filteredProducts);
+    };
+
+    useEffect(() => {
+        applyFilters();
+    }, [filtersState]);
+
+    const clearFilters = () => {
+        setFiltersState({
+            category: 'all',
+            color: 'all',
+            priceRange: '',
+            age: ''
+        });
+    };
+
+
+    return (
+        <>
+            <section className="section__container rounded bg-primary-light">
+                <h2 className="section__header">Shop Page</h2>
+                <p className="section__subheader">
+                    Discover the Hottest Picks: Elevate Your Style with Our Curated
+                    Collection of Trending Kids's Fashion Products.
+                </p>
+            </section>
+            <section className='section__container'>
+                <div className='flex flex-col md:flex-row md:gap-12 gap-8'>
+                    {/* left side */}
+                    <ShopFiltering filters={filters} filtersState={filtersState} setFiltersState={setFiltersState} clearFilters={clearFilters} />
+
+                    {/* right side */}
+                    <div>
+                        <h3 className='text-xl font-medium mb-4'>Products Available: {products.length}</h3>
+                        <ProductCards products={products} />
+
+                    </div>
+
+                </div>
+            </section>
+        </>
+    );
+};
+
+export default ShopPage;
