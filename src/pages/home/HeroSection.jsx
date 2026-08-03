@@ -6,6 +6,32 @@ import card2 from '../../assets/card-2.png';
 import card3 from '../../assets/card-3.png';
 import './CategoriesSection.css';
 
+// ✅ Helper function to get hex color for the dot - MOVED TO TOP
+const getColorHex = (colorValue) => {
+  const colorMap = {
+    'brown': '#8B7355',
+    'black': '#1A1A1A',
+    'maroon': '#800000',
+    'zinc': '#71717A',
+    'navy blue': '#1B2A4A',
+    'white': '#F5F5F5',
+    'skin': '#E8C5B0',
+    'burgundy': '#900020',
+    'purple': '#6B3FA0',
+    'grey': '#808080',
+    'plum': '#8E4585',
+    'red': '#DC2626',
+    'gold': '#D4AF37',
+    'blue': '#2563EB',
+    'silver': '#C0C0C0',
+    'beige': '#F5F5DC',
+    'green': '#16A34A',
+    'sagegreen': '#9CAF88',
+    'pink': '#f107de'
+  };
+  return colorMap[colorValue] || '#CCCCCC';
+};
+
 // Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -107,7 +133,7 @@ const HeroSection = () => {
 
         {/* Color Grid */}
         <div className="color-palette-grid">
-          {uniqueColors.map((color, index) => (
+          {uniqueColors.map((color) => (
             <motion.div
               key={color.id}
               className="color-card"
@@ -161,32 +187,6 @@ const HeroSection = () => {
       </motion.div>
     </section>
   );
-};
-
-// Helper function to get hex color for the dot
-const getColorHex = (colorValue) => {
-  const colorMap = {
-    'brown': '#8B7355',
-    'black': '#1A1A1A',
-    'maroon': '#800000',
-    'zinc': '#71717A',
-    'navy blue': '#1B2A4A',
-    'white': '#F5F5F5',
-    'skin': '#E8C5B0',
-    'burgundy': '#900020',
-    'purple': '#6B3FA0',
-    'grey': '#808080',
-    'plum': '#8E4585',
-    'red': '#DC2626',
-    'gold': '#D4AF37',
-    'blue': '#2563EB',
-    'silver': '#C0C0C0',
-    'beige': '#F5F5DC',
-    'green': '#16A34A',
-    'sagegreen': '#9CAF88',
-    'pink': '#f107de'
-  };
-  return colorMap[colorValue] || '#CCCCCC';
 };
 
 export default HeroSection;
