@@ -9,7 +9,7 @@ const OrderSummary = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const products = useSelector((store) => store.cart.products);
-  const { deliveryCharge, grandTotal, totalPrice, selectedItems } = useSelector(
+  const { deliveryCharge = 250, grandTotal, totalPrice, selectedItems } = useSelector(
     (store) => store.cart
   );
 
@@ -39,9 +39,6 @@ const OrderSummary = () => {
     }
   }, [showSuccess, dispatch]);
 
-  // ✅ REMOVED: Login requirement check
-  // Users can now checkout without logging in
-
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
@@ -52,7 +49,6 @@ const OrderSummary = () => {
     if (!formData.state.trim()) newErrors.state = "State is required";
     if (!formData.postalCode.trim()) newErrors.postalCode = "Postal code is required";
 
-    // Validate email format
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
@@ -115,10 +111,10 @@ const OrderSummary = () => {
     setIsSubmitting(true);
 
     try {
+      // ✅ Fix: Proper order data structure matching backend schema
       const orderData = {
         // ✅ If user is logged in, include user ID; otherwise guest checkout
         ...(user && user._id ? { user: user._id } : {}),
-        // ✅ Always include email from form (not from user)
         email: formData.email,
         customerName: formData.name,
         phone: formData.phone,
@@ -157,7 +153,9 @@ const OrderSummary = () => {
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
+        // ✅ Better error handling
+        const errorMsg = responseData.message || responseData.error || `HTTP error! status: ${response.status}`;
+        throw new Error(errorMsg);
       }
 
       const emailResult = await sendOrderNotification({
@@ -204,19 +202,20 @@ const OrderSummary = () => {
     }
   };
 
-  // ✅ Show guest checkout notice if not logged in
   const isGuest = !user?.email;
 
   return (
     <>
       {showSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-gradient-to-br from-green-50 to-teal-50 p-8 rounded-xl border-2 border-green-200 max-w-md w-full text-center shadow-2xl animate-pulse">
-            <div className="bg-green-100 p-3 rounded-full inline-block mb-4">
-              <i className="ri-checkbox-circle-fill text-4xl text-green-600"></i>
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl border-2 border-green-200 max-w-md w-full text-center shadow-2xl animate-bounce-in">
+            <div className="bg-green-100 p-4 rounded-full inline-block mb-4">
+              <svg className="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
             </div>
-            <h2 className="text-green-800 text-2xl font-bold mb-3">Order Placed Successfully!</h2>
-            <div className="bg-white p-4 rounded-lg mb-4 shadow-inner">
+            <h2 className="text-green-800 text-2xl font-bold mb-3">Order Placed Successfully! 🎉</h2>
+            <div className="bg-white p-4 rounded-xl mb-4 shadow-inner">
               <p className="text-gray-800">Order <strong className="text-indigo-700">#{orderDetails?.orderId}</strong></p>
               <p className="text-gray-800">Total: <strong className="text-green-600">PKR {orderDetails?.amount}</strong></p>
             </div>
@@ -225,71 +224,113 @@ const OrderSummary = () => {
         </div>
       )}
 
-      <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl mt-5 p-6 border border-gray-200">
+      <div className="bg-white shadow-xl rounded-2xl mt-5 p-6 border border-gray-100">
         <div className="space-y-4">
-          <h1 className="text-2xl font-bold text-indigo-700 border-b pb-2 border-indigo-100">Order Summary</h1>
+          <div className="flex items-center gap-3 border-b pb-3 border-gray-100">
+            <div className="bg-indigo-100 p-2 rounded-lg">
+              <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-800">Order Summary</h1>
+          </div>
           
-          {/* ✅ Guest checkout notice */}
           {isGuest && (
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-3 rounded">
-              <p className="text-sm text-blue-700">
-                <strong>Guest Checkout:</strong> You're placing an order as a guest. 
-                Please provide your email and shipping details below.
-              </p>
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+              <div className="flex items-start gap-2">
+                <svg className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm text-blue-700">
+                  <strong>Guest Checkout:</strong> You're placing an order as a guest. 
+                  Please provide your email and shipping details below.
+                </p>
+              </div>
             </div>
           )}
 
-          <div className="flex justify-between py-2 border-b border-gray-100">
-            <span className="text-gray-700 font-medium">Items ({selectedItems}):</span>
-            <span className="text-gray-900 font-semibold">PKR {totalPrice.toFixed(2)}</span>
+          {/* ✅ Order Items */}
+          <div className="space-y-2 max-h-60 overflow-y-auto">
+            {products.map((product) => (
+              <div key={product._id || product.id} className="flex justify-between items-center py-2 border-b border-gray-50">
+                <div className="flex items-center gap-3">
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-12 h-12 object-cover rounded-lg"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">{product.name}</p>
+                    <p className="text-xs text-gray-500">Qty: {product.quantity}</p>
+                  </div>
+                </div>
+                <span className="text-sm font-semibold text-gray-700">
+                  PKR {(product.price * product.quantity).toFixed(2)}
+                </span>
+              </div>
+            ))}
           </div>
-          <div className="flex justify-between py-2 border-b border-gray-100">
-            <span className="text-gray-700 font-medium">Delivery:</span>
-            <span className="text-gray-900 font-semibold">PKR {deliveryCharge.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between pt-3">
-            <span className="font-bold text-lg text-gray-800">Total:</span>
-            <span className="font-bold text-xl text-indigo-600">PKR {grandTotal.toFixed(2)}</span>
+
+          {/* ✅ Price Breakdown */}
+          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+            <div className="flex justify-between py-1">
+              <span className="text-gray-600">Subtotal ({selectedItems} items):</span>
+              <span className="text-gray-800 font-medium">PKR {totalPrice.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-1 border-t border-gray-200">
+              <span className="text-gray-600">Delivery Charges:</span>
+              <span className="text-gray-800 font-medium">PKR {deliveryCharge.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-t-2 border-indigo-200 mt-1">
+              <span className="font-bold text-lg text-gray-800">Grand Total:</span>
+              <span className="font-bold text-xl text-indigo-600">PKR {grandTotal.toFixed(2)}</span>
+            </div>
           </div>
         </div>
 
         <div className="mt-6 space-y-3">
           <button
             onClick={() => dispatch(clearCart())}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all transform hover:scale-[1.02]"
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium py-3 px-4 rounded-xl shadow-md transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={showSuccess}
           >
-            <i className="ri-delete-bin-7-line"></i>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
             Clear Cart
           </button>
           <button
             onClick={() => setShowModal(true)}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition-all transform hover:scale-[1.02]"
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-4 rounded-xl shadow-md transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={showSuccess}
           >
-            <i className="ri-truck-line"></i>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
             Place Order (Cash on Delivery)
           </button>
         </div>
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40">
-          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md border border-indigo-100">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-indigo-800">Shipping Details</h2>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-100 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-indigo-800">Shipping Details</h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-400 hover:text-gray-600 transition-colors"
               >
-                <i className="ri-close-line text-xl"></i>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
-            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-              {/* ✅ Name field */}
+            <div className="space-y-4">
+              {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -297,19 +338,17 @@ const OrderSummary = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.name ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                  placeholder="Enter your full name"
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.name ? "border-red-500" : "border-gray-300"}`}
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <i className="ri-error-warning-line"></i>
-                    {errors.name}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
                 )}
               </div>
 
-              {/* ✅ Email field - NEW */}
+              {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -318,24 +357,19 @@ const OrderSummary = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="your@email.com"
-                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.email ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.email ? "border-red-500" : "border-gray-300"}`}
                 />
                 {user?.email && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    Using your account email: {user.email}
-                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Using your account email: {user.email}</p>
                 )}
                 {errors.email && (
-                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <i className="ri-error-warning-line"></i>
-                    {errors.email}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
                 )}
               </div>
 
-              {/* ✅ Phone field */}
+              {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -344,40 +378,35 @@ const OrderSummary = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="03XX-XXXXXXX"
-                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.phone ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.phone ? "border-red-500" : "border-gray-300"}`}
                 />
                 {errors.phone && (
-                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <i className="ri-error-warning-line"></i>
-                    {errors.phone}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
                 )}
               </div>
 
-              {/* ✅ Address field */}
+              {/* Address */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-                  Address <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Shipping Address <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
                   rows="2"
-                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.address ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                  placeholder="House #, Street, Area"
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.address ? "border-red-500" : "border-gray-300"}`}
                 />
                 {errors.address && (
-                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <i className="ri-error-warning-line"></i>
-                    {errors.address}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
                 )}
               </div>
 
-              {/* ✅ City, State, Postal Code */}
+              {/* City & State */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     City <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -385,40 +414,37 @@ const OrderSummary = () => {
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.city ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                    placeholder="City"
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.city ? "border-red-500" : "border-gray-300"}`}
                   />
-                  {errors.city && (
-                    <p className="text-red-500 text-xs mt-1">{errors.city}</p>
-                  )}
+                  {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     State <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="state"
                     value={formData.state}
                     onChange={handleInputChange}
-                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.state ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.state ? "border-red-500" : "border-gray-300"}`}
                   >
-                    <option value="">Select State</option>
+                    <option value="">Select</option>
                     <option value="Punjab">Punjab</option>
                     <option value="Sindh">Sindh</option>
                     <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
                     <option value="Balochistan">Balochistan</option>
-                    <option value="Islamabad Capital Territory">Islamabad</option>
+                    <option value="Islamabad">Islamabad</option>
                     <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
                     <option value="Azad Kashmir">Azad Kashmir</option>
                   </select>
-                  {errors.state && (
-                    <p className="text-red-500 text-xs mt-1">{errors.state}</p>
-                  )}
+                  {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
                 </div>
               </div>
 
-              {/* ✅ Postal Code */}
+              {/* Postal Code */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Postal Code <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -426,17 +452,15 @@ const OrderSummary = () => {
                   name="postalCode"
                   value={formData.postalCode}
                   onChange={handleInputChange}
-                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.postalCode ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                  placeholder="46000"
+                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.postalCode ? "border-red-500" : "border-gray-300"}`}
                 />
                 {errors.postalCode && (
-                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                    <i className="ri-error-warning-line"></i>
-                    {errors.postalCode}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.postalCode}</p>
                 )}
               </div>
 
-              {/* ✅ Delivery Notes */}
+              {/* Notes */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Delivery Notes <span className="text-gray-400">(Optional)</span>
@@ -445,32 +469,52 @@ const OrderSummary = () => {
                   name="notes"
                   value={formData.notes}
                   onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all"
                   rows="2"
-                  placeholder="Any special instructions..."
+                  placeholder="Any special delivery instructions..."
                 />
               </div>
             </div>
 
-            <div className="mt-6 flex justify-end space-x-3">
+            {/* ✅ Price Summary in Modal */}
+            <div className="mt-6 bg-gray-50 rounded-xl p-4">
+              <div className="flex justify-between py-1">
+                <span className="text-gray-600">Subtotal:</span>
+                <span className="text-gray-800">PKR {totalPrice.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between py-1 border-t border-gray-200">
+                <span className="text-gray-600">Delivery:</span>
+                <span className="text-gray-800">PKR {deliveryCharge.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between py-2 border-t-2 border-indigo-200 mt-1">
+                <span className="font-bold text-gray-800">Total:</span>
+                <span className="font-bold text-xl text-indigo-600">PKR {grandTotal.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
                 disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
                 onClick={handleOrderConfirmation}
-                className={`px-4 py-2 text-white rounded-lg font-medium ${isSubmitting
+                className={`flex-1 px-4 py-3 text-white rounded-xl font-medium transition-all ${
+                  isSubmitting
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md"
-                  } transition-all`}
+                }`}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center gap-2">
-                    <i className="ri-loader-4-line animate-spin"></i>
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                     Processing...
                   </span>
                 ) : (
