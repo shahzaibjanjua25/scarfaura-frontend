@@ -1,12 +1,16 @@
 import React from 'react';
-import { useGetAllOrdersQuery, useUpdateOrderStatusMutation, useDeleteOrderMutation } from '../../../../redux/features/orders/orderApi';
+import { 
+  useGetAllOrdersQuery, 
+  useUpdateOrderStatusMutation,
+  useDeleteOrderMutation  // ✅ Add this import
+} from '../../../../redux/features/orders/orderApi';
 import { toast } from 'react-toastify';
 import { FiEdit, FiTrash2, FiRefreshCw } from 'react-icons/fi';
 
 const ManageOrders = () => {
   const { data: orders = [], isLoading, isError, refetch } = useGetAllOrdersQuery();
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
-  const [deleteOrder] = useDeleteOrderMutation(); // ✅ Add delete mutation
+  const [deleteOrder] = useDeleteOrderMutation(); // ✅ Initialize delete mutation
 
   const DELIVERY_CHARGE = 200; // Fixed delivery charge
 
@@ -25,7 +29,7 @@ const ManageOrders = () => {
 
   // ✅ Add delete handler
   const handleDeleteOrder = async (orderId) => {
-    // Confirm before deleting
+    // Show confirmation dialog
     if (!window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
       return;
     }
