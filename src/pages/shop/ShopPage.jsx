@@ -20,7 +20,6 @@ const ShopPage = () => {
     const location = useLocation();
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-    // Initialize state from location state or default to 'all'
     const [filtersState, setFiltersState] = useState({
         category: location.state?.category || 'all',
         color: 'all',
@@ -50,7 +49,12 @@ const ShopPage = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const { data: { products = [], totalPages, totalProducts } = {}, error, isLoading } = useFetchAllProductsQuery({
+    // ✅ FIX: Safely extract data with proper defaults
+    const { 
+        data, 
+        error, 
+        isLoading 
+    } = useFetchAllProductsQuery({
         category: category !== 'all' ? category : '',
         color: color !== 'all' ? color : '',
         age: age !== 'all' ? age : '',
@@ -59,6 +63,11 @@ const ShopPage = () => {
         page: currentPage,
         limit: productsPerPage
     });
+
+    // ✅ FIX: Ensure products is always an array
+    const products = data?.products || [];
+    const totalPages = data?.totalPages || 1;
+    const totalProducts = data?.totalProducts || 0;
 
     useEffect(() => {
         if (location.state?.category && location.state.category !== filtersState.category) {
@@ -83,7 +92,6 @@ const ShopPage = () => {
             age: 'all',
             priceRange: ''
         });
-
         setCurrentPage(1);
     };
 
@@ -94,6 +102,11 @@ const ShopPage = () => {
         }));
     };
 
+    // ✅ FIX: Add debug logging to see what the API returns
+    console.log('🔍 API Response:', data);
+    console.log('📦 Products:', products);
+    console.log('📊 Total Products:', totalProducts);
+
     if (isLoading) return (
         <div className="section__container">
             <div className="text-center py-12">
@@ -102,7 +115,6 @@ const ShopPage = () => {
             </div>
         </div>
     );
-
 
     if (error) return (
         <div className="section__container">
@@ -116,7 +128,7 @@ const ShopPage = () => {
                     <div className="ml-3">
                         <h3 className="text-sm font-medium text-red-800">API Connection Failed</h3>
                         <p className="text-sm text-red-700 mt-2">
-                            The frontend couldn't communicate with the backend server properly.
+                            {error?.data?.message || error?.message || 'Failed to load products'}
                         </p>
                         <div className="mt-4 flex gap-3">
                             <button
@@ -132,8 +144,10 @@ const ShopPage = () => {
         </div>
     );
 
-    const startProduct = (currentPage - 1) * productsPerPage + 1;
-    const endProduct = startProduct + products.length - 1;
+    // ✅ FIX: Check if products is an array before calculating
+    const productCount = Array.isArray(products) ? products.length : 0;
+    const startProduct = productCount > 0 ? (currentPage - 1) * productsPerPage + 1 : 0;
+    const endProduct = productCount > 0 ? startProduct + productCount - 1 : 0;
 
     return (
         <>
@@ -329,7 +343,6 @@ const ShopPage = () => {
                     ) : (
                         <ShopFiltering
                             filters={{ ...filters, ages: filters.age }}
-
                             filtersState={filtersState}
                             setFiltersState={setFiltersState}
                             clearFilters={clearFilters}
@@ -339,7 +352,7 @@ const ShopPage = () => {
                     {/* right side */}
                     <div className="flex-1">
                         <h3 className='text-xl font-medium mb-4'>Showing {startProduct} to {endProduct} of {totalProducts} products</h3>
-                        {products.length > 0 ? (
+                        {Array.isArray(products) && products.length > 0 ? (
                             <>
                                 <ProductCards products={products} />
                                 {/* Pagination controls */}
@@ -351,7 +364,7 @@ const ShopPage = () => {
                                     >
                                         Previous
                                     </button>
-                                    {[...Array(totalPages)].map((_, index) => (
+                                    {totalPages > 1 && [...Array(totalPages)].map((_, index) => (
                                         <button
                                             key={index}
                                             onClick={() => handlePageChange(index + 1)}
