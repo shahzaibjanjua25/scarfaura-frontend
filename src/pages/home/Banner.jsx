@@ -60,7 +60,7 @@ const Banner = () => {
             <span aria-hidden className="mt-[0.7rem] hidden h-px w-8 shrink-0 bg-[#c9a87c]/50 lg:block" />
             <p className="sa-rise text-[0.95rem] font-light leading-relaxed text-[#5a4f47] sm:text-base lg:text-lg" style={{ animationDelay: '.25s' }}>
               Timeless pieces from ScarfAura's handcrafted collection — woven
-              slowly, finished by hand, made to be worn for years.
+              slowly, finished by hand, made to be worn for years. Test
             </p>
           </div>
 
