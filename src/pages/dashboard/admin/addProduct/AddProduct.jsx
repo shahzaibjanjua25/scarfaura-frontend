@@ -19,24 +19,27 @@ const categories = [
     { label: 'Dark Skin', value: 'Dark Skin' }  
 ];
 
-// const ageOptions = [
-//     { label: 'Select Age', value: '' },
-//     { label: '1-2 years', value: '1' },  
-//     { label: '3-4 years', value: '2' },  
-//     { label: '5-6 years', value: '3' }, 
-//     { label: '7-8 years', value: '4' },  
-//     { label: '9-10 years', value: '5' }
-// ];
-
+// Updated colors with all your colors
 const colors = [
     { label: 'Select Color', value: '' },
     { label: 'Black', value: 'black' },
+    { label: 'Brown', value: 'brown' },
+    { label: 'Maroon', value: 'maroon' },
+    { label: 'Zinc', value: 'zinc' },
+    { label: 'Navy Blue', value: 'navy blue' },
+    { label: 'White', value: 'white' },
+    { label: 'Skin', value: 'skin' },
+    { label: 'Burgundy', value: 'burgundy' },
+    { label: 'Purple', value: 'purple' },
+    { label: 'Grey', value: 'grey' },
+    { label: 'Plum', value: 'plum' },
     { label: 'Red', value: 'red' },
     { label: 'Gold', value: 'gold' },
     { label: 'Blue', value: 'blue' },
     { label: 'Silver', value: 'silver' },
     { label: 'Beige', value: 'beige' },
-    { label: 'Green', value: 'green' }
+    { label: 'Green', value: 'green' },
+    { label: 'Sage Green', value: 'sagegreen' }
 ];
 
 const AddProduct = () => {
@@ -45,7 +48,6 @@ const AddProduct = () => {
         name: '',
         category: '',
         color: '',
-        // age: '',
         price: '',
         oldPrice: '',
         description: ''
@@ -55,7 +57,7 @@ const AddProduct = () => {
     const navigate = useNavigate();
     const [dialog, setDialog] = useState({
         show: false,
-        type: '', // 'success' or 'error'
+        type: '',
         message: ''
     });
 
@@ -64,17 +66,29 @@ const AddProduct = () => {
         setProduct(prev => ({ ...prev, [name]: value }));
     };
 
+    // ✅ Check if color is required based on category
+    const isColorRequired = product.category === 'Chiffon Hijabs';
+
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        // if (!product.name || !product.category || !product.price || !product.color || 
-        //     !product.age || !product.description || !image) {
-        if (!product.name || !product.category || !product.price || !product.color || 
-             !product.description || !image) {
+        // ✅ Validate based on category
+        if (!product.name || !product.category || !product.price || 
+            !product.description || !image) {
             setDialog({
                 show: true,
                 type: 'error',
                 message: 'Please fill in all required fields including the image.'
+            });
+            return;
+        }
+
+        // ✅ Only validate color if category is Chiffon Hijabs
+        if (isColorRequired && !product.color) {
+            setDialog({
+                show: true,
+                type: 'error',
+                message: 'Color is required for Chiffon Hijabs category. Please select a color.'
             });
             return;
         }
@@ -84,10 +98,8 @@ const AddProduct = () => {
                 ...product, 
                 image, 
                 author: user?._id,
-                // Convert string numbers to actual numbers
                 price: Number(product.price),
                 oldPrice: product.oldPrice ? Number(product.oldPrice) : null
-                // age: Number(product.age)
             };
             
             await addProduct(productData).unwrap();
@@ -97,13 +109,11 @@ const AddProduct = () => {
                 message: 'Product added successfully! Redirecting to shop...'
             });
             
-            // Reset form and redirect after 2 seconds
             setTimeout(() => {
                 setProduct({ 
                     name: '', 
                     category: '', 
                     color: '', 
-                    // age: '', 
                     price: '', 
                     oldPrice: '', 
                     description: '' 
@@ -172,23 +182,27 @@ const AddProduct = () => {
                     required
                 />
                 
-                <SelectInput
-                    label="Color"
-                    name="color"
-                    value={product.color}
-                    onChange={handleChange}
-                    options={colors}
-                    required
-                />
-                
-                {/* <SelectInput
-                    label="Age"
-                    name="age"
-                    value={product.age}
-                    onChange={handleChange}
-                    options={ageOptions}
-                    required
-                /> */}
+                {/* ✅ Color field with conditional required indicator */}
+                <div>
+                    <SelectInput
+                        label="Color"
+                        name="color"
+                        value={product.color}
+                        onChange={handleChange}
+                        options={colors}
+                        required={isColorRequired}
+                    />
+                    {isColorRequired && (
+                        <p className="text-xs text-amber-600 mt-1">
+                            ⚠️ Color is required for Chiffon Hijabs category
+                        </p>
+                    )}
+                    {!isColorRequired && product.category && (
+                        <p className="text-xs text-gray-400 mt-1">
+                            ℹ️ Color is optional for this category
+                        </p>
+                    )}
+                </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <TextInput
