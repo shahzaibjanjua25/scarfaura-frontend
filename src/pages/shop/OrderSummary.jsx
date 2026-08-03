@@ -111,9 +111,7 @@ const OrderSummary = () => {
     setIsSubmitting(true);
 
     try {
-      // ✅ Build order data - user is optional
       const orderData = {
-        // ✅ Only include user if logged in
         ...(user?._id && { user: user._id }),
         products: products.map((product) => ({
           productId: product._id || product.id,
@@ -136,8 +134,6 @@ const OrderSummary = () => {
         paymentMethod: "Cash on Delivery"
       };
 
-      console.log("📦 Submitting order:", JSON.stringify(orderData, null, 2));
-
       const response = await fetch('https://scarfaura.vercel.app/api/orders/create-order', {
         method: "POST",
         headers: {
@@ -151,12 +147,10 @@ const OrderSummary = () => {
       const responseData = await response.json();
 
       if (!response.ok) {
-        console.error("❌ Server response:", responseData);
         const errorMsg = responseData.error || responseData.message || `HTTP error! status: ${response.status}`;
         throw new Error(errorMsg);
       }
 
-      // Send email notification
       const emailResult = await sendOrderNotification({
         ...orderData,
         orderId: responseData.orderId || responseData._id
@@ -200,136 +194,199 @@ const OrderSummary = () => {
       setIsSubmitting(false);
     }
   };
+
   const isGuest = !user?.email;
 
   return (
     <>
+      {/* Success Modal */}
       {showSuccess && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl border-2 border-green-200 max-w-md w-full text-center shadow-2xl animate-bounce-in">
-            <div className="bg-green-100 p-4 rounded-full inline-block mb-4">
-              <svg className="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowSuccess(false)} />
+          <div className="relative bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl animate-fadeIn">
+            <div className="w-20 h-20 mx-auto bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-green-800 text-2xl font-bold mb-3">Order Placed Successfully! 🎉</h2>
-            <div className="bg-white p-4 rounded-xl mb-4 shadow-inner">
-              <p className="text-gray-800">Order <strong className="text-indigo-700">#{orderDetails?.orderId}</strong></p>
-              <p className="text-gray-800">Total: <strong className="text-green-600">PKR {orderDetails?.amount}</strong></p>
+            <h2 className="text-2xl font-serif text-gray-800 mb-2">Order Confirmed</h2>
+            <p className="text-gray-500 text-sm mb-4">Your order has been placed successfully</p>
+            <div className="bg-gray-50 rounded-xl p-4 mb-4">
+              <p className="text-gray-600 text-sm">Order ID</p>
+              <p className="text-gray-800 font-semibold font-mono text-sm">#{orderDetails?.orderId}</p>
+              <p className="text-gray-600 text-sm mt-2">Total Amount</p>
+              <p className="text-emerald-600 font-bold text-xl">PKR {orderDetails?.amount}</p>
             </div>
-            <p className="text-sm text-gray-600">We'll contact you shortly for confirmation.</p>
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-colors"
+            >
+              Continue Shopping
+            </button>
           </div>
         </div>
       )}
 
-      <div className="bg-white shadow-xl rounded-2xl mt-5 p-6 border border-gray-100">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 border-b pb-3 border-gray-100">
-            <div className="bg-indigo-100 p-2 rounded-lg">
-              <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-800">Order Summary</h1>
-          </div>
-
-          {isGuest && (
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
-              <div className="flex items-start gap-2">
-                <svg className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-sm text-blue-700">
-                  <strong>Guest Checkout:</strong> You're placing an order as a guest.
-                  Please provide your email and shipping details below.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* ✅ Order Items */}
-          <div className="space-y-2 max-h-60 overflow-y-auto">
-            {products.map((product) => (
-              <div key={product._id || product.id} className="flex justify-between items-center py-2 border-b border-gray-50">
+      {/* Main Container */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 md:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Order Summary Card */}
+          <div className="lg:col-span-2 order-2 lg:order-1">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              {/* Header */}
+              <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
                 <div className="flex items-center gap-3">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-12 h-12 object-cover rounded-lg"
-                  />
+                  <div className="w-10 h-10 rounded-full bg-gray-900/5 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                  </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-800">{product.name}</p>
-                    <p className="text-xs text-gray-500">Qty: {product.quantity}</p>
+                    <h2 className="text-lg font-serif font-medium text-gray-800">Order Summary</h2>
+                    <p className="text-xs text-gray-400">{selectedItems} items in your cart</p>
                   </div>
                 </div>
-                <span className="text-sm font-semibold text-gray-700">
-                  PKR {(product.price * product.quantity).toFixed(2)}
-                </span>
               </div>
-            ))}
+
+              {/* Guest Notice */}
+              {isGuest && (
+                <div className="mx-6 mt-4 px-4 py-3 bg-amber-50/80 border border-amber-200/50 rounded-xl text-sm text-amber-700 flex items-start gap-3">
+                  <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>You're checking out as a guest. <span className="font-medium">Sign in</span> to track your orders easily.</span>
+                </div>
+              )}
+
+              {/* Products List */}
+              <div className="px-6 py-4 space-y-3 max-h-72 overflow-y-auto">
+                {products.map((product) => (
+                  <div key={product._id || product.id} className="flex items-center gap-4 py-2 border-b border-gray-50 last:border-0">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-14 h-14 object-cover rounded-xl bg-gray-100 flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-800 truncate">{product.name}</p>
+                      <p className="text-xs text-gray-400">Qty: {product.quantity}</p>
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+                      PKR {(product.price * product.quantity).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Price Breakdown */}
+              <div className="px-6 py-4 bg-gray-50/50 border-t border-gray-100">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Subtotal ({selectedItems} items)</span>
+                    <span className="text-gray-700 font-medium">PKR {totalPrice.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Delivery Charges</span>
+                    <span className="text-gray-700 font-medium">PKR {deliveryCharge.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t border-gray-200">
+                    <span className="text-gray-800 font-medium">Grand Total</span>
+                    <span className="text-emerald-600 font-bold text-lg">PKR {grandTotal.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="px-6 py-5 bg-white border-t border-gray-100 space-y-3">
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="w-full py-3.5 px-4 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={showSuccess}
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Place Order
+                  </span>
+                </button>
+                <button
+                  onClick={() => dispatch(clearCart())}
+                  className="w-full py-3 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors"
+                  disabled={showSuccess}
+                >
+                  Clear Cart
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* ✅ Price Breakdown */}
-          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-            <div className="flex justify-between py-1">
-              <span className="text-gray-600">Subtotal ({selectedItems} items):</span>
-              <span className="text-gray-800 font-medium">PKR {totalPrice.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between py-1 border-t border-gray-200">
-              <span className="text-gray-600">Delivery Charges:</span>
-              <span className="text-gray-800 font-medium">PKR {deliveryCharge.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between py-2 border-t-2 border-indigo-200 mt-1">
-              <span className="font-bold text-lg text-gray-800">Grand Total:</span>
-              <span className="font-bold text-xl text-indigo-600">PKR {grandTotal.toFixed(2)}</span>
+          {/* Sidebar - Order Tips */}
+          <div className="lg:col-span-1 order-1 lg:order-2">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-6">
+              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Order Information</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Secure Checkout</p>
+                    <p className="text-xs text-gray-400">Your information is protected</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Cash on Delivery</p>
+                    <p className="text-xs text-gray-400">Pay when you receive</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Free Returns</p>
+                    <p className="text-xs text-gray-400">14-day return policy</p>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
-        </div>
-
-        <div className="mt-6 space-y-3">
-          <button
-            onClick={() => dispatch(clearCart())}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium py-3 px-4 rounded-xl shadow-md transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={showSuccess}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            Clear Cart
-          </button>
-          <button
-            onClick={() => setShowModal(true)}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-4 rounded-xl shadow-md transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={showSuccess}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            Place Order (Cash on Delivery)
-          </button>
         </div>
       </div>
 
+      {/* Shipping Details Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-100 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-indigo-800">Shipping Details</h2>
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)} />
+          <div className="relative bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+              <h2 className="text-lg font-serif font-medium text-gray-800">Shipping Details</h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="px-6 py-6 space-y-4">
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Full Name <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -337,17 +394,15 @@ const OrderSummary = () => {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Enter your full name"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.name ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.name ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm`}
                 />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
-                )}
+                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Email Address <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="email"
@@ -355,20 +410,18 @@ const OrderSummary = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="your@email.com"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.email ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.email ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm`}
                 />
                 {user?.email && (
-                  <p className="text-xs text-gray-500 mt-1">Using your account email: {user.email}</p>
+                  <p className="text-xs text-gray-400 mt-1">Using account email: {user.email}</p>
                 )}
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                )}
+                {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone Number <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Phone Number <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="tel"
@@ -376,17 +429,15 @@ const OrderSummary = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="03XX-XXXXXXX"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.phone ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.phone ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm`}
                 />
-                {errors.phone && (
-                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-                )}
+                {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
               </div>
 
               {/* Address */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Shipping Address <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Shipping Address <span className="text-red-400">*</span>
                 </label>
                 <textarea
                   name="address"
@@ -394,18 +445,16 @@ const OrderSummary = () => {
                   onChange={handleInputChange}
                   rows="2"
                   placeholder="House #, Street, Area"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.address ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.address ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm resize-none`}
                 />
-                {errors.address && (
-                  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
-                )}
+                {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address}</p>}
               </div>
 
               {/* City & State */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    City <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    City <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
@@ -413,19 +462,19 @@ const OrderSummary = () => {
                     value={formData.city}
                     onChange={handleInputChange}
                     placeholder="City"
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.city ? "border-red-500" : "border-gray-300"}`}
+                    className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.city ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm`}
                   />
-                  {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+                  {errors.city && <p className="text-red-400 text-xs mt-1">{errors.city}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    State <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    State <span className="text-red-400">*</span>
                   </label>
                   <select
                     name="state"
                     value={formData.state}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.state ? "border-red-500" : "border-gray-300"}`}
+                    className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.state ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm appearance-none`}
                   >
                     <option value="">Select</option>
                     <option value="Punjab">Punjab</option>
@@ -436,14 +485,14 @@ const OrderSummary = () => {
                     <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
                     <option value="Azad Kashmir">Azad Kashmir</option>
                   </select>
-                  {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
+                  {errors.state && <p className="text-red-400 text-xs mt-1">{errors.state}</p>}
                 </div>
               </div>
 
               {/* Postal Code */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Postal Code <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Postal Code <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -451,73 +500,65 @@ const OrderSummary = () => {
                   value={formData.postalCode}
                   onChange={handleInputChange}
                   placeholder="46000"
-                  className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all ${errors.postalCode ? "border-red-500" : "border-gray-300"}`}
+                  className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.postalCode ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm`}
                 />
-                {errors.postalCode && (
-                  <p className="text-red-500 text-xs mt-1">{errors.postalCode}</p>
-                )}
+                {errors.postalCode && <p className="text-red-400 text-xs mt-1">{errors.postalCode}</p>}
               </div>
 
               {/* Notes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Delivery Notes <span className="text-gray-400">(Optional)</span>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Delivery Notes <span className="text-gray-400 font-normal">(Optional)</span>
                 </label>
                 <textarea
                   name="notes"
                   value={formData.notes}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm resize-none"
                   rows="2"
                   placeholder="Any special delivery instructions..."
                 />
               </div>
             </div>
 
-            {/* ✅ Price Summary in Modal */}
-            <div className="mt-6 bg-gray-50 rounded-xl p-4">
-              <div className="flex justify-between py-1">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="text-gray-800">PKR {totalPrice.toFixed(2)}</span>
+            {/* Price Summary & Actions */}
+            <div className="sticky bottom-0 bg-white/90 backdrop-blur-sm border-t border-gray-100 px-6 py-4">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs text-gray-400">Total Amount</p>
+                  <p className="text-xl font-serif font-medium text-gray-800">PKR {grandTotal.toFixed(2)}</p>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2.5 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleOrderConfirmation}
+                    className={`px-6 py-2.5 text-sm font-medium text-white rounded-xl transition-all ${
+                      isSubmitting
+                        ? "bg-gray-300 cursor-not-allowed"
+                        : "bg-gray-900 hover:bg-gray-800 hover:shadow-lg"
+                    }`}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Processing...
+                      </span>
+                    ) : (
+                      "Confirm Order"
+                    )}
+                  </button>
+                </div>
               </div>
-              <div className="flex justify-between py-1 border-t border-gray-200">
-                <span className="text-gray-600">Delivery:</span>
-                <span className="text-gray-800">PKR {deliveryCharge.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between py-2 border-t-2 border-indigo-200 mt-1">
-                <span className="font-bold text-gray-800">Total:</span>
-                <span className="font-bold text-xl text-indigo-600">PKR {grandTotal.toFixed(2)}</span>
-              </div>
-            </div>
-
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors font-medium text-gray-700"
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleOrderConfirmation}
-                className={`flex-1 px-4 py-3 text-white rounded-xl font-medium transition-all ${isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md"
-                  }`}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                  </span>
-                ) : (
-                  "Confirm Order"
-                )}
-              </button>
             </div>
           </div>
         </div>
