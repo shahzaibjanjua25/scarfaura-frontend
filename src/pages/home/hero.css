@@ -1,231 +1,285 @@
 /* ============================================================
-   Hero / Trend Cards — ScarfAura
-   Shares the hero palette:
-   ink #2c241e · muted #5a4f47 · gold #c9a87c · gold-dark #b8966a
-   sand #d4c5b0 · cream #faf8f5
+   Color Palette Section - Elegant Design
    ============================================================ */
 
-.hero__section {
-  --sa-ink: #2c241e;
-  --sa-muted: #5a4f47;
-  --sa-gold: #c9a87c;
-  --sa-gold-dark: #b8966a;
-  --sa-sand: #d4c5b0;
-  --sa-cream: #faf8f5;
-
-  background-color: var(--sa-cream);
+.color-palette-section {
   padding: 4rem 1.25rem;
+  background: #FAFAF8;
 }
 
-/* ---------- Header ---------------------------------------- */
+.color-palette-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
 
-.hero__header {
-  max-width: 34rem;
-  margin: 0 auto 2.75rem;
+/* ========== Header ========== */
+
+.color-palette-header {
   text-align: center;
+  margin-bottom: 3.5rem;
 }
 
-.hero__eyebrow-line {
+.color-palette-eyebrow {
   display: inline-block;
-  margin-bottom: 0.9rem;
   font-size: 0.625rem;
   font-weight: 300;
   letter-spacing: 0.45em;
   text-transform: uppercase;
-  color: var(--sa-gold);
+  color: #C9A87C;
+  margin-bottom: 0.75rem;
 }
 
-.hero__section-title {
-  margin: 0;
+.color-palette-eyebrow::before,
+.color-palette-eyebrow::after {
+  content: "";
+  display: inline-block;
+  width: 1.75rem;
+  height: 1px;
+  vertical-align: middle;
+  background-color: #C9A87C;
+  opacity: 0.5;
+}
+
+.color-palette-eyebrow::before {
+  margin-right: 0.9rem;
+}
+
+.color-palette-eyebrow::after {
+  margin-left: 0.9rem;
+}
+
+.color-palette-title {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
   font-weight: 300;
-  line-height: 1.15;
   letter-spacing: -0.01em;
-  color: var(--sa-ink);
+  color: #2C241E;
+  margin: 0 0 0.5rem;
 }
 
-/* ---------- Grid ------------------------------------------ */
-/* Was: flex + space-between with no wrap, so three cards were
-   force-squeezed onto one row at every width. */
+.color-palette-subtitle {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: #5A4F47;
+  margin: 0 0 1.25rem;
+}
 
-.hero__container {
+.color-palette-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.divider-line {
+  width: 2.5rem;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #C9A87C, transparent);
+}
+
+.divider-diamond {
+  color: #C9A87C;
+  font-size: 0.625rem;
+  opacity: 0.5;
+}
+
+/* ========== Grid ========== */
+
+.color-palette-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1.5rem;
-  max-width: 78rem;
-  margin: 0 auto;
 }
 
-/* ---------- Card ------------------------------------------ */
+/* ========== Color Card ========== */
 
-.hero__card {
-  position: relative;
-  display: block;
+.color-card {
+  background: #FFFFFF;
+  border-radius: 16px;
   overflow: hidden;
-  background-color: #efe9e1;
-  border: 1px solid rgba(212, 197, 176, 0.5);
-  border-radius: 2px;
-  transition: border-color 0.5s ease;
+  box-shadow: 0 2px 16px rgba(44, 36, 30, 0.06);
+  transition: box-shadow 0.4s ease;
+  border: 1px solid #F0EDE8;
 }
 
-.hero__card:hover {
-  border-color: var(--sa-gold);
+.color-card:hover {
+  box-shadow: 0 8px 32px rgba(44, 36, 30, 0.10);
 }
 
-.hero__card:focus-within {
-  outline: 1px solid var(--sa-gold);
-  outline-offset: 4px;
-}
+/* ========== Image ========== */
 
-/* ---------- Media ----------------------------------------- */
-/* aspect-ratio replaces height:auto, so all three cards match
-   no matter what dimensions the source PNGs happen to be. */
-
-.hero__card-media {
+.color-image-wrapper {
   position: relative;
-  aspect-ratio: 3 / 4;
   overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background: #F5F3F0;
 }
 
-.hero__card-media img {
+.color-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  display: block;
-  transition: transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.hero__card:hover .hero__card-media img {
-  transform: scale(1.06);
-}
-
-.hero__card-veil {
+.color-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(30, 24, 20, 0.82) 0%,
-    rgba(30, 24, 20, 0.45) 32%,
-    rgba(30, 24, 20, 0.08) 62%,
-    transparent 100%
+    rgba(44, 36, 30, 0.12) 0%,
+    transparent 50%
   );
+  opacity: 0;
+  transition: opacity 0.4s ease;
   pointer-events: none;
 }
 
-/* ---------- Content --------------------------------------- */
-
-.hero__content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  padding: 1.75rem 1.5rem 1.5rem;
-  color: #fff;
+.color-card:hover .color-overlay {
+  opacity: 1;
 }
 
-.hero__trend {
-  margin: 0 0 0.6rem;
-  font-size: 0.5625rem;
-  font-weight: 400;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--sa-sand);
+/* ========== Color Info ========== */
+
+.color-info {
+  padding: 1rem 1.125rem 1.25rem;
+  text-align: center;
 }
 
-.hero__title {
-  margin: 0 0 1rem;
+.color-dot-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+}
+
+.color-card:hover .color-dot {
+  transform: scale(1.15);
+}
+
+.color-name {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.5rem;
+  font-size: 0.95rem;
   font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-  color: #fff;
+  color: #2C241E;
+  margin: 0 0 0.6rem;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
 }
 
-/* ---------- Button (stretched hit area) -------------------- */
+.color-card:hover .color-name {
+  color: #C9A87C;
+}
 
-.discover-more-btn {
-  position: relative;
+/* ========== Shop Button ========== */
+
+.color-shop-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.3rem 0 0.45rem;
-  border: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  gap: 0.4rem;
+  padding: 0.35rem 0;
   background: none;
+  border: none;
+  border-bottom: 1px solid rgba(201, 168, 124, 0.3);
   font-family: inherit;
   font-size: 0.625rem;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #fff;
+  color: #8B7A6B;
   cursor: pointer;
-  transition: color 0.4s ease, border-color 0.4s ease;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Whole card becomes clickable, one focusable control only */
-.discover-more-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
+.color-shop-btn:hover {
+  color: #C9A87C;
+  border-color: #C9A87C;
 }
 
-.hero__card:hover .discover-more-btn {
-  color: var(--sa-gold);
-  border-color: var(--sa-gold);
+.color-arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.discover-more-btn:focus-visible {
-  outline: none;
+.color-shop-btn:hover .color-arrow {
+  transform: translateX(4px);
 }
 
-.discover-more-btn__mark {
-  font-size: 0.8rem;
-  line-height: 1;
-  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+/* ========== Responsive ========== */
+
+@media (min-width: 640px) {
+  .color-palette-section {
+    padding: 5rem 2rem;
+  }
+  
+  .color-palette-grid {
+    gap: 1.75rem;
+  }
 }
 
-.hero__card:hover .discover-more-btn__mark {
-  transform: rotate(90deg);
+@media (min-width: 768px) {
+  .color-palette-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+  }
 }
 
-/* ---------- Responsive ------------------------------------ */
-
-@media (min-width: 40rem) {          /* 640px */
-  .hero__section { padding: 5rem 2rem; }
-  .hero__container { grid-template-columns: repeat(2, 1fr); gap: 1.75rem; }
-  /* Odd card out spans the full row rather than leaving a gap */
-  .hero__card:last-child:nth-child(odd) { grid-column: 1 / -1; }
-  .hero__card:last-child:nth-child(odd) .hero__card-media { aspect-ratio: 16 / 9; }
+@media (min-width: 1024px) {
+  .color-palette-section {
+    padding: 6rem 3rem;
+  }
+  
+  .color-palette-header {
+    margin-bottom: 4.5rem;
+  }
+  
+  .color-palette-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2.25rem;
+  }
+  
+  .color-info {
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
 }
 
-@media (min-width: 64rem) {          /* 1024px */
-  .hero__section { padding: 6.5rem 3rem; }
-  .hero__header { margin-bottom: 3.5rem; }
-  .hero__container { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-  .hero__card:last-child:nth-child(odd) { grid-column: auto; }
-  .hero__card:last-child:nth-child(odd) .hero__card-media { aspect-ratio: 3 / 4; }
-  .hero__content { padding: 2rem 1.75rem 1.75rem; }
-  .hero__title { font-size: 1.75rem; }
-}
-
-/* Touch devices never fire :hover — keep the cue in its resting state */
-@media (hover: none) {
-  .hero__card:hover .hero__card-media img { transform: none; }
-  .discover-more-btn { color: var(--sa-sand); }
-}
+/* ========== Accessibility ========== */
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__card,
-  .hero__card-media img,
-  .discover-more-btn,
-  .discover-more-btn__mark {
+  .color-card,
+  .color-image,
+  .color-overlay,
+  .color-dot,
+  .color-shop-btn,
+  .color-arrow {
     transition: none !important;
   }
-  .hero__card:hover .hero__card-media img { transform: none; }
-  .hero__card:hover .discover-more-btn__mark { transform: none; }
+  
+  .color-card:hover {
+    transform: none !important;
+  }
+  
+  .color-card:hover .color-image {
+    transform: none !important;
+  }
+}
+
+/* ========== Touch Devices ========== */
+
+@media (hover: none) {
+  .color-overlay {
+    opacity: 0.6;
+  }
+  
+  .color-card:hover {
+    transform: none !important;
+  }
 }
