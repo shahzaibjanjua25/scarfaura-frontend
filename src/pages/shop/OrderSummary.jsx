@@ -150,8 +150,8 @@ const OrderSummary = () => {
 // console.log("Submitting order:", orderData);
 
 
-      const response = await fetch('https://almadin-backend.vercel.app/api/orders/create-order', {
-      // const response = await fetch('http://localhost:5000/api/orders/create-order', {
+      // const response = await fetch('https://almadin-backend.vercel.app/api/orders/create-order', {
+      const response = await fetch('https://scarfaura.vercel.app/api/orders/create-order', {
 
         method: "POST",
         headers: {
