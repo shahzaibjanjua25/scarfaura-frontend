@@ -14,9 +14,9 @@ const filters = {
         'Leoprd Prints',
         'Brown',
         'Chiffon',
-        'Mustart Yellow'
+        'Dark Brown'
     ],
-    colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green'],
+    colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green','Brown',],
     priceRanges: [
         { label: 'Under PKR 1000', min: 0, max: 1000 },
         { label: 'PKR 1000 - PKR 2000', min: 1000, max: 2000 },

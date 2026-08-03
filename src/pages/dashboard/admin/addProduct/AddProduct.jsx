@@ -16,7 +16,7 @@ const categories = [
     { label: 'Leopard Prints', value: 'Leopard Prints' },  
     { label: 'Brown', value: 'Women-shirts' },  
     { label: 'Chiffon', value: 'Women-casuals' },  
-    { label: 'Mustart Yellow', value: 'Mustart Yellow' }  
+    { label: 'Dark Skin', value: 'Dark Skin' }  
 ];
 
 // const ageOptions = [

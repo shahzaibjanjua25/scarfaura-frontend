@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import card1 from '../../assets/card-1.png';
 import card2 from '../../assets/card-2.png';
 import card3 from '../../assets/card-3.png';
-import './CategoriesSection.css'; 
+import './CategoriesSection.css';
 
 // Animation variants
 const containerVariants = {
@@ -12,24 +12,24 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2,
+      staggerChildren: 0.15,
       when: "beforeChildren"
     }
   }
 };
 
 const cardVariants = {
-  hidden: { y: 20, opacity: 0 },
+  hidden: { y: 30, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 0.5,
-      ease: "easeOut"
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1]
     }
   },
   hover: {
-    y: -10,
+    y: -8,
     transition: {
       duration: 0.3,
       ease: "easeInOut"
@@ -37,100 +37,112 @@ const cardVariants = {
   }
 };
 
-const contentVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      delay: 0.3
-    }
-  }
-};
-
-// Data for cards
-const cards = [
-  {
-    id: 1,
-    image: card1,
-    trend: '2026 Trend',
-    title: 'Brown', // Match exact category name from your filters
-    filter: 'Brown' // Added filter property
-  },
-  {
-    id: 2,
-    image: card2,
-    trend: '2026 Trend',
-    title: 'Mustart Yellow',
-    filter: 'Mustart Yellow'
-  },
-  {
-    id: 3,
-    image: card3,
-    trend: '2026 Trend',
-    title: 'Chiffon',
-    filter: 'Chiffon' // Note: matches the exact case from your filters
-  },
+// Color palette based on your requirements
+const colorPalette = [
+  { id: 1, name: 'Brown', hex: '#8B7355', image: card1 },
+  { id: 2, name: 'Black', hex: '#1A1A1A', image: card2 },
+  { id: 3, name: 'Maroon', hex: '#800000', image: card3 },
+  { id: 4, name: 'Zinc', hex: '#71717A', image: card1 },
+  { id: 5, name: 'Navy Blue', hex: '#1B2A4A', image: card2 },
+  { id: 6, name: 'White', hex: '#F5F5F5', image: card3 },
+  { id: 7, name: 'Skin', hex: '#E8C5B0', image: card1 },
+  { id: 8, name: 'Burgundy', hex: '#900020', image: card2 },
+  { id: 9, name: 'Purple', hex: '#6B3FA0', image: card3 },
+  { id: 10, name: 'Grey', hex: '#808080', image: card1 },
+  { id: 11, name: 'Plum', hex: '#8E4585', image: card2 },
 ];
 
 const HeroSection = () => {
   const navigate = useNavigate();
 
-  const handleCardClick = (filter) => {
+  const handleColorClick = (colorName) => {
     navigate('/shop', {
-      state: { category: filter }
+      state: { color: colorName }
     });
   };
 
   return (
-    <motion.section 
-      className="section__container hero__container"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      {cards.map((card) => (
+    <section className="color-palette-section">
+      <motion.div 
+        className="color-palette-container"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        {/* Header */}
         <motion.div 
-          key={card.id} 
-          className="hero__card"
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          whileHover="hover"
-          onClick={() => handleCardClick(card.filter)}
-          style={{ cursor: 'pointer' }}
+          className="color-palette-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          <motion.img 
-            src={card.image} 
-            alt={card.title} 
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          />
-          <motion.div 
-            className="hero__content"
-            variants={contentVariants}
-          >
-            <p>{card.trend}</p>
-            <h4>{card.title}</h4>
-            <motion.button 
-              className="discover-more-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCardClick(card.filter);
-              }}
-              whileHover={{ 
-                scale: 1.05,
-                color: "#ff6b6b" // Change to your preferred hover color
-              }}
-              transition={{ duration: 0.2 }}
-            >
-              Discover More +
-            </motion.button>
-          </motion.div>
+          <span className="color-palette-eyebrow">Shop by Color</span>
+          <h2 className="color-palette-title">Find Your Shade</h2>
+          <p className="color-palette-subtitle">
+            Explore our collection by your favorite colors
+          </p>
+          <div className="color-palette-divider">
+            <span className="divider-line"></span>
+            <span className="divider-diamond">✦</span>
+            <span className="divider-line"></span>
+          </div>
         </motion.div>
-      ))}
-    </motion.section>
+
+        {/* Color Grid */}
+        <div className="color-palette-grid">
+          {colorPalette.map((color, index) => (
+            <motion.div
+              key={color.id}
+              className="color-card"
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover="hover"
+              onClick={() => handleColorClick(color.name)}
+              style={{ cursor: 'pointer' }}
+            >
+              {/* Color Image */}
+              <div className="color-image-wrapper">
+                <motion.img
+                  src={color.image}
+                  alt={color.name}
+                  className="color-image"
+                  whileHover={{ scale: 1.08 }}
+                  transition={{ duration: 0.4 }}
+                />
+                <div className="color-overlay" />
+              </div>
+
+              {/* Color Info */}
+              <div className="color-info">
+                <div className="color-dot-wrapper">
+                  <span 
+                    className="color-dot" 
+                    style={{ 
+                      backgroundColor: color.hex,
+                      border: color.name === 'White' ? '1px solid #E5E7EB' : 'none'
+                    }}
+                  />
+                </div>
+                <h4 className="color-name">{color.name}</h4>
+                <motion.button
+                  className="color-shop-btn"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleColorClick(color.name);
+                  }}
+                >
+                  Shop {color.name}
+                  <span className="color-arrow">→</span>
+                </motion.button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
   );
 };
 

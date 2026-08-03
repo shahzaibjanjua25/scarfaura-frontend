@@ -12,7 +12,7 @@ const Checkout = () => {
 
   const { cartItems, totalAmount } = location.state || {};
 
-  const deliveryCharge = 200;
+  const deliveryCharge = 250;
   const subtotal = totalAmount || 0;
   const grandTotal = subtotal + deliveryCharge;
 
