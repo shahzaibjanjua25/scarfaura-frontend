@@ -83,12 +83,12 @@
   opacity: 0.5;
 }
 
-/* ========== Grid ========== */
+/* ========== Grid - Mobile First ========== */
 
 .color-palette-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
 
 /* ========== Color Card ========== */
@@ -217,26 +217,31 @@
 
 /* ========== Responsive ========== */
 
-@media (min-width: 480px) {
+/* Small tablets: 3 columns */
+@media (min-width: 600px) {
   .color-palette-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
   }
 }
 
-@media (min-width: 640px) {
+/* Tablets: 3 columns with better spacing */
+@media (min-width: 768px) {
   .color-palette-section {
     padding: 5rem 2rem;
   }
-}
-
-@media (min-width: 768px) {
+  
   .color-palette-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.75rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .color-info {
+    padding: 1.125rem 1rem 1.25rem;
   }
 }
 
+/* Desktop: 4 columns */
 @media (min-width: 1024px) {
   .color-palette-section {
     padding: 6rem 3rem;
@@ -247,7 +252,7 @@
   }
   
   .color-palette-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
   }
   
@@ -257,6 +262,14 @@
   
   .color-name {
     font-size: 0.95rem;
+  }
+}
+
+/* Large Desktop: 4 columns with max width */
+@media (min-width: 1280px) {
+  .color-palette-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.25rem;
   }
 }
 

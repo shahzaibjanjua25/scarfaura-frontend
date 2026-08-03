@@ -7,9 +7,25 @@ import category1 from "../../assets/category-1.jpg";
 import category2 from "../../assets/category-2.jpg";
 import category3 from "../../assets/category-3.jpg";
 import category7 from "../../assets/category-7.jpg";
+// import category4 from "../../assets/category-4.png";
+// import category5 from "../../assets/category-4.png";
+// import category6 from "../../assets/category-4.png";
+// import category8 from "../../assets/category-4.png";
+// import category9 from "../../assets/category-4.png";
+// import category10 from "../../assets/category-4.png";
+// import category11 from "../../assets/category-4.png";
+// import category12 from "../../assets/category-4.png";
 
 const categories = [
+
   {
+    id: 3,
+    title: "Modal Hijabs",
+    discount: "Up to 25% off",
+    image: category3,
+    description: "Breathable modal that holds its shape from morning to night.",
+    slug: "modal-hijabs"
+  }, {
     id: 1,
     title: "Printed Hijabs",
     discount: "Up to 20% off",
@@ -18,29 +34,23 @@ const categories = [
     slug: "printed-hijabs"
   },
   {
-    id: 2,
-    title: "Chiffon Hijabs",
-    discount: "Up to 15% off",
-    image: category2,
-    description: "Featherlight drape with a soft sheen — made for warm days.",
-    slug: "chiffon-hijabs"
-  },
-  {
-    id: 3,
-    title: "Modal Hijabs",
-    discount: "Up to 25% off",
-    image: category3,
-    description: "Breathable modal that holds its shape from morning to night.",
-    slug: "modal-hijabs"
-  },
-  {
     id: 4,
     title: "Jersey Hijabs",
     discount: "Up to 35% off",
     image: category7,
     description: "Gentle stretch that stays where you place it, no pins needed.",
     slug: "jersey-hijabs"
+  },
+  {
+    id: 2,
+    title: "Chiffon Hijabs",
+    discount: "Up to 15% off",
+    image: category2,
+    description: "Featherlight drape with a soft sheen — made for warm days.",
+    slug: "chiffon-hijabs"
   }
+
+  
 ];
 
 const CategoriesSection = () => {
@@ -62,8 +72,8 @@ const CategoriesSection = () => {
 
       <div className="categories__grid">
         {categories.map((category) => (
-          <div 
-            className="category__card" 
+          <div
+            className="category__card"
             key={category.id}
             onClick={() => handleCategoryClick(category.title)}
             style={{ cursor: 'pointer' }}

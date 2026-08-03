@@ -104,6 +104,7 @@
 
 .deals-grid__card {
   background: #ffffff;
+  /* height: ; */
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(44, 36, 30, 0.06);
@@ -145,7 +146,7 @@
 .deals-grid__image-wrapper {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   background-color: #f0ebe5;
 }
 
