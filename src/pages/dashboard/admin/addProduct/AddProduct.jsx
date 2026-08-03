@@ -7,16 +7,16 @@ import UploadImage from './UploadImage';
 import { useNavigate } from 'react-router-dom';
 
 const categories = [
-    { label: 'All Categories', value: 'all' },  
-    { label: 'Printed Hijabs', value: 'Printed Hijabs' },  
-    { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },  
-    { label: 'Modal Hijabs', value: 'Modal Hijabs' }, 
-    { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },  
-    { label: 'Deer Prints', value: 'Deer Prints' },  
-    { label: 'Leopard Prints', value: 'Leopard Prints' },  
-    { label: 'Brown', value: 'Women-shirts' },  
-    { label: 'Chiffon', value: 'Women-casuals' },  
-    { label: 'Dark Skin', value: 'Dark Skin' }  
+    { label: 'All Categories', value: 'all' },
+    { label: 'Printed Hijabs', value: 'Printed Hijabs' },
+    { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },
+    { label: 'Modal Hijabs', value: 'Modal Hijabs' },
+    { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
+    { label: 'Deer Prints', value: 'Deer Prints' },
+    { label: 'Leopard Prints', value: 'Leopard Prints' },
+    { label: 'Brown', value: 'Women-shirts' },
+    { label: 'Chiffon', value: 'Women-casuals' },
+    { label: 'Dark Skin', value: 'Dark Skin' }
 ];
 
 // Updated colors with all your colors
@@ -71,9 +71,9 @@ const AddProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         // ✅ Validate based on category
-        if (!product.name || !product.category || !product.price || 
+        if (!product.name || !product.category || !product.price ||
             !product.description || !image) {
             setDialog({
                 show: true,
@@ -94,29 +94,29 @@ const AddProduct = () => {
         }
 
         try {
-            const productData = { 
-                ...product, 
-                image, 
+            const productData = {
+                ...product,
+                image,
                 author: user?._id,
                 price: Number(product.price),
                 oldPrice: product.oldPrice ? Number(product.oldPrice) : null
             };
-            
+
             await addProduct(productData).unwrap();
             setDialog({
                 show: true,
                 type: 'success',
                 message: 'Product added successfully! Redirecting to shop...'
             });
-            
+
             setTimeout(() => {
-                setProduct({ 
-                    name: '', 
-                    category: '', 
-                    color: '', 
-                    price: '', 
-                    oldPrice: '', 
-                    description: '' 
+                setProduct({
+                    name: '',
+                    category: '',
+                    color: '',
+                    price: '',
+                    oldPrice: '',
+                    description: ''
                 });
                 setImage('');
                 navigate("/shop");
@@ -139,22 +139,19 @@ const AddProduct = () => {
             {/* Notification Dialog */}
             {dialog.show && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className={`bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto border-t-4 ${
-                        dialog.type === 'success' ? 'border-green-500' : 'border-red-500'
-                    }`}>
-                        <h3 className={`text-xl font-semibold ${
-                            dialog.type === 'success' ? 'text-green-600' : 'text-red-600'
+                    <div className={`bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto border-t-4 ${dialog.type === 'success' ? 'border-green-500' : 'border-red-500'
                         }`}>
+                        <h3 className={`text-xl font-semibold ${dialog.type === 'success' ? 'text-green-600' : 'text-red-600'
+                            }`}>
                             {dialog.type === 'success' ? 'Success!' : 'Error'}
                         </h3>
                         <p className="mt-2 mb-4">{dialog.message}</p>
                         <button
                             onClick={closeDialog}
-                            className={`w-full py-2 rounded-md ${
-                                dialog.type === 'success' 
-                                    ? 'bg-green-500 hover:bg-green-600' 
+                            className={`w-full py-2 rounded-md ${dialog.type === 'success'
+                                    ? 'bg-green-500 hover:bg-green-600'
                                     : 'bg-red-500 hover:bg-red-600'
-                            } text-white transition-colors`}
+                                } text-white transition-colors`}
                         >
                             OK
                         </button>
@@ -172,7 +169,7 @@ const AddProduct = () => {
                     onChange={handleChange}
                     required
                 />
-                
+
                 <SelectInput
                     label="Category"
                     name="category"
@@ -181,7 +178,7 @@ const AddProduct = () => {
                     options={categories}
                     required
                 />
-                
+
                 {/* ✅ Color field with conditional required indicator */}
                 <div>
                     <SelectInput
@@ -203,7 +200,7 @@ const AddProduct = () => {
                         </p>
                     )}
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <TextInput
                         label="Current Price (PKR)"
@@ -216,7 +213,7 @@ const AddProduct = () => {
                         step="1"
                         required
                     />
-                    
+
                     <TextInput
                         label="Old Price (PKR) - Optional"
                         name="oldPrice"
@@ -228,12 +225,12 @@ const AddProduct = () => {
                         step="1"
                     />
                 </div>
-                
+
                 <UploadImage
                     setImage={setImage}
                     required
                 />
-                
+
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
                         Description

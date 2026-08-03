@@ -90,7 +90,7 @@ const UploadImage = ({ name, setImage, required = false }) => {
             
             {url && (
                 <div className="mt-2">
-                    <p className="text-sm text-green-600 mb-2">Image uploaded successfully!</p>
+                    <p className="text-sm text-green-600 mb-2">Your Image uploaded successfully!</p>
                     <div className="max-w-xs border rounded-md overflow-hidden">
                         <img 
                             src={url} 
