@@ -19,6 +19,7 @@ const OrderSummary = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
     address: "",
     city: "",
@@ -38,32 +39,23 @@ const OrderSummary = () => {
     }
   }, [showSuccess, dispatch]);
 
-  // Check if user is logged in (has email)
-  if (!user?.email) {
-    return (
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg rounded-lg mt-5 p-6 text-center">
-        <h2 className="text-2xl font-bold text-indigo-800 mb-4">Login Required</h2>
-        <p className="text-gray-700 mb-6">You need to be logged in to place an order.</p>
-        <Link
-          to="/login"
-          className="inline-block bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition-all transform hover:scale-105"
-        >
-          Go to Login
-        </Link>
-      </div>
-    );
-  }
+  // ✅ REMOVED: Login requirement check
+  // Users can now checkout without logging in
 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
     if (!formData.postalCode.trim()) newErrors.postalCode = "Postal code is required";
 
-    if (!formData.postalCode.trim()) newErrors.postalCode = "Login is required";
+    // Validate email format
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -124,15 +116,11 @@ const OrderSummary = () => {
 
     try {
       const orderData = {
-        user: user._id, // ✅ Add this line
-        products: products.map((product) => ({
-          productId: product._id || product.id,
-          name: product.name || "Unnamed Product",
-          price: Number(product.price) || 0,
-          quantity: Number(product.quantity) || 1,
-          image: product.image || ""
-        })),
-        email: user.email,
+        // ✅ If user is logged in, include user ID; otherwise guest checkout
+        ...(user && user._id ? { user: user._id } : {}),
+        // ✅ Always include email from form (not from user)
+        email: formData.email,
+        customerName: formData.name,
         phone: formData.phone,
         shippingAddress: {
           address: formData.address,
@@ -140,24 +128,28 @@ const OrderSummary = () => {
           state: formData.state,
           zipCode: formData.postalCode
         },
-        customerName: formData.name,
+        products: products.map((product) => ({
+          productId: product._id || product.id,
+          name: product.name || "Unnamed Product",
+          price: Number(product.price) || 0,
+          quantity: Number(product.quantity) || 1,
+          image: product.image || ""
+        })),
         totalAmount: totalPrice,
         deliveryCharge: deliveryCharge,
         grandTotal: grandTotal,
         paymentMethod: "Cash on Delivery",
         notes: formData.notes || ""
       };
-// console.log("Submitting order:", orderData);
 
+      console.log("📦 Submitting order:", orderData);
 
-      // const response = await fetch('https://almadin-backend.vercel.app/api/orders/create-order', {
       const response = await fetch('https://scarfaura.vercel.app/api/orders/create-order', {
-
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          Authorization: `Bearer ${user.token}`
+          ...(user?.token && { Authorization: `Bearer ${user.token}` })
         },
         body: JSON.stringify(orderData)
       });
@@ -185,6 +177,7 @@ const OrderSummary = () => {
       setShowSuccess(true);
       setFormData({
         name: "",
+        email: "",
         phone: "",
         address: "",
         city: "",
@@ -211,6 +204,9 @@ const OrderSummary = () => {
     }
   };
 
+  // ✅ Show guest checkout notice if not logged in
+  const isGuest = !user?.email;
+
   return (
     <>
       {showSuccess && (
@@ -232,6 +228,17 @@ const OrderSummary = () => {
       <div className="bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-xl mt-5 p-6 border border-gray-200">
         <div className="space-y-4">
           <h1 className="text-2xl font-bold text-indigo-700 border-b pb-2 border-indigo-100">Order Summary</h1>
+          
+          {/* ✅ Guest checkout notice */}
+          {isGuest && (
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-3 rounded">
+              <p className="text-sm text-blue-700">
+                <strong>Guest Checkout:</strong> You're placing an order as a guest. 
+                Please provide your email and shipping details below.
+              </p>
+            </div>
+          )}
+
           <div className="flex justify-between py-2 border-b border-gray-100">
             <span className="text-gray-700 font-medium">Items ({selectedItems}):</span>
             <span className="text-gray-900 font-semibold">PKR {totalPrice.toFixed(2)}</span>
@@ -280,40 +287,156 @@ const OrderSummary = () => {
             </div>
 
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-              {["name", "phone", "address", "city", "state", "postalCode"].map((field) => (
-                <div key={field}>
+              {/* ✅ Name field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.name ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <i className="ri-error-warning-line"></i>
+                    {errors.name}
+                  </p>
+                )}
+              </div>
+
+              {/* ✅ Email field - NEW */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                  Email Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your@email.com"
+                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.email ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                />
+                {user?.email && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Using your account email: {user.email}
+                  </p>
+                )}
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <i className="ri-error-warning-line"></i>
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+
+              {/* ✅ Phone field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="03XX-XXXXXXX"
+                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.phone ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <i className="ri-error-warning-line"></i>
+                    {errors.phone}
+                  </p>
+                )}
+              </div>
+
+              {/* ✅ Address field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                  Address <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  rows="2"
+                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.address ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <i className="ri-error-warning-line"></i>
+                    {errors.address}
+                  </p>
+                )}
+              </div>
+
+              {/* ✅ City, State, Postal Code */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
-                    {field.replace(/([A-Z])/g, " $1")}
-                    <span className="text-red-500">*</span>
+                    City <span className="text-red-500">*</span>
                   </label>
-                  {field === "address" ? (
-                    <textarea
-                      name={field}
-                      value={formData[field]}
-                      onChange={handleInputChange}
-                      rows="2"
-                      className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors[field] ? "border-red-500 focus:ring-red-200" : "border-gray-300"
-                        }`}
-                    />
-                  ) : (
-                    <input
-                      type={field === "phone" ? "tel" : "text"}
-                      name={field}
-                      value={formData[field]}
-                      onChange={handleInputChange}
-                      className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors[field] ? "border-red-500 focus:ring-red-200" : "border-gray-300"
-                        }`}
-                    />
-                  )}
-                  {errors[field] && (
-                    <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
-                      <i className="ri-error-warning-line"></i>
-                      {errors[field]}
-                    </p>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.city ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                  />
+                  {errors.city && (
+                    <p className="text-red-500 text-xs mt-1">{errors.city}</p>
                   )}
                 </div>
-              ))}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                    State <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.state ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                  >
+                    <option value="">Select State</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Sindh">Sindh</option>
+                    <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
+                    <option value="Balochistan">Balochistan</option>
+                    <option value="Islamabad Capital Territory">Islamabad</option>
+                    <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                    <option value="Azad Kashmir">Azad Kashmir</option>
+                  </select>
+                  {errors.state && (
+                    <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                  )}
+                </div>
+              </div>
 
+              {/* ✅ Postal Code */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                  Postal Code <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="postalCode"
+                  value={formData.postalCode}
+                  onChange={handleInputChange}
+                  className={`w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 ${errors.postalCode ? "border-red-500 focus:ring-red-200" : "border-gray-300"}`}
+                />
+                {errors.postalCode && (
+                  <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                    <i className="ri-error-warning-line"></i>
+                    {errors.postalCode}
+                  </p>
+                )}
+              </div>
+
+              {/* ✅ Delivery Notes */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Delivery Notes <span className="text-gray-400">(Optional)</span>
