@@ -17,7 +17,7 @@ const DashboardLayout = () => {
   // Render different dashboards based on user role
   const renderDashboard = () => {
     switch (user?.role) {
-      case 'admin':
+      case 'admin2':
         return <AdminDashboard />;
       case 'user':
         return <UserDashboard />;

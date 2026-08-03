@@ -30,7 +30,7 @@ const Footer = () => {
                 </div>
                 <div className="footer__col">
                     <h4>USEFUL LINK</h4>
-                    {user?.role === 'admin' ? (
+                    {user?.role === 'admin2' ? (
                         <Link to="/dashboard/manage-orders">Manage Orders</Link>
                     ) : (
                         <Link to="/dashboard/orders">Track My Order</Link>

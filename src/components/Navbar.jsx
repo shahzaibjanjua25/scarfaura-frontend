@@ -87,7 +87,7 @@ const Navbar = () => {
     { label: "Track my order", path: "/dashboard/orders" },
   ];
 
-  const dropdownMenus = user?.role === 'admin'
+  const dropdownMenus = user?.role === 'admin2'
     ? [...adminDropdownMenus]
     : [...userDropdownMenus];
 

@@ -55,7 +55,7 @@ const router = createBrowserRouter([
 
       // Admin routes
       {
-        path: 'admin',
+        path: 'admin2',
         element: <PrivateRoute role="admin"><AdminDMain /></PrivateRoute>,
       },
       {
