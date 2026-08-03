@@ -111,19 +111,8 @@ const OrderSummary = () => {
     setIsSubmitting(true);
 
     try {
-      // ✅ Fix: Proper order data structure matching backend schema
+      // ✅ Build order data
       const orderData = {
-        // ✅ If user is logged in, include user ID; otherwise guest checkout
-        ...(user && user._id ? { user: user._id } : {}),
-        email: formData.email,
-        customerName: formData.name,
-        phone: formData.phone,
-        shippingAddress: {
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          zipCode: formData.postalCode
-        },
         products: products.map((product) => ({
           productId: product._id || product.id,
           name: product.name || "Unnamed Product",
@@ -131,12 +120,26 @@ const OrderSummary = () => {
           quantity: Number(product.quantity) || 1,
           image: product.image || ""
         })),
-        totalAmount: totalPrice,
-        deliveryCharge: deliveryCharge,
-        grandTotal: grandTotal,
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        shippingAddress: {
+          address: formData.address.trim(),
+          city: formData.city.trim(),
+          state: formData.state.trim(),
+          zipCode: formData.postalCode.trim()
+        },
+        customerName: formData.name.trim(),
+        totalAmount: Number(totalPrice),
+        deliveryCharge: Number(deliveryCharge),
+        grandTotal: Number(grandTotal),
         paymentMethod: "Cash on Delivery",
-        notes: formData.notes || ""
+        notes: formData.notes?.trim() || ""
       };
+
+      // ✅ Only add user field if logged in
+      if (user?._id) {
+        orderData.user = user._id;
+      }
 
       console.log("📦 Submitting order:", orderData);
 
@@ -153,11 +156,11 @@ const OrderSummary = () => {
       const responseData = await response.json();
 
       if (!response.ok) {
-        // ✅ Better error handling
         const errorMsg = responseData.message || responseData.error || `HTTP error! status: ${response.status}`;
         throw new Error(errorMsg);
       }
 
+      // Send email notification
       const emailResult = await sendOrderNotification({
         ...orderData,
         orderId: responseData.orderId || responseData._id
@@ -201,7 +204,6 @@ const OrderSummary = () => {
       setIsSubmitting(false);
     }
   };
-
   const isGuest = !user?.email;
 
   return (
@@ -234,7 +236,7 @@ const OrderSummary = () => {
             </div>
             <h1 className="text-2xl font-bold text-gray-800">Order Summary</h1>
           </div>
-          
+
           {isGuest && (
             <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
               <div className="flex items-start gap-2">
@@ -242,7 +244,7 @@ const OrderSummary = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="text-sm text-blue-700">
-                  <strong>Guest Checkout:</strong> You're placing an order as a guest. 
+                  <strong>Guest Checkout:</strong> You're placing an order as a guest.
                   Please provide your email and shipping details below.
                 </p>
               </div>
@@ -254,9 +256,9 @@ const OrderSummary = () => {
             {products.map((product) => (
               <div key={product._id || product.id} className="flex justify-between items-center py-2 border-b border-gray-50">
                 <div className="flex items-center gap-3">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
+                  <img
+                    src={product.image}
+                    alt={product.name}
                     className="w-12 h-12 object-cover rounded-lg"
                   />
                   <div>
@@ -502,11 +504,10 @@ const OrderSummary = () => {
               </button>
               <button
                 onClick={handleOrderConfirmation}
-                className={`flex-1 px-4 py-3 text-white rounded-xl font-medium transition-all ${
-                  isSubmitting
+                className={`flex-1 px-4 py-3 text-white rounded-xl font-medium transition-all ${isSubmitting
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md"
-                }`}
+                  }`}
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
