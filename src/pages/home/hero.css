@@ -87,8 +87,8 @@
 
 .color-palette-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.25rem;
 }
 
 /* ========== Color Card ========== */
@@ -98,12 +98,13 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 16px rgba(44, 36, 30, 0.06);
-  transition: box-shadow 0.4s ease;
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
   border: 1px solid #F0EDE8;
 }
 
 .color-card:hover {
   box-shadow: 0 8px 32px rgba(44, 36, 30, 0.10);
+  transform: translateY(-4px);
 }
 
 /* ========== Image ========== */
@@ -127,7 +128,7 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(44, 36, 30, 0.12) 0%,
+    rgba(44, 36, 30, 0.08) 0%,
     transparent 50%
   );
   opacity: 0;
@@ -142,7 +143,7 @@
 /* ========== Color Info ========== */
 
 .color-info {
-  padding: 1rem 1.125rem 1.25rem;
+  padding: 1rem 0.875rem 1.125rem;
   text-align: center;
 }
 
@@ -154,23 +155,24 @@
 
 .color-dot {
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .color-card:hover .color-dot {
-  transform: scale(1.15);
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .color-name {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 400;
   color: #2C241E;
-  margin: 0 0 0.6rem;
+  margin: 0 0 0.5rem;
   letter-spacing: 0.02em;
   transition: color 0.3s ease;
 }
@@ -184,13 +186,13 @@
 .color-shop-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0;
+  gap: 0.35rem;
+  padding: 0.3rem 0;
   background: none;
   border: none;
-  border-bottom: 1px solid rgba(201, 168, 124, 0.3);
+  border-bottom: 1px solid rgba(201, 168, 124, 0.25);
   font-family: inherit;
-  font-size: 0.625rem;
+  font-size: 0.5625rem;
   font-weight: 300;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -215,20 +217,23 @@
 
 /* ========== Responsive ========== */
 
+@media (min-width: 480px) {
+  .color-palette-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
 @media (min-width: 640px) {
   .color-palette-section {
     padding: 5rem 2rem;
-  }
-  
-  .color-palette-grid {
-    gap: 1.75rem;
   }
 }
 
 @media (min-width: 768px) {
   .color-palette-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 2rem;
+    gap: 1.75rem;
   }
 }
 
@@ -243,11 +248,15 @@
   
   .color-palette-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 2.25rem;
+    gap: 2rem;
   }
   
   .color-info {
     padding: 1.25rem 1.25rem 1.5rem;
+  }
+  
+  .color-name {
+    font-size: 0.95rem;
   }
 }
 
@@ -276,7 +285,7 @@
 
 @media (hover: none) {
   .color-overlay {
-    opacity: 0.6;
+    opacity: 0.4;
   }
   
   .color-card:hover {

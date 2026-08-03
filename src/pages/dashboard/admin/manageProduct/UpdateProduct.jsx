@@ -1,167 +1,191 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
-import TextInput from '../addProduct/TextInput';
-import UploadImage from '../addProduct/UploadImage';
-import SelectInput from '../addProduct/SelectInput';
-import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../../../redux/features/products/productsApi';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import card1 from '../../assets/card-1.png';
+import card2 from '../../assets/card-2.png';
+import card3 from '../../assets/card-3.png';
+import './CategoriesSection.css';
 
-const categories = [
-    { label: 'All Categories', value: 'all' },
-    { label: 'Printed Hijabs', value: 'Printed Hijabs' },
-    { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },
-    { label: 'Modal Hijabs', value: 'Modal Hijabs' },
-    { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
-    { label: 'Deer Prints', value: 'Deer Prints' },
-    { label: 'Leopard Prints', value: 'Leopard Prints' },
-    { label: 'Brown', value: 'Women-shirts' },
-    { label: 'Chiffon', value: 'Women-casuals' },
-    { label: 'Mustart Yellow', value: 'Mustart Yellow' }
-];
-
-const colors = [
-    { label: 'Select Color', value: '' },
-    { label: 'Black', value: 'black' },
-    { label: 'Red', value: 'red' },
-    { label: 'Gold', value: 'gold' },
-    { label: 'Blue', value: 'blue' },
-    { label: 'Silver', value: 'silver' },
-    { label: 'Beige', value: 'beige' },
-    { label: 'Green', value: 'green' }
-];
-
-const UpdateProduct = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const { user } = useSelector((state) => state.auth);
-
-    const [product, setProduct] = useState({
-        name: '',
-        category: '',
-        color: '',
-        price: '',
-        oldPrice: '',
-        // age: '',
-        description: '',
-        image: ''
-    });
-
-    const [newImage, setNewImage] = useState(null);
-    const [notification, setNotification] = useState({ show: false, type: '', message: '' });
-
-    const { data: productData, isLoading, error, refetch } = useFetchProductByIdQuery(id);
-    const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
-
-    useEffect(() => {
-        if (productData?.product) {
-            const { name, category, color, price, oldPrice, age, description, image } = productData.product;
-            setProduct({
-                name: name || '',
-                category: category || '',
-                color: color || '',
-                price: price || '',
-                oldPrice: oldPrice || '',
-                // age: age || '',
-                description: description || '',
-                image: image || ''
-            });
-        }
-    }, [productData]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProduct((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleImageChange = (image) => {
-        setNewImage(image);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const { name, category, color, price, oldPrice, age, description } = product;
-
-        if (!name || !category || !color || !price || !oldPrice || !age || !description) {
-            setNotification({ show: true, type: 'error', message: 'Please fill in all required fields' });
-            return;
-        }
-
-        try {
-            const updatedProduct = {
-                ...product,
-                image: newImage || product.image,
-                author: user?._id
-            };
-
-            await updateProduct({ id, ...updatedProduct }).unwrap();
-            setNotification({ show: true, type: 'success', message: 'Product updated successfully!' });
-
-            setTimeout(() => navigate('/dashboard/manage-products'), 1500);
-        } catch (err) {
-            console.error('Update failed:', err);
-            setNotification({
-                show: true,
-                type: 'error',
-                message: err.data?.message || 'Update failed. Try again.'
-            });
-        }
-    };
-
-    if (isLoading) {
-        return <div className="flex justify-center items-center h-64"><div className="loader" /></div>;
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      when: "beforeChildren"
     }
-
-    if (error) {
-        return (
-            <div className="p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
-                Error loading product: {error.message}
-            </div>
-        );
-    }
-
-    return (
-        <div className="container mx-auto mt-8 px-4">
-            {notification.show && (
-                <div className={`fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
-                    notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-                } text-white`}>
-                    {notification.message}
-                    <button onClick={() => setNotification({ ...notification, show: false })} className="ml-4">×</button>
-                </div>
-            )}
-
-            <h2 className="text-2xl font-bold mb-6">Update Product</h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
-                <TextInput label="Product Name" name="name" value={product.name} onChange={handleChange} required />
-                <SelectInput label="Category" name="category" value={product.category} onChange={handleChange} options={categories} required />
-                <SelectInput label="Color" name="color" value={product.color} onChange={handleChange} options={colors} required />
-
-                <TextInput label="Price" name="price" type="number" value={product.price} onChange={handleChange} required />
-                <TextInput label="Old Price" name="oldPrice" type="number" value={product.oldPrice} onChange={handleChange} required />
-                <TextInput label="Age" name="age" type="number" value={product.age} onChange={handleChange} required />
-
-                <UploadImage value={newImage || product.image} setImage={handleImageChange} />
-
-                <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea
-                        rows={6}
-                        name="description"
-                        id="description"
-                        value={product.description}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border rounded-md"
-                        required
-                    />
-                </div>
-
-                <button type="submit" disabled={isUpdating} className="w-full bg-primary text-white py-3 px-4 rounded-md">
-                    {isUpdating ? 'Updating...' : 'Update Product'}
-                </button>
-            </form>
-        </div>
-    );
+  }
 };
 
-export default UpdateProduct;
+const cardVariants = {
+  hidden: { y: 30, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  },
+  hover: {
+    y: -8,
+    transition: {
+      duration: 0.3,
+      ease: "easeInOut"
+    }
+  }
+};
+
+// Colors from your filters - exactly matching the colors array
+const colorCards = [
+  { id: 1, name: 'Brown', value: 'brown', image: card1 },
+  { id: 2, name: 'Black', value: 'black', image: card2 },
+  { id: 3, name: 'Maroon', value: 'maroon', image: card3 },
+  { id: 4, name: 'Zinc', value: 'zinc', image: card1 },
+  { id: 5, name: 'Navy Blue', value: 'navy blue', image: card2 },
+  { id: 6, name: 'White', value: 'white', image: card3 },
+  { id: 7, name: 'Skin', value: 'skin', image: card1 },
+  { id: 8, name: 'Burgundy', value: 'burgundy', image: card2 },
+  { id: 9, name: 'Purple', value: 'purple', image: card3 },
+  { id: 10, name: 'Grey', value: 'grey', image: card1 },
+  { id: 11, name: 'Plum', value: 'plum', image: card2 },
+  { id: 12, name: 'Red', value: 'red', image: card3 },
+  { id: 13, name: 'Gold', value: 'gold', image: card1 },
+  { id: 14, name: 'Blue', value: 'blue', image: card2 },
+  { id: 15, name: 'Silver', value: 'silver', image: card3 },
+  { id: 16, name: 'Beige', value: 'beige', image: card1 },
+  { id: 17, name: 'Green', value: 'green', image: card2 },
+  { id: 18, name: 'Sage Green', value: 'sagegreen', image: card3 },
+];
+
+// Display only unique colors (remove duplicates)
+const uniqueColors = [];
+const seen = new Set();
+colorCards.forEach(color => {
+  if (!seen.has(color.value)) {
+    seen.add(color.value);
+    uniqueColors.push(color);
+  }
+});
+
+const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleColorClick = (colorValue) => {
+    navigate('/shop', {
+      state: { color: colorValue }
+    });
+  };
+
+  return (
+    <section className="color-palette-section">
+      <motion.div 
+        className="color-palette-container"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        {/* Header */}
+        <motion.div 
+          className="color-palette-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="color-palette-eyebrow">Shop by Color</span>
+          <h2 className="color-palette-title">Find Your Shade</h2>
+          <p className="color-palette-subtitle">
+            Explore our collection by your favorite colors
+          </p>
+          <div className="color-palette-divider">
+            <span className="divider-line"></span>
+            <span className="divider-diamond">✦</span>
+            <span className="divider-line"></span>
+          </div>
+        </motion.div>
+
+        {/* Color Grid */}
+        <div className="color-palette-grid">
+          {uniqueColors.map((color, index) => (
+            <motion.div
+              key={color.id}
+              className="color-card"
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              whileHover="hover"
+              onClick={() => handleColorClick(color.value)}
+              style={{ cursor: 'pointer' }}
+            >
+              {/* Color Image */}
+              <div className="color-image-wrapper">
+                <motion.img
+                  src={color.image}
+                  alt={color.name}
+                  className="color-image"
+                  whileHover={{ scale: 1.08 }}
+                  transition={{ duration: 0.4 }}
+                />
+                <div className="color-overlay" />
+              </div>
+
+              {/* Color Info */}
+              <div className="color-info">
+                <div className="color-dot-wrapper">
+                  <span 
+                    className="color-dot" 
+                    style={{ 
+                      backgroundColor: getColorHex(color.value),
+                      border: color.value === 'white' ? '1px solid #E5E7EB' : 'none'
+                    }}
+                  />
+                </div>
+                <h4 className="color-name">{color.name}</h4>
+                <motion.button
+                  className="color-shop-btn"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleColorClick(color.value);
+                  }}
+                >
+                  Shop {color.name}
+                  <span className="color-arrow">→</span>
+                </motion.button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
+// Helper function to get hex color for the dot
+const getColorHex = (colorValue) => {
+  const colorMap = {
+    'brown': '#8B7355',
+    'black': '#1A1A1A',
+    'maroon': '#800000',
+    'zinc': '#71717A',
+    'navy blue': '#1B2A4A',
+    'white': '#F5F5F5',
+    'skin': '#E8C5B0',
+    'burgundy': '#900020',
+    'purple': '#6B3FA0',
+    'grey': '#808080',
+    'plum': '#8E4585',
+    'red': '#DC2626',
+    'gold': '#D4AF37',
+    'blue': '#2563EB',
+    'silver': '#C0C0C0',
+    'beige': '#F5F5DC',
+    'green': '#16A34A',
+    'sagegreen': '#9CAF88'
+  };
+  return colorMap[colorValue] || '#CCCCCC';
+};
+
+export default HeroSection;

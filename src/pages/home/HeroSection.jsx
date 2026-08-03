@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import card1 from '../../assets/card-1.png';
 import card2 from '../../assets/card-2.png';
 import card3 from '../../assets/card-3.png';
-import './hero.css';
+import './CategoriesSection.css';
 
 // Animation variants
 const containerVariants = {
@@ -37,27 +37,44 @@ const cardVariants = {
   }
 };
 
-// Color palette based on your requirements
-const colorPalette = [
-  { id: 1, name: 'Brown', hex: '#8B7355', image: card1 },
-  { id: 2, name: 'Black', hex: '#1A1A1A', image: card2 },
-  { id: 3, name: 'Maroon', hex: '#800000', image: card3 },
-  { id: 4, name: 'Zinc', hex: '#71717A', image: card1 },
-  { id: 5, name: 'Navy Blue', hex: '#1B2A4A', image: card2 },
-  { id: 6, name: 'White', hex: '#F5F5F5', image: card3 },
-  { id: 7, name: 'Skin', hex: '#E8C5B0', image: card1 },
-  { id: 8, name: 'Burgundy', hex: '#900020', image: card2 },
-  { id: 9, name: 'Purple', hex: '#6B3FA0', image: card3 },
-  { id: 10, name: 'Grey', hex: '#808080', image: card1 },
-  { id: 11, name: 'Plum', hex: '#8E4585', image: card2 },
+// Colors from your filters - exactly matching the colors array
+const colorCards = [
+  { id: 1, name: 'Brown', value: 'brown', image: card1 },
+  { id: 2, name: 'Black', value: 'black', image: card2 },
+  { id: 3, name: 'Maroon', value: 'maroon', image: card3 },
+  { id: 4, name: 'Zinc', value: 'zinc', image: card1 },
+  { id: 5, name: 'Navy Blue', value: 'navy blue', image: card2 },
+  { id: 6, name: 'White', value: 'white', image: card3 },
+  { id: 7, name: 'Skin', value: 'skin', image: card1 },
+  { id: 8, name: 'Burgundy', value: 'burgundy', image: card2 },
+  { id: 9, name: 'Purple', value: 'purple', image: card3 },
+  { id: 10, name: 'Grey', value: 'grey', image: card1 },
+  { id: 11, name: 'Plum', value: 'plum', image: card2 },
+  { id: 12, name: 'Red', value: 'red', image: card3 },
+  { id: 13, name: 'Gold', value: 'gold', image: card1 },
+  { id: 14, name: 'Blue', value: 'blue', image: card2 },
+  { id: 15, name: 'Silver', value: 'silver', image: card3 },
+  { id: 16, name: 'Beige', value: 'beige', image: card1 },
+  { id: 17, name: 'Green', value: 'green', image: card2 },
+  { id: 18, name: 'Sage Green', value: 'sagegreen', image: card3 },
 ];
+
+// Display only unique colors (remove duplicates)
+const uniqueColors = [];
+const seen = new Set();
+colorCards.forEach(color => {
+  if (!seen.has(color.value)) {
+    seen.add(color.value);
+    uniqueColors.push(color);
+  }
+});
 
 const HeroSection = () => {
   const navigate = useNavigate();
 
-  const handleColorClick = (colorName) => {
+  const handleColorClick = (colorValue) => {
     navigate('/shop', {
-      state: { color: colorName }
+      state: { color: colorValue }
     });
   };
 
@@ -90,7 +107,7 @@ const HeroSection = () => {
 
         {/* Color Grid */}
         <div className="color-palette-grid">
-          {colorPalette.map((color, index) => (
+          {uniqueColors.map((color, index) => (
             <motion.div
               key={color.id}
               className="color-card"
@@ -98,7 +115,7 @@ const HeroSection = () => {
               initial="hidden"
               animate="visible"
               whileHover="hover"
-              onClick={() => handleColorClick(color.name)}
+              onClick={() => handleColorClick(color.value)}
               style={{ cursor: 'pointer' }}
             >
               {/* Color Image */}
@@ -119,8 +136,8 @@ const HeroSection = () => {
                   <span 
                     className="color-dot" 
                     style={{ 
-                      backgroundColor: color.hex,
-                      border: color.name === 'White' ? '1px solid #E5E7EB' : 'none'
+                      backgroundColor: getColorHex(color.value),
+                      border: color.value === 'white' ? '1px solid #E5E7EB' : 'none'
                     }}
                   />
                 </div>
@@ -131,7 +148,7 @@ const HeroSection = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleColorClick(color.name);
+                    handleColorClick(color.value);
                   }}
                 >
                   Shop {color.name}
@@ -144,6 +161,32 @@ const HeroSection = () => {
       </motion.div>
     </section>
   );
+};
+
+// Helper function to get hex color for the dot
+const getColorHex = (colorValue) => {
+  const colorMap = {
+    'brown': '#8B7355',
+    'black': '#1A1A1A',
+    'maroon': '#800000',
+    'zinc': '#71717A',
+    'navy blue': '#1B2A4A',
+    'white': '#F5F5F5',
+    'skin': '#E8C5B0',
+    'burgundy': '#900020',
+    'purple': '#6B3FA0',
+    'grey': '#808080',
+    'plum': '#8E4585',
+    'red': '#DC2626',
+    'gold': '#D4AF37',
+    'blue': '#2563EB',
+    'silver': '#C0C0C0',
+    'beige': '#F5F5DC',
+    'green': '#16A34A',
+    'sagegreen': '#9CAF88',
+    'pink': '#f107de'
+  };
+  return colorMap[colorValue] || '#CCCCCC';
 };
 
 export default HeroSection;
