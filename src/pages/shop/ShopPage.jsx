@@ -13,7 +13,7 @@ const filters = {
         { label: 'PKR 2000 - PKR 3000', min: 2000, max: 3000 },
         { label: 'PKR 3000 and above', min: 3000, max: Infinity }
     ],
-    age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10']
+    // age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10'] // COMMENTED OUT
 };
 
 const ShopPage = () => {
@@ -23,7 +23,7 @@ const ShopPage = () => {
     const [filtersState, setFiltersState] = useState({
         category: location.state?.category || 'all',
         color: 'all',
-        age: 'all',
+        // age: 'all', // COMMENTED OUT
         priceRange: ''
     });
 
@@ -31,13 +31,13 @@ const ShopPage = () => {
         category: false,
         color: false,
         price: false,
-        age: false
+        // age: false // COMMENTED OUT
     });
 
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage] = useState(8);
 
-    const { category, color, priceRange, age } = filtersState;
+    const { category, color, priceRange } = filtersState; // Removed age
     const [minPrice, maxPrice] = priceRange ? priceRange.split('-').map(Number) : [NaN, NaN];
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const ShopPage = () => {
     } = useFetchAllProductsQuery({
         category: category !== 'all' ? category : '',
         color: color !== 'all' ? color : '',
-        age: age !== 'all' ? age : '',
+        // age: age !== 'all' ? age : '', // COMMENTED OUT
         minPrice: isNaN(minPrice) ? '' : minPrice,
         maxPrice: isNaN(maxPrice) ? '' : maxPrice,
         page: currentPage,
@@ -89,7 +89,7 @@ const ShopPage = () => {
         setFiltersState({
             category: 'all',
             color: 'all',
-            age: 'all',
+            // age: 'all', // COMMENTED OUT
             priceRange: ''
         });
         setCurrentPage(1);
@@ -294,7 +294,8 @@ const ShopPage = () => {
                                 )}
                             </div>
 
-                            <div className="mb-4">
+                            {/* AGE FILTER - COMMENTED OUT */}
+                            {/* <div className="mb-4">
                                 <button
                                     onClick={() => toggleMobileFilter('age')}
                                     className="w-full flex justify-between items-center p-3 bg-gray-100 rounded-md"
@@ -331,7 +332,7 @@ const ShopPage = () => {
                                         ))}
                                     </div>
                                 )}
-                            </div>
+                            </div> */}
 
                             <button
                                 onClick={clearFilters}
@@ -342,7 +343,7 @@ const ShopPage = () => {
                         </div>
                     ) : (
                         <ShopFiltering
-                            filters={{ ...filters, ages: filters.age }}
+                            filters={{ ...filters }} // Removed ages from here
                             filtersState={filtersState}
                             setFiltersState={setFiltersState}
                             clearFilters={clearFilters}
