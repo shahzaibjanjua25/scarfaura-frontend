@@ -23,7 +23,7 @@ const filters = {
         { label: 'PKR 2000 - PKR 3000', min: 2000, max: 3000 },
         { label: 'PKR 3000 and above', min: 3000, max: Infinity }
     ],
- age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10']
+//  age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10']
 };
 
 const ShopPage = () => {

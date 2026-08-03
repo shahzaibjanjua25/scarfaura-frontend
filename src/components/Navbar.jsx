@@ -136,7 +136,7 @@ const Navbar = () => {
           <ul className="hidden md:flex nav__links gap-8">
             <li className="link"><Link to="/">Home</Link></li>
             <li className="link"><Link to="/shop">Shop</Link></li>
-            <li className="link"><Link to="/">Pages</Link></li>
+            <li className="link"><Link to="/shop">Categories</Link></li>
             <li className="link">
               <a
                 href="https://wa.me/message/JU2BB6GQGTCBL1"

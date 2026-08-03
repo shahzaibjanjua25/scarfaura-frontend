@@ -19,14 +19,14 @@ const categories = [
     { label: 'Mustart Yellow', value: 'Mustart Yellow' }  
 ];
 
-const ageOptions = [
-    { label: 'Select Age', value: '' },
-    { label: '1-2 years', value: '1' },  
-    { label: '3-4 years', value: '2' },  
-    { label: '5-6 years', value: '3' }, 
-    { label: '7-8 years', value: '4' },  
-    { label: '9-10 years', value: '5' }
-];
+// const ageOptions = [
+//     { label: 'Select Age', value: '' },
+//     { label: '1-2 years', value: '1' },  
+//     { label: '3-4 years', value: '2' },  
+//     { label: '5-6 years', value: '3' }, 
+//     { label: '7-8 years', value: '4' },  
+//     { label: '9-10 years', value: '5' }
+// ];
 
 const colors = [
     { label: 'Select Color', value: '' },

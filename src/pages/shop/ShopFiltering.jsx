@@ -75,7 +75,7 @@ const ShopFiltering = ({
       </div>
 
       {/* Age Filter */}
-      <div className="flex flex-col space-y-2">
+      {/* <div className="flex flex-col space-y-2">
         <h4 className='font-medium text-lg'>Age</h4>
         <hr />
         {filters.age?.map(age => (
@@ -90,7 +90,7 @@ const ShopFiltering = ({
             <span className='ml-1'>{age}</span>
           </label>
         ))}
-      </div>
+      </div> */}
 
       {/* Clear Filters Button */}
       <button 
