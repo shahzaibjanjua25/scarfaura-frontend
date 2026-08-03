@@ -111,7 +111,7 @@ const Navbar = () => {
               <Link to="/">
                 <img
                   src={logo}
-                  alt="Scarfaura Kids Clothing Store Logo"
+                  alt="Scarfaura  Logo"
                   style={{
                     width: '50px',
                     height: '50px',
@@ -127,7 +127,7 @@ const Navbar = () => {
             {/* Text logo (hidden on mobile) */}
             <div className="hidden md:block nav__logo-text">
               <Link to="/" className="text-lg font-semibold">
-                Scarfaura Kids Clothing Store<span className="text-primary">.</span>
+                Scarfaura <span className="text-primary">.</span>
               </Link>
             </div>
           </div>

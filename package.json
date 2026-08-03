@@ -1,5 +1,5 @@
 {
-  "name": "Scarfaura Kids Clothing Store-ecommerce-store",
+  "name": "Scarfaura -ecommerce-store",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "express-validator": "^7.2.1",
     "framer-motion": "^12.23.6",
+    "mongodb": "^7.5.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",

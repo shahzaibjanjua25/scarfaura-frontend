@@ -19,28 +19,28 @@ const CategoriesSection = () => {
 const categories = [
   {
     id: 1,
-    title: "Tops and tees",
+    title: "Printed Hijabs",
     discount: "Up to 20% Off",
     image: category1,
     description: "Discover our latest collection of kids' fashion"
   },
   {
     id: 2,
-    title: "Shirts and polos",
+    title: "Chiffon Hijabs",
     discount: "Up to 15% Off",
     image: category2,
     description: "Lightweight and comfortable summer outfits"
   },
   {
     id: 3,
-    title: "Bottoms",
+    title: "Modal Hijabs",
     discount: "Up to 25% Off",
     image: category3,
     description: "Keep your kids warm with our cozy winter collection"
   },
   {
     id: 4,
-    title: "Jacket and coats",
+    title: "Jersey Hijabs",
     discount: "Up to 35% Off",
     image: category7,
     description: "Keep your kids warm with our cozy winter collection"

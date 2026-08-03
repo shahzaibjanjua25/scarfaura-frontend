@@ -8,10 +8,10 @@ import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../../../
 
 const categories = [
     { label: 'All Categories', value: 'all' },
-    { label: 'Tops and tees', value: 'Tops and tees' },
-    { label: 'Shirts and polos', value: 'Shirts and polos' },
-    { label: 'Bottoms', value: 'Bottoms' },
-    { label: 'Jacket and coats', value: 'Jacket and coats' },
+    { label: 'Printed Hijabs', value: 'Printed Hijabs' },
+    { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },
+    { label: 'Modal Hijabs', value: 'Modal Hijabs' },
+    { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
     { label: 'New Arrivals (Boys)', value: 'New Arrivals (Boys)' },
     { label: 'New Arrivals (Girls)', value: 'New Arrivals (Girls)' },
     { label: 'Kids Shirts', value: 'kids-shirts' },

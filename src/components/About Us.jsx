@@ -7,7 +7,7 @@ const AboutUs = () => {
     <div className="about-us-container">
       <section className="about-hero">
         <div className="hero-content">
-          <h1>About Scarfaura Kids Clothing Store</h1>
+          <h1>About Scarfaura </h1>
           <p>Where comfort meets style for your little ones!</p>
         </div>
       </section>
@@ -18,7 +18,7 @@ const AboutUs = () => {
             <h2>Welcome to Our Story</h2>
             <p>
               At Scarfaura, we specialize in high-quality, affordable clothing for children of all ages. 
-              From everyday Tops and tees to formal wear and festive outfits, our handpicked collections are 
+              From everyday Printed Hijabs to formal wear and festive outfits, our handpicked collections are 
               designed to keep your kids looking stylish and feeling comfortable — all year round.
             </p>
           </div>
@@ -47,8 +47,8 @@ const AboutUs = () => {
           <div className="visit-us">
             <h2>Visit Us</h2>
             <div className="contact-info">
-              <p><span className="icon location-icon"></span> WPHM+JH2, City Dispensary Street, Toya Mohallah, Jhelum 49600, Pakistan</p>
-              <p><span className="icon phone-icon"></span> Call or WhatsApp: +92 319 8445823</p>
+              <p><span className="icon location-icon"></span> Dheri Hassanabad, Rawalpindi</p>
+              <p><span className="icon phone-icon"></span> Call or WhatsApp: +9231302677570</p>
               <p><span className="icon email-icon"></span> Email: sch19435@gmail.com</p>
             </div>
           </div>

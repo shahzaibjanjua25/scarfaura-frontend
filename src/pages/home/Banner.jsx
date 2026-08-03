@@ -7,9 +7,9 @@ const Banner = () => {
     <header className="section__container header__container">
       <div className="header__content z-30">
         <h4>UP TO 20% DISCOUNT ON</h4>
-        <h1>Girl's Fashion</h1>
+        <h1>Welcome to Scarfura</h1>
         <p>
-          Discover the latest trends and express your unique style with our Kids's Fashion website. Explore a curated collection of clothing, Tops and tees, and footwear that caters to every taste and occasion.
+          A collection of premium scarves designed to move with you through every moment. Soft fabrics, timeless silhouettes, and understated elegance come together to create pieces you'll reach for every day.
         </p>
         <button className="btn"><Link to="/shop">Shop NOW</Link></button>
       </div>

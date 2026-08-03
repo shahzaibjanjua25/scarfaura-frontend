@@ -14,7 +14,7 @@ const DealsSection = () => {
       <p>
         Our Kids's Fashion Deals of the Month are here to make your style
         dreams a reality without breaking the bank. Discover a curated
-        collection of exquisite clothing, Tops and tees, and footwear, all
+        collection of exquisite clothing, Printed Hijabs, and footwear, all
         handpicked to elevate your wardrobe.
       </p>
       <div className="deals__countdown flex-wrap">

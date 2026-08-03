@@ -76,7 +76,7 @@ const SocialMediaLinks = () => {
       </a>
 
       <a 
-        href="https://www.instagram.com/al_https://www.instagram.com/scarfaura._?igsh=OW9uNTQxeDZ1OWVp_clothing_store?igsh=MW00enJzejJodjUydg==" 
+        href="https://www.instagram.com/scarfaura._?igsh=OW9uNTQxeDZ1OWVp" 
         target="_blank" 
         rel="noopener noreferrer"
         style={{

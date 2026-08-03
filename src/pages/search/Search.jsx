@@ -21,7 +21,7 @@ const Search = () => {
             <section className="section__container bg-primary-light">
                 <h2 className="section__header">Search Products</h2>
                 <p className="section__subheader">
-                    Browse a diverse range of categories, from chic Boutiques to versatile Tops and tees. Elevate your style today!
+                    Browse a diverse range of categories, from chic Boutiques to versatile Printed Hijabs. Elevate your style today!
                 </p>
             </section>
             <section className="section__container">

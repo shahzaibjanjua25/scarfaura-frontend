@@ -5,7 +5,7 @@ const Blogs = () => {
     <section className="section__container blog__container">
       <h2 className="section__header">Locate US</h2>
       <p className="section__subheader">
-        We are settled near to River Jhelum in Toya Mohallah Jhelum.
+        We are settled near CMH Rawalpindi
       </p>
       <div className="md:p-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {/* Blog items would go here */}

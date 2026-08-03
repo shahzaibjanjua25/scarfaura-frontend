@@ -12,15 +12,15 @@ const Footer = () => {
                     <h4>CONTACT INFO</h4>
                     <p>
                         <span><i className="ri-map-pin-2-fill"></i></span>
-                        WPHM+JH2, City Dispensary St, Toya Mohallah Jhelum, 49600, Pakistan
+                        Dheri Hassanabad, Rawalpindi
                     </p>
                     <p>
                         <span><i className="ri-mail-fill"></i></span>
-                        sch19435@gmail.com
+                        scarfauraa@gmail.com
                     </p>
                     <p>
                         <span><i className="ri-phone-fill"></i></span>
-                        +92 319 8445823
+                        +9231302677570
                     </p>
                 </div>
                 <div className="footer__col">
@@ -138,7 +138,7 @@ const Footer = () => {
                 </div>
             </footer>
             <div className="footer__bar">
-                Copyright © 2025 Scarfaura Kids Clothing Store. All rights reserved.
+                Copyright © 2025 Scarfaura. All rights reserved.
             </div>
         </>
     )

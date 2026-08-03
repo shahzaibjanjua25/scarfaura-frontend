@@ -6,10 +6,10 @@ import ShopFiltering from './ShopFiltering';
 const filters = {
     categories: [
         'all',
-        'Tops and tees',
-        'Shirts and polos',
-        'Bottoms',
-        'Jacket and coats',
+        'Printed Hijabs',
+        'Chiffon Hijabs',
+        'Modal Hijabs',
+        'Jersey Hijabs',
         'New Arrivals (Boys)',
         'New Arrivals (Girls)',
         'Kids Shirts',
