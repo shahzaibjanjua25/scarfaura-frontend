@@ -88,7 +88,7 @@ const ShopPage = () => {
                 <h2 className="section__header">Shop Page</h2>
                 <p className="section__subheader">
                     Discover the Hottest Picks: Elevate Your Style with Our Curated
-                    Collection of Trending Kids's Fashion Products.
+                    Collection of Trending Women's hijab Fashion Products.
                 </p>
             </section>
             <section className='section__container'>

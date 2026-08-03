@@ -19,7 +19,7 @@ const AboutUs = () => {
             <p>
               At Scarfaura, we specialize in high-quality, affordable clothing for children of all ages. 
               From everyday Printed Hijabs to formal wear and festive outfits, our handpicked collections are 
-              designed to keep your kids looking stylish and feeling comfortable — all year round.
+              designed to keep your Women looking stylish and feeling comfortable — all year round.
             </p>
           </div>
 
@@ -39,7 +39,7 @@ const AboutUs = () => {
               <div className="feature-card">
                 <div className="feature-icon affordable-icon"></div>
                 <h3>Affordable Fashion</h3>
-                <p>Great style shouldn't come with a high price tag. We offer fashionable kids' wear that fits your budget.</p>
+                <p>Great style shouldn't come with a high price tag. We offer fashionable Women' wear that fits your budget.</p>
               </div>
             </div>
           </div>

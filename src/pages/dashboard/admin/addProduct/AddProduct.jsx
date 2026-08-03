@@ -14,8 +14,8 @@ const categories = [
     { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },  
     { label: 'Deer Prints', value: 'Deer Prints' },  
     { label: 'Leopard Prints', value: 'Leopard Prints' },  
-    { label: 'Brown', value: 'kids-shirts' },  
-    { label: 'Chiffon', value: 'kids-casuals' },  
+    { label: 'Brown', value: 'Women-shirts' },  
+    { label: 'Chiffon', value: 'Women-casuals' },  
     { label: 'Mustart Yellow', value: 'Mustart Yellow' }  
 ];
 
@@ -179,14 +179,14 @@ const AddProduct = () => {
                     required
                 />
                 
-                <SelectInput
+                {/* <SelectInput
                     label="Age"
                     name="age"
                     value={product.age}
                     onChange={handleChange}
                     options={ageOptions}
                     required
-                />
+                /> */}
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <TextInput

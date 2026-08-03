@@ -5,7 +5,7 @@ import ShopFiltering from './ShopFiltering';
 import { useFetchAllProductsQuery } from '../../redux/features/products/productsApi';
 
 const filters = {
-    categories: ['all', 'Tops and tees', 'Shirts and polos', 'Bottoms', 'Jacket and coats', 'New Arrivals (Boys)', 'New Arrivals (Girls)', 'Kids Shirts', 'kids Casuals', 'Sweatshirts and hoodies'],
+    categories: ['all', 'Tops and tees', 'Shirts and polos', 'Bottoms', 'Jacket and coats', 'New Arrivals (Boys)', 'New Arrivals (Girls)', 'Women Shirts', 'Women Casuals', 'Sweatshirts and hoodies'],
     colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green'],
     priceRanges: [
         { label: 'Under PKR 1000', min: 0, max: 1000 },
@@ -141,7 +141,7 @@ const ShopPage = () => {
                 <h2 className="section__header">Shop Page</h2>
                 <p className="section__subheader">
                     Discover the Hottest Picks: Elevate Your Style with Our Curated
-                    Collection of Trending Kids's Fashion Products.
+                    Collection of Trending Women's hijab Fashion Products.
                 </p>
             </section>
             <section className='section__container'>

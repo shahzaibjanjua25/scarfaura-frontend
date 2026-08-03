@@ -12,7 +12,7 @@ const DealsSection = () => {
       <h5>Get Up To 20% Discount</h5>
       <h4>Deals Of This Month</h4>
       <p>
-        Our Kids's Fashion Deals of the Month are here to make your style
+        Our Women's hijab Fashion Deals of the Month are here to make your style
         dreams a reality without breaking the bank. Discover a curated
         collection of exquisite clothing, Printed Hijabs, and footwear, all
         handpicked to elevate your wardrobe.
