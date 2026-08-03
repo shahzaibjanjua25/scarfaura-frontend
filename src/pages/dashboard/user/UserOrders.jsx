@@ -25,23 +25,6 @@ const UserOrders = () => {
       </div>
     );
   }
-
-  if (isError) {
-    return (
-      <div className="bg-red-50 border-l-4 border-red-500 p-4">
-        <p className="text-sm text-red-700">
-          Failed to load your orders.
-          <button
-            onClick={refetch}
-            className="ml-2 text-sm font-medium text-red-600 hover:text-red-500"
-          >
-            Retry
-          </button>
-        </p>
-      </div>
-    );
-  }
-
   if (!orders.length) {
     return (
       <div className="text-center py-12">
@@ -65,6 +48,23 @@ const UserOrders = () => {
       </div>
     );
   }
+
+  if (isError) {
+    return (
+      <div className="bg-red-50 border-l-4 border-red-500 p-4">
+        <p className="text-sm text-red-700">
+          Failed to load your orders.
+          <button
+            onClick={refetch}
+            className="ml-2 text-sm font-medium text-red-600 hover:text-red-500"
+          >
+            Retry
+          </button>
+        </p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
