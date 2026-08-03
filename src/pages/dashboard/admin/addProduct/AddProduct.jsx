@@ -67,8 +67,10 @@ const AddProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
+        // if (!product.name || !product.category || !product.price || !product.color || 
+        //     !product.age || !product.description || !image) {
         if (!product.name || !product.category || !product.price || !product.color || 
-            !product.age || !product.description || !image) {
+             !product.description || !image) {
             setDialog({
                 show: true,
                 type: 'error',
