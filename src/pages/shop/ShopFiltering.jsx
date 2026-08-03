@@ -4,14 +4,14 @@ const ShopFiltering = ({
   filters = {
     categories: [],
     colors: [],
-    priceRanges: [],
-    age: []
+    priceRanges: []
+    // age: []
   }, 
   filtersState = {
     category: 'all',
     color: 'all',
-    priceRange: 'all',
-    age: 'all'
+    priceRange: 'all'
+    // age: 'all'
   }, 
   setFiltersState, 
   clearFilters 
@@ -98,8 +98,8 @@ const ShopFiltering = ({
         onClick={() => clearFilters({
           category: 'all',
           color: 'all',
-          priceRange: 'all',
-          age: 'all'
+          priceRange: 'all'
+          // age: 'all'
         })}
       >
         Clear All Filters

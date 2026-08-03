@@ -45,7 +45,7 @@ const AddProduct = () => {
         name: '',
         category: '',
         color: '',
-        age: '',
+        // age: '',
         price: '',
         oldPrice: '',
         description: ''
@@ -86,8 +86,8 @@ const AddProduct = () => {
                 author: user?._id,
                 // Convert string numbers to actual numbers
                 price: Number(product.price),
-                oldPrice: product.oldPrice ? Number(product.oldPrice) : null,
-                age: Number(product.age)
+                oldPrice: product.oldPrice ? Number(product.oldPrice) : null
+                // age: Number(product.age)
             };
             
             await addProduct(productData).unwrap();
@@ -103,7 +103,7 @@ const AddProduct = () => {
                     name: '', 
                     category: '', 
                     color: '', 
-                    age: '', 
+                    // age: '', 
                     price: '', 
                     oldPrice: '', 
                     description: '' 

@@ -69,7 +69,7 @@ const SingleProduct = () => {
                         <div className="flex flex-col space-y-2">
                             <p><strong>Category:</strong> {singleProduct.category}</p>
                             <p><strong>Color:</strong> {singleProduct.color}</p>
-                            <p><strong>Age:</strong> {singleProduct.age} years</p>
+                            {/* <p><strong>Age:</strong> {singleProduct.age} years</p> */}
                             <div className='flex gap-1 items-center'>
                                 <strong>Rating:</strong>
                                 <RatingStars rating={singleProduct.rating} />

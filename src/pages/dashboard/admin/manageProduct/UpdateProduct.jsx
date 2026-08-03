@@ -41,7 +41,7 @@ const UpdateProduct = () => {
         color: '',
         price: '',
         oldPrice: '',
-        age: '',
+        // age: '',
         description: '',
         image: ''
     });
@@ -61,7 +61,7 @@ const UpdateProduct = () => {
                 color: color || '',
                 price: price || '',
                 oldPrice: oldPrice || '',
-                age: age || '',
+                // age: age || '',
                 description: description || '',
                 image: image || ''
             });

@@ -31,8 +31,8 @@ const ShopPage = () => {
     const [filtersState, setFiltersState] = useState({
         category: 'all',
         color: 'all',
-        priceRange: '',
-        age:''
+        priceRange: ''
+        // age:''
     });
 
     const applyFilters = () => {
@@ -51,11 +51,11 @@ const ShopPage = () => {
                 product => product.color === filtersState.color
             );
         }
-         if (filtersState.age && filtersState.age !== 'all') {
-            filteredProducts = filteredProducts.filter(
-                product => product.age === filtersState.age
-            );
-        }
+        //  if (filtersState.age && filtersState.age !== 'all') {
+        //     filteredProducts = filteredProducts.filter(
+        //         product => product.age === filtersState.age
+        //     );
+        // }
 
         // Filter by price range
         if (filtersState.priceRange) {
@@ -76,8 +76,8 @@ const ShopPage = () => {
         setFiltersState({
             category: 'all',
             color: 'all',
-            priceRange: '',
-            age: ''
+            priceRange: ''
+            // age: ''
         });
     };
 

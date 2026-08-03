@@ -16,7 +16,7 @@ export const productsApi = createApi({
           color: color || '',
           minPrice: minPrice || 0,
           maxPrice: maxPrice || '',
-          age: age || '',
+          // age: age || '',
           page: page.toString(),
           limit: limit.toString()
         }).toString();

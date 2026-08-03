@@ -19,7 +19,7 @@ const ManageProducts = () => {
         color: '',
         minPrice: '',
         maxPrice: '',
-        age:'',
+        // age:'',
         page: currentPage,
         limit: productsPerPage
     });
