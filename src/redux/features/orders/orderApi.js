@@ -10,32 +10,70 @@ export const orderApi = createApi({
   }),
   tagTypes: ['Order'],
   endpoints: (builder) => ({
-    // ✅ Ensure getAllOrders always returns an array
+    // Get orders by email
+    getOrdersByEmail: builder.query({
+      query: (email) => ({
+        url: `/${email}`,
+        method: 'GET',
+      }),
+      // ✅ FIX: Transform response to ensure it's always an array
+      transformResponse: (response) => {
+        console.log('📦 getOrdersByEmail response:', response);
+        if (Array.isArray(response)) return response;
+        if (response?.orders && Array.isArray(response.orders)) return response.orders;
+        if (response?.data && Array.isArray(response.data)) return response.data;
+        return [];
+      },
+      providesTags: ['Order'],
+    }),
+
+    // Get order by ID
+    getOrderById: builder.query({
+      query: (orderId) => ({
+        url: `/order/${orderId}`,
+        method: 'GET',
+      }),
+      transformResponse: (response) => {
+        if (response && typeof response === 'object') return response;
+        return null;
+      },
+      providesTags: ['Order'],
+    }),
+
+    // Get all orders (admin)
     getAllOrders: builder.query({
       query: () => ({
         url: '/',
         method: 'GET',
       }),
-      // ✅ Transform response to ensure it's always an array
       transformResponse: (response) => {
-        // If response is an array, return it
-        if (Array.isArray(response)) {
-          return response;
-        }
-        // If response is an object with orders property
-        if (response && typeof response === 'object' && Array.isArray(response.orders)) {
-          return response.orders;
-        }
-        // If response is an object with data property
-        if (response && typeof response === 'object' && Array.isArray(response.data)) {
-          return response.data;
-        }
-        // Default: return empty array
+        console.log('📦 getAllOrders response:', response);
+        if (Array.isArray(response)) return response;
+        if (response?.orders && Array.isArray(response.orders)) return response.orders;
+        if (response?.data && Array.isArray(response.data)) return response.data;
         return [];
       },
       providesTags: ['Order'],
     }),
-    // ... other endpoints
+
+    // Update order status
+    updateOrderStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/update-order-status/${id}`,
+        method: 'PATCH',
+        body: { status },
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
+    // Delete order
+    deleteOrder: builder.mutation({
+      query: (id) => ({
+        url: `/delete-order/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Order'],
+    }),
   }),
 });
 

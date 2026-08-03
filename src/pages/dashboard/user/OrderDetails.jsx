@@ -8,14 +8,21 @@ const OrderDetails = () => {
     const { data: order, error, isLoading } = useGetOrderByIdQuery(orderId);
 
     if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    if (error) return <div>Error: {error?.message || 'Failed to load order'}</div>;
+    
+    // ✅ FIX: Check if order exists
+    if (!order) return <div>Order not found</div>;
+
+    // ✅ FIX: Ensure order has required properties
+    const orderStatus = order.status || 'pending';
+    const orderIdDisplay = order.orderId || order._id?.slice(-6) || 'N/A';
 
     const isCompleted = (status) => {
         const statuses = ['pending', 'processing', 'shipped', 'Delivered'];
-        return statuses.indexOf(status) < statuses.indexOf(order.status);
+        return statuses.indexOf(status) < statuses.indexOf(orderStatus);
     };
 
-    const isCurrent = (status) => order.status === status;
+    const isCurrent = (status) => orderStatus === status;
 
     const steps = [
         {
@@ -44,13 +51,35 @@ const OrderDetails = () => {
         },
     ];
 
+    // ✅ FIX: Ensure products is an array
+    const products = Array.isArray(order.products) ? order.products : [];
+
     return (
         <div className="section__container rounded p-6">
             <h2 className="text-2xl font-semibold mb-4">
-                Payment {order.status}
+                Payment {orderStatus}
             </h2>
-            <p className="mb-4">Order ID: {order.orderId}</p>
-            <p className="mb-8">Status: {order.status}</p>
+            <p className="mb-4">Order ID: {orderIdDisplay}</p>
+            <p className="mb-8">Status: {orderStatus}</p>
+
+            {/* Order Summary */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-semibold mb-2">Order Summary</h3>
+                {products.length === 0 ? (
+                    <p>No products in this order</p>
+                ) : (
+                    products.map((product, index) => (
+                        <div key={product._id || index} className="flex justify-between py-2 border-b">
+                            <span>{product.name || 'Product'}</span>
+                            <span>PKR {(product.price || 0).toFixed(2)} x {product.quantity || 1}</span>
+                        </div>
+                    ))
+                )}
+                <div className="flex justify-between py-2 font-bold">
+                    <span>Total</span>
+                    <span>PKR {order.totalAmount || order.totalPrice || '0.00'}</span>
+                </div>
+            </div>
 
             {/* Timeline */}
             <ol className="items-center sm:flex relative">
