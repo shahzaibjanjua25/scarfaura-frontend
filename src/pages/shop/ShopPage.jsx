@@ -5,7 +5,18 @@ import ShopFiltering from './ShopFiltering';
 import { useFetchAllProductsQuery } from '../../redux/features/products/productsApi';
 
 const filters = {
-    categories: ['all', 'Tops and tees', 'Shirts and polos', 'Bottoms', 'Jacket and coats', 'New Arrivals (Boys)', 'New Arrivals (Girls)', 'Women Shirts', 'Women Casuals', 'Sweatshirts and hoodies'],
+    categories: [
+        'all',
+        'Printed Hijabs',
+        'Chiffon Hijabs',
+        'Modal Hijabs',
+        'Jersey Hijabs',
+        'Deer Prints',
+        'Leoprd Prints',
+        'Brown',
+        'Chiffon',
+        'Dark Brown'
+    ],
     colors: ['all', 'brown', 'black', 'maroon', 'zinc', 'navy blue', 'white', 'skin', 'burgundy', 'purple', 'grey', 'plum', 'red', 'gold', 'blue', 'silver', 'beige', 'green', 'sagegreen'],
     priceRanges: [
         { label: 'PKR 550', min: 0, max: 550 },
