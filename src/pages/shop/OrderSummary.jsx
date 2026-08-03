@@ -111,8 +111,10 @@ const OrderSummary = () => {
     setIsSubmitting(true);
 
     try {
-      // ✅ Build order data
+      // ✅ Build order data - user is optional
       const orderData = {
+        // ✅ Only include user if logged in
+        ...(user?._id && { user: user._id }),
         products: products.map((product) => ({
           productId: product._id || product.id,
           name: product.name || "Unnamed Product",
@@ -129,19 +131,12 @@ const OrderSummary = () => {
           zipCode: formData.postalCode.trim()
         },
         customerName: formData.name.trim(),
-        totalAmount: Number(totalPrice),
-        deliveryCharge: Number(deliveryCharge),
-        grandTotal: Number(grandTotal),
-        paymentMethod: "Cash on Delivery",
-        notes: formData.notes?.trim() || ""
+        amount: Number(totalPrice) + Number(deliveryCharge),
+        specialInstructions: formData.notes?.trim() || "",
+        paymentMethod: "Cash on Delivery"
       };
 
-      // ✅ Only add user field if logged in
-      if (user?._id) {
-        orderData.user = user._id;
-      }
-
-      console.log("📦 Submitting order:", orderData);
+      console.log("📦 Submitting order:", JSON.stringify(orderData, null, 2));
 
       const response = await fetch('https://scarfaura.vercel.app/api/orders/create-order', {
         method: "POST",
@@ -156,7 +151,8 @@ const OrderSummary = () => {
       const responseData = await response.json();
 
       if (!response.ok) {
-        const errorMsg = responseData.message || responseData.error || `HTTP error! status: ${response.status}`;
+        console.error("❌ Server response:", responseData);
+        const errorMsg = responseData.error || responseData.message || `HTTP error! status: ${response.status}`;
         throw new Error(errorMsg);
       }
 
@@ -172,7 +168,7 @@ const OrderSummary = () => {
 
       setOrderDetails({
         orderId: responseData.orderId || responseData._id,
-        amount: grandTotal.toFixed(2)
+        amount: orderData.amount.toFixed(2)
       });
       setShowModal(false);
       setShowSuccess(true);
@@ -505,8 +501,8 @@ const OrderSummary = () => {
               <button
                 onClick={handleOrderConfirmation}
                 className={`flex-1 px-4 py-3 text-white rounded-xl font-medium transition-all ${isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md"
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md"
                   }`}
                 disabled={isSubmitting}
               >
