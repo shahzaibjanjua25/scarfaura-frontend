@@ -12,9 +12,9 @@ const filters = {
         'Modal Hijabs',
         'Jersey Hijabs',
         'Deer Prints',
-        'Leoprd Prints',
+        'Leoprd Prints'
         // 'Brown',
-        'Chiffon'
+        // 'Chiffon'
         // 'Dark Brown'
     ],
     colors: ['all', 'brown', 'black', 'maroon', 'zinc', 'navy blue', 'white', 'skin', 'burgundy', 'purple', 'grey', 'plum', 'red', 'gold', 'blue', 'silver', 'beige', 'green', 'sagegreen'],
