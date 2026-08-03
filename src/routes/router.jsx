@@ -56,27 +56,27 @@ const router = createBrowserRouter([
       // Admin routes
       {
         path: 'admin2',
-        element: <PrivateRoute role="admin"><AdminDMain /></PrivateRoute>,
+        element: <PrivateRoute role="admin2"><AdminDMain /></PrivateRoute>,
       },
       {
         path: 'add-new-post',
-        element: <PrivateRoute role="admin"><AddProduct /></PrivateRoute>,
+        element: <PrivateRoute role="admin2"><AddProduct /></PrivateRoute>,
       },
       {
         path: 'manage-products',
-        element: <PrivateRoute role="admin"><ManageProducts /></PrivateRoute>,
+        element: <PrivateRoute role="admin2"><ManageProducts /></PrivateRoute>,
       },
       {
         path: 'update-product/:id',
-        element: <PrivateRoute role="admin"><UpdateProduct /></PrivateRoute>,
+        element: <PrivateRoute role="admin2"><UpdateProduct /></PrivateRoute>,
       },
       {
         path: 'users',
-        element: <PrivateRoute role="admin"><ManageUser /></PrivateRoute>,
+        element: <PrivateRoute role="admin2"><ManageUser /></PrivateRoute>,
       },
       {
         path: 'manage-orders',
-        element: <PrivateRoute role="admin"><ManageOrders /></PrivateRoute>,
+        element: <PrivateRoute role="admin2"><ManageOrders /></PrivateRoute>,
       },
     ],
   },{
