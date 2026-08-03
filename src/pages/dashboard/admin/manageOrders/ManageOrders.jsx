@@ -1,11 +1,12 @@
 import React from 'react';
-import { useGetAllOrdersQuery, useUpdateOrderStatusMutation } from '../../../../redux/features/orders/orderApi';
+import { useGetAllOrdersQuery, useUpdateOrderStatusMutation, useDeleteOrderMutation } from '../../../../redux/features/orders/orderApi';
 import { toast } from 'react-toastify';
 import { FiEdit, FiTrash2, FiRefreshCw } from 'react-icons/fi';
 
 const ManageOrders = () => {
   const { data: orders = [], isLoading, isError, refetch } = useGetAllOrdersQuery();
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
+  const [deleteOrder] = useDeleteOrderMutation(); // ✅ Add delete mutation
 
   const DELIVERY_CHARGE = 200; // Fixed delivery charge
 
@@ -19,6 +20,23 @@ const ManageOrders = () => {
     } catch (err) {
       toast.error('Failed to update order status');
       console.error('Update error:', err);
+    }
+  };
+
+  // ✅ Add delete handler
+  const handleDeleteOrder = async (orderId) => {
+    // Confirm before deleting
+    if (!window.confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      await deleteOrder(orderId).unwrap();
+      toast.success('Order deleted successfully');
+      refetch(); // Refresh the orders list
+    } catch (err) {
+      toast.error('Failed to delete order');
+      console.error('Delete error:', err);
     }
   };
 
@@ -138,10 +156,19 @@ const ManageOrders = () => {
                     {getOrderTotal(order)}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <button className="text-primary hover:text-indigo-900 mr-4">
+                    <button 
+                      className="text-primary hover:text-indigo-900 mr-4"
+                      onClick={() => {
+                        // Edit functionality - you can add edit modal here
+                        toast.info('Edit functionality coming soon');
+                      }}
+                    >
                       <FiEdit className="h-5 w-5" />
                     </button>
-                    <button className="text-red-600 hover:text-red-900">
+                    <button 
+                      className="text-red-600 hover:text-red-900"
+                      onClick={() => handleDeleteOrder(order._id)} // ✅ Add onClick handler
+                    >
                       <FiTrash2 className="h-5 w-5" />
                     </button>
                   </td>

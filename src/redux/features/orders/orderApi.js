@@ -1,64 +1,33 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getBaseUrl } from '../../../utils/baseURL';
-
+// redux/features/orders/orderApi.js
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getBaseUrl } from "../../../utils/baseURL";
 
 export const orderApi = createApi({
-  reducerPath: 'orderApi',
+  reducerPath: "orderApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${getBaseUrl()}/api/orders`,
-    credentials: 'include',
+    credentials: "include",
   }),
-  tagTypes: ["Order"],
+  tagTypes: ["Orders"],
   endpoints: (builder) => ({
-    // Fetch orders by email
-    getOrdersByEmail: builder.query({
-      query: (email) => ({
-        url: `/${email}`,
-        method: 'GET',
-      }),
-      providesTags: ['Order'],
-    }),
-    // Fetch order by ID
-    getOrderById: builder.query({
-      query: (orderId) => ({
-        url: `order/${orderId}`,
-        method: 'GET',
-      }),
-      providesTags: ['Order'],
-    }),
+    // ... existing endpoints
 
-    getAllOrders: builder.query({
-      query: () => ({
-        url: '',
-        method: 'GET',
-      }),
-      providesTags: ['Order'],
-    }),
-
-    updateOrderStatus: builder.mutation({
-      query: ({ id, status }) => ({
-        url: `/update-order-status/${id}`,
-        method: 'PATCH',
-        body: { status },
-      }),
-      invalidatesTags: ['Order'],
-    }),
+    // ✅ Add delete order mutation
     deleteOrder: builder.mutation({
-      query: (id) => ({
-        url: `/delete-order/${id}`,
-        method: 'DELETE',
+      query: (orderId) => ({
+        url: `/${orderId}`,
+        method: "DELETE",
       }),
-      invalidatesTags: ['Order'],
+      invalidatesTags: ["Orders"],
     }),
   }),
 });
 
+// ✅ Export the hook
 export const {
-  useGetOrdersByEmailQuery,
-  useGetOrderByIdQuery,
   useGetAllOrdersQuery,
+  useGetOrderByIdQuery,
+  useCreateOrderMutation,
   useUpdateOrderStatusMutation,
-  useDeleteOrderMutation
+  useDeleteOrderMutation, // ✅ Export this
 } = orderApi;
-
-export default orderApi;
