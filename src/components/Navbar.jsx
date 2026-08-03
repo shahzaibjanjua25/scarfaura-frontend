@@ -139,7 +139,7 @@ const Navbar = () => {
             <li className="link"><Link to="/">Pages</Link></li>
             <li className="link">
               <a
-                href="https://wa.me/message/OTRSHLMNW7CEE1"
+                href="https://wa.me/message/JU2BB6GQGTCBL1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link"

@@ -12,11 +12,11 @@ const categories = [
     { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },  
     { label: 'Modal Hijabs', value: 'Modal Hijabs' }, 
     { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },  
-    { label: 'New Arrivals (Boys)', value: 'New Arrivals (Boys)' },  
-    { label: 'New Arrivals (Girls)', value: 'New Arrivals (Girls)' },  
-    { label: 'Kids Shirts', value: 'kids-shirts' },  
-    { label: 'Kids Casuals', value: 'kids-casuals' },  
-    { label: 'Sweatshirts and hoodies', value: 'Sweatshirts and hoodies' }  
+    { label: 'Deer Prints', value: 'Deer Prints' },  
+    { label: 'Leopard Prints', value: 'Leopard Prints' },  
+    { label: 'Brown', value: 'kids-shirts' },  
+    { label: 'Chiffon', value: 'kids-casuals' },  
+    { label: 'Mustart Yellow', value: 'Mustart Yellow' }  
 ];
 
 const ageOptions = [
@@ -155,7 +155,7 @@ const AddProduct = () => {
                 <TextInput
                     label="Product Name"
                     name="name"
-                    placeholder="Ex: Sweatshirts and hoodies"
+                    placeholder="Ex: Mustart Yellow"
                     value={product.name}
                     onChange={handleChange}
                     required

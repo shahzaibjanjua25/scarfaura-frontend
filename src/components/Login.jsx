@@ -134,7 +134,7 @@ const Login = () => {
             </div>
 
             <a
-              href="https://wa.me/message/OTRSHLMNW7CEE1"
+              href="https://wa.me/message/JU2BB6GQGTCBL1"
               className="inline-flex items-center justify-center mt-4 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <svg className="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 24 24">

@@ -15,8 +15,9 @@ const SocialMediaLinks = () => {
       maxWidth: '600px',
       border: '1px solid #f0e6e0'
     }}>
+      {/* WhatsApp */}
       <a 
-        href="https://wa.me/message/OTRSHLMNW7CEE1" 
+        href="https://wa.me/message/JU2BB6GQGTCBL1" 
         target="_blank" 
         rel="noopener noreferrer"
         style={{
@@ -45,8 +46,9 @@ const SocialMediaLinks = () => {
         <i className="ri-whatsapp-line"></i>
       </a>
 
+      {/* Facebook */}
       <a 
-        href="https://www.facebook.com/share/1BDethAHew/" 
+        href="https://www.facebook.com/share/1HkUYmrcEE/" 
         target="_blank" 
         rel="noopener noreferrer"
         style={{
@@ -75,6 +77,7 @@ const SocialMediaLinks = () => {
         <i className="ri-facebook-fill"></i>
       </a>
 
+      {/* Instagram */}
       <a 
         href="https://www.instagram.com/scarfaura._?igsh=OW9uNTQxeDZ1OWVp" 
         target="_blank" 
@@ -105,8 +108,9 @@ const SocialMediaLinks = () => {
         <i className="ri-instagram-line"></i>
       </a>
 
+      {/* TikTok - Updated with correct link */}
       <a 
-        href="https://www.instagram.com/scarfaura._?igsh=OW9uNTQxeDZ1OWVp" 
+        href="https://www.tiktok.com/@scarfaura5?_r=1&_t=ZS-98ZeTug2XJd" 
         target="_blank" 
         rel="noopener noreferrer"
         style={{

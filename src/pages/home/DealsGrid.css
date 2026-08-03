@@ -1,10 +1,10 @@
 /* ============================================================
-   New Arrivals / Deals Grid — ScarfAura
+   Deals Grid — ScarfAura
    Palette: ink #2c241e · muted #5a4f47 · gold #c9a87c · 
    gold-dark #b8966a · sand #d4c5b0 · cream #faf8f5
    ============================================================ */
 
-.deals-grid__wrapper {
+.deals-grid__container {
   --sa-ink: #2c241e;
   --sa-muted: #5a4f47;
   --sa-gold: #c9a87c;
@@ -15,7 +15,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 4rem 1.25rem;
-  /* background-color: var(--sa-cream); */
+  background-color: var(--sa-cream);
 }
 
 /* ---------- Header ---------------------------------------- */
@@ -112,7 +112,6 @@
   opacity: 0;
   transform: translateY(30px);
   animation: floatInUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  cursor: pointer;
 }
 
 .deals-grid__card:nth-child(1) {
@@ -126,18 +125,6 @@
 .deals-grid__card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 40px rgba(44, 36, 30, 0.12);
-}
-
-/* Make entire card clickable */
-.deals-grid__card .deals-grid__button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.deals-grid__button {
-  position: relative;
 }
 
 /* ---------- Image ----------------------------------------- */
@@ -262,7 +249,6 @@
   transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
   position: relative;
   overflow: hidden;
-  z-index: 2;
 }
 
 .deals-grid__button::before {
@@ -340,7 +326,7 @@
 /* ---------- Responsive ------------------------------------ */
 
 @media (min-width: 640px) {
-  .deals-grid__wrapper {
+  .deals-grid__container {
     padding: 5rem 2rem;
   }
   
@@ -351,7 +337,7 @@
 }
 
 @media (min-width: 1024px) {
-  .deals-grid__wrapper {
+  .deals-grid__container {
     padding: 6rem 3rem;
   }
   
@@ -393,20 +379,5 @@
   
   .deals-grid__button::before {
     display: none;
-  }
-}
-
-/* Touch devices - disable hover animations */
-@media (hover: none) {
-  .deals-grid__card:hover {
-    transform: none !important;
-  }
-  
-  .deals-grid__card:hover .deals-grid__image {
-    transform: none !important;
-  }
-  
-  .deals-grid__image-overlay {
-    opacity: 1;
   }
 }

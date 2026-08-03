@@ -1,38 +1,231 @@
-.hero__container {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
+/* ============================================================
+   Hero / Trend Cards — ScarfAura
+   Shares the hero palette:
+   ink #2c241e · muted #5a4f47 · gold #c9a87c · gold-dark #b8966a
+   sand #d4c5b0 · cream #faf8f5
+   ============================================================ */
+
+.hero__section {
+  --sa-ink: #2c241e;
+  --sa-muted: #5a4f47;
+  --sa-gold: #c9a87c;
+  --sa-gold-dark: #b8966a;
+  --sa-sand: #d4c5b0;
+  --sa-cream: #faf8f5;
+
+  background-color: var(--sa-cream);
+  padding: 4rem 1.25rem;
 }
+
+/* ---------- Header ---------------------------------------- */
+
+.hero__header {
+  max-width: 34rem;
+  margin: 0 auto 2.75rem;
+  text-align: center;
+}
+
+.hero__eyebrow-line {
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  font-size: 0.625rem;
+  font-weight: 300;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--sa-gold);
+}
+
+.hero__section-title {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--sa-ink);
+}
+
+/* ---------- Grid ------------------------------------------ */
+/* Was: flex + space-between with no wrap, so three cards were
+   force-squeezed onto one row at every width. */
+
+.hero__container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 78rem;
+  margin: 0 auto;
+}
+
+/* ---------- Card ------------------------------------------ */
 
 .hero__card {
   position: relative;
+  display: block;
   overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
+  background-color: #efe9e1;
+  border: 1px solid rgba(212, 197, 176, 0.5);
+  border-radius: 2px;
+  transition: border-color 0.5s ease;
 }
 
-.hero__card img {
-  width: 100%;
-  height: auto;
-  display: block;
-  transition: transform 0.3s ease;
+.hero__card:hover {
+  border-color: var(--sa-gold);
 }
+
+.hero__card:focus-within {
+  outline: 1px solid var(--sa-gold);
+  outline-offset: 4px;
+}
+
+/* ---------- Media ----------------------------------------- */
+/* aspect-ratio replaces height:auto, so all three cards match
+   no matter what dimensions the source PNGs happen to be. */
+
+.hero__card-media {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.hero__card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.hero__card:hover .hero__card-media img {
+  transform: scale(1.06);
+}
+
+.hero__card-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(30, 24, 20, 0.82) 0%,
+    rgba(30, 24, 20, 0.45) 32%,
+    rgba(30, 24, 20, 0.08) 62%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ---------- Content --------------------------------------- */
 
 .hero__content {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-  color: white;
+  z-index: 2;
+  padding: 1.75rem 1.5rem 1.5rem;
+  color: #fff;
 }
 
-.hero__content a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  display: inline-block;
-  margin-top: 10px;
+.hero__trend {
+  margin: 0 0 0.6rem;
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--sa-sand);
+}
+
+.hero__title {
+  margin: 0 0 1rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+/* ---------- Button (stretched hit area) -------------------- */
+
+.discover-more-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.3rem 0 0.45rem;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  background: none;
+  font-family: inherit;
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.4s ease, border-color 0.4s ease;
+}
+
+/* Whole card becomes clickable, one focusable control only */
+.discover-more-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.hero__card:hover .discover-more-btn {
+  color: var(--sa-gold);
+  border-color: var(--sa-gold);
+}
+
+.discover-more-btn:focus-visible {
+  outline: none;
+}
+
+.discover-more-btn__mark {
+  font-size: 0.8rem;
+  line-height: 1;
+  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.hero__card:hover .discover-more-btn__mark {
+  transform: rotate(90deg);
+}
+
+/* ---------- Responsive ------------------------------------ */
+
+@media (min-width: 40rem) {          /* 640px */
+  .hero__section { padding: 5rem 2rem; }
+  .hero__container { grid-template-columns: repeat(2, 1fr); gap: 1.75rem; }
+  /* Odd card out spans the full row rather than leaving a gap */
+  .hero__card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .hero__card:last-child:nth-child(odd) .hero__card-media { aspect-ratio: 16 / 9; }
+}
+
+@media (min-width: 64rem) {          /* 1024px */
+  .hero__section { padding: 6.5rem 3rem; }
+  .hero__header { margin-bottom: 3.5rem; }
+  .hero__container { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .hero__card:last-child:nth-child(odd) { grid-column: auto; }
+  .hero__card:last-child:nth-child(odd) .hero__card-media { aspect-ratio: 3 / 4; }
+  .hero__content { padding: 2rem 1.75rem 1.75rem; }
+  .hero__title { font-size: 1.75rem; }
+}
+
+/* Touch devices never fire :hover — keep the cue in its resting state */
+@media (hover: none) {
+  .hero__card:hover .hero__card-media img { transform: none; }
+  .discover-more-btn { color: var(--sa-sand); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__card,
+  .hero__card-media img,
+  .discover-more-btn,
+  .discover-more-btn__mark {
+    transition: none !important;
+  }
+  .hero__card:hover .hero__card-media img { transform: none; }
+  .hero__card:hover .discover-more-btn__mark { transform: none; }
 }

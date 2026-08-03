@@ -5,7 +5,7 @@ import ShopFiltering from './ShopFiltering';
 import { useFetchAllProductsQuery } from '../../redux/features/products/productsApi';
 
 const filters = {
-    categories: ['all', 'Printed Hijabs', 'Chiffon Hijabs', 'Modal Hijabs', 'Jersey Hijabs', 'New Arrivals (Boys)', 'New Arrivals (Girls)', 'Kids Shirts', 'kids Casuals', 'Sweatshirts and hoodies'],
+    categories: ['all', 'Printed Hijabs', 'Chiffon Hijabs', 'Modal Hijabs', 'Jersey Hijabs', 'Deer Prints', 'Leopard Prints', 'Brown', 'Chiffon', 'Mustart Yellow'],
     colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green'],
     priceRanges: [
         { label: 'Under PKR 1000', min: 0, max: 1000 },

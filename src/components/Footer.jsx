@@ -44,8 +44,9 @@ const Footer = () => {
                         gap: '15px',
                         marginTop: '15px'
                     }}>
+                        {/* WhatsApp */}
                         <a 
-                            href="https://wa.me/message/OTRSHLMNW7CEE1" 
+                            href="https://wa.me/message/JU2BB6GQGTCBL1" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             style={{
@@ -66,8 +67,9 @@ const Footer = () => {
                             <i className="ri-whatsapp-line"></i>
                         </a>
 
+                        {/* Facebook */}
                         <a 
-                            href="https://www.facebook.com/share/1BDethAHew/" 
+                            href="https://www.facebook.com/share/1HkUYmrcEE/" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             style={{
@@ -88,6 +90,7 @@ const Footer = () => {
                             <i className="ri-facebook-fill"></i>
                         </a>
 
+                        {/* Instagram */}
                         <a 
                             href="https://www.instagram.com/scarfaura._?igsh=OW9uNTQxeDZ1OWVp" 
                             target="_blank" 
@@ -110,8 +113,9 @@ const Footer = () => {
                             <i className="ri-instagram-line"></i>
                         </a>
 
+                        {/* TikTok - Updated with correct link */}
                         <a 
-                            href="https://www.instagram.com/scarfaura._?igsh=OW9uNTQxeDZ1OWVp" 
+                            href="https://www.tiktok.com/@scarfaura5?_r=1&_t=ZS-98ZeTug2XJd" 
                             target="_blank" 
                             rel="noopener noreferrer"
                             style={{
@@ -124,10 +128,18 @@ const Footer = () => {
                                 backgroundColor: '#000000',
                                 color: 'white',
                                 fontSize: '20px',
-                                transition: 'all 0.3s ease'
+                                transition: 'all 0.3s ease',
+                                position: 'relative',
+                                overflow: 'hidden'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.1)';
+                                e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 242, 234, 0.3)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = 'none';
+                            }}
                         >
                             <i className="ri-tiktok-fill"></i>
                         </a>
@@ -138,7 +150,7 @@ const Footer = () => {
                 </div>
             </footer>
             <div className="footer__bar">
-                Copyright © 2025 Scarfaura. All rights reserved.
+                Copyright © 2026 Scarfaura. All rights reserved.
             </div>
         </>
     )

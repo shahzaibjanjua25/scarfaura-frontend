@@ -10,11 +10,11 @@ const filters = {
         'Chiffon Hijabs',
         'Modal Hijabs',
         'Jersey Hijabs',
-        'New Arrivals (Boys)',
-        'New Arrivals (Girls)',
-        'Kids Shirts',
-        'Kids Casuals',
-        'Sweatshirts and hoodies'
+        'Deer Prints',
+        'Leoprd Prints',
+        'Brown',
+        'Chiffon',
+        'Mustart Yellow'
     ],
     colors: ['all', 'black', 'red', 'gold', 'blue', 'silver', 'beige', 'green'],
     priceRanges: [

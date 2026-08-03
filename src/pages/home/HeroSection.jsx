@@ -54,23 +54,23 @@ const cards = [
   {
     id: 1,
     image: card1,
-    trend: '2025 Trend',
-    title: 'Kids Shirts', // Match exact category name from your filters
-    filter: 'Kids Shirts' // Added filter property
+    trend: '2026 Trend',
+    title: 'Brown', // Match exact category name from your filters
+    filter: 'Brown' // Added filter property
   },
   {
     id: 2,
     image: card2,
-    trend: '2025 Trend',
-    title: 'Sweatshirts and hoodies',
-    filter: 'Sweatshirts and hoodies'
+    trend: '2026 Trend',
+    title: 'Mustart Yellow',
+    filter: 'Mustart Yellow'
   },
   {
     id: 3,
     image: card3,
-    trend: '2025 Trend',
-    title: 'Kids Casuals',
-    filter: 'kids Casuals' // Note: matches the exact case from your filters
+    trend: '2026 Trend',
+    title: 'Chiffon',
+    filter: 'Chiffon' // Note: matches the exact case from your filters
   },
 ];
 
