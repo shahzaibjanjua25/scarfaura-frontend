@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import Home from '../pages/home/Home';
-import CategoryPage from '../pages/category/CategoryPage';
+import NewArrival from '../pages/home/NewArrival'; // ✅ Correct import name
 import ShopPage from '../pages/shop/ShopPage';
 import ErrorPage from '../components/ErrorPage';
 import Search from '../pages/search/Search';
@@ -24,7 +24,7 @@ import ManageProducts from '../pages/dashboard/admin/manageProduct/ManageProduct
 import UpdateProduct from '../pages/dashboard/admin/manageProduct/UpdateProduct';
 import ManageUser from '../pages/dashboard/admin/users/ManageUser';
 import ManageOrders from '../pages/dashboard/admin/manageOrders/ManageOrders';
-import AboutUs from "../pages/AboutUs"; // ✅ Correct import
+import AboutUs from "../pages/AboutUs";
 
 const router = createBrowserRouter([
   {
@@ -33,12 +33,12 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { path: '/', element: <Home /> },
-      { path: '/categories/:categoryName', element: <CategoryPage /> },
+      { path: '/categories/:categoryName', element: <NewArrival /> }, // ✅ Using NewArrival component
       { path: '/shop', element: <ShopPage /> },
       { path: '/search', element: <Search /> },
       { path: '/shop/:id', element: <SingleProduct /> },
       { path: '/orders/:orderId', element: <OrderDetails /> },
-      { path: '/about-us', element: <AboutUs /> }, // ✅ Moved here
+      { path: '/about-us', element: <AboutUs /> },
     ],
   },
   { path: '/login', element: <Login /> },
@@ -79,10 +79,6 @@ const router = createBrowserRouter([
         element: <PrivateRoute role="admin2"><ManageOrders /></PrivateRoute>,
       },
     ],
-  },{
-    future: {
-    v7_startTransition: true,
-  },
   }
 ]);
 

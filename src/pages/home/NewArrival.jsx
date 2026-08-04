@@ -34,8 +34,12 @@ const DealsGrid = () => {
       {/* Grid Container */}
       <div className="deals-grid__grid">
         
-        {/* First Grid Item */}
-        <div className="deals-grid__card">
+        {/* First Grid Item - Entire card clickable */}
+        <div 
+          className="deals-grid__card"
+          onClick={() => handleShopNow('Deer Prints')}
+          style={{ cursor: 'pointer' }}
+        >
           <div className="deals-grid__image-wrapper">
             <img
               src={dealsImg1}
@@ -53,7 +57,10 @@ const DealsGrid = () => {
             </p>
             <div className="deals-grid__footer">
               <button
-                onClick={() => handleShopNow('Deer Prints')}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent double trigger
+                  handleShopNow('Deer Prints');
+                }}
                 className="deals-grid__button"
               >
                 <span>Shop Now</span>
@@ -63,8 +70,12 @@ const DealsGrid = () => {
           </div>
         </div>
 
-        {/* Second Grid Item */}
-        <div className="deals-grid__card">
+        {/* Second Grid Item - Entire card clickable */}
+        <div 
+          className="deals-grid__card"
+          onClick={() => handleShopNow('Leopard Prints')}
+          style={{ cursor: 'pointer' }}
+        >
           <div className="deals-grid__image-wrapper">
             <img
               src={dealsImg2}
@@ -82,7 +93,10 @@ const DealsGrid = () => {
             </p>
             <div className="deals-grid__footer">
               <button
-                onClick={() => handleShopNow('Leopard Prints')}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent double trigger
+                  handleShopNow('Leopard Prints');
+                }}
                 className="deals-grid__button"
               >
                 <span>Shop Now</span>
