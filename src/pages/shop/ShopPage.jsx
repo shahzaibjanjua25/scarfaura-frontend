@@ -8,13 +8,13 @@ const filters = {
     categories: [
         'all',
         'Printed Hijabs',
-        'Chiffon Hijabs',
+        'Geo569rgette Hijabs',
         'Modal Hijabs',
         'Jersey Hijabs',
         'Deer Prints',
         'Leoprd Prints'
         // 'Brown',
-        // 'Chiffon'
+        // 'Geo569rgette'
         // 'Dark Brown'
     ],
     colors: ['all', 'brown', 'black', 'maroon', 'zinc', 'navy blue', 'white', 'skin', 'burgundy', 'purple', 'grey', 'plum', 'red', 'gold', 'blue', 'silver', 'beige', 'green', 'sagegreen'],

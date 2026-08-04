@@ -8,7 +8,7 @@ import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../../../
 
 const categories = [
     { label: 'Printed Hijabs', value: 'Printed Hijabs' },
-    { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },
+    { label: 'Geo569rgette Hijabs', value: 'Geo569rgette Hijabs' },
     { label: 'Modal Hijabs', value: 'Modal Hijabs' },
     { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
     { label: 'Deer Prints', value: 'Deer Prints' },
@@ -108,10 +108,10 @@ const UpdateProduct = () => {
             return;
         }
 
-        // ✅ Color is only required if "Chiffon Hijabs" is selected
-        const isColorRequired = categories.includes('Chiffon Hijabs');
+        // ✅ Color is only required if "Geo569rgette Hijabs" is selected
+        const isColorRequired = categories.includes('Geo569rgette Hijabs');
         if (isColorRequired && !color) {
-            setNotification({ show: true, type: 'error', message: 'Color is required for Chiffon Hijabs category' });
+            setNotification({ show: true, type: 'error', message: 'Color is required for Geo569rgette Hijabs category' });
             return;
         }
 
@@ -149,7 +149,7 @@ const UpdateProduct = () => {
         );
     }
 
-    const isColorRequired = product.categories.includes('Chiffon Hijabs');
+    const isColorRequired = product.categories.includes('Geo569rgette Hijabs');
 
     return (
         <div className="container mx-auto mt-8 px-4">
@@ -202,7 +202,7 @@ const UpdateProduct = () => {
                     />
                     {isColorRequired && (
                         <p className="text-xs text-amber-600 mt-1">
-                            ⚠️ Color is required when "Chiffon Hijabs" is selected
+                            ⚠️ Color is required when "Geo569rgette Hijabs" is selected
                         </p>
                     )}
                     {product.categories.length > 0 && !isColorRequired && (

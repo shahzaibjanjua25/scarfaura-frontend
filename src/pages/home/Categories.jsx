@@ -43,11 +43,11 @@ const categories = [
   },
   {
     id: 2,
-    title: "Chiffon Hijabs",
+    title: "Geo569rgette Hijabs",
     discount: "Up to 15% off",
     image: category2,
     description: "Featherlight drape with a soft sheen — made for warm days.",
-    slug: "chiffon-hijabs"
+    slug: "Geo569rgette-hijabs"
   }
 
   

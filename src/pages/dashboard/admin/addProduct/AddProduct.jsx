@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const categories = [
     { label: 'Printed Hijabs', value: 'Printed Hijabs' },
-    { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },
+    { label: 'Geo569rgette Hijabs', value: 'Geo569rgette Hijabs' },
     { label: 'Modal Hijabs', value: 'Modal Hijabs' },
     { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
     { label: 'Deer Prints', value: 'Deer Prints' },
@@ -78,7 +78,7 @@ const AddProduct = () => {
         }));
     };
 
-    const isColorRequired = product.categories.includes('Chiffon Hijabs');
+    const isColorRequired = product.categories.includes('Geo569rgette Hijabs');
 
     const showError = (message) => setDialog({ show: true, type: 'error', message });
 
@@ -92,7 +92,7 @@ const AddProduct = () => {
         }
 
         if (isColorRequired && !product.color) {
-            showError('Color is required when "Chiffon Hijabs" category is selected.');
+            showError('Color is required when "Geo569rgette Hijabs" category is selected.');
             return;
         }
 
@@ -287,7 +287,7 @@ const AddProduct = () => {
                     />
                     {isColorRequired ? (
                         <p className="text-xs text-amber-600 mt-1">
-                            Color is required when "Chiffon Hijabs" is selected
+                            Color is required when "Geo569rgette Hijabs" is selected
                         </p>
                     ) : product.categories.length > 0 && (
                         <p className="text-xs text-gray-400 mt-1">
