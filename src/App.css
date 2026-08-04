@@ -1,5 +1,235 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@400;500;600;700&display=swap");
 
+/* Add at the top of your CSS */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Fix the root container */
+#root {
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Fix the body */
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Fix the nav container */
+nav {
+  max-width: 100%;
+  padding: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Fix the nav icons to prevent overflow */
+.nav__icons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+/* Fix header container */
+.header__container {
+  min-height: auto;
+  padding: 2rem 1rem;
+}
+
+/* Fix header image position */
+.header__image img {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  transform: none;
+  max-width: 100%;
+}
+
+/* Fix deals image */
+.deals__image img {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  transform: none;
+  max-width: 100%;
+}
+
+/* Add responsive fixes for all sections */
+@media (max-width: 768px) {
+  .section__container {
+    padding: 2rem 1rem;
+  }
+
+  .header__container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .header__content {
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .header__content h1 {
+    font-size: 2.5rem;
+  }
+
+  .header__image {
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .header__image img {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    transform: none;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .deals__image {
+    min-height: auto;
+  }
+
+  .deals__image img {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    transform: none;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Fix the grid containers */
+  .categories__grid,
+  .product__grid,
+  .hero__container,
+  .banner__container,
+  .blog__grid {
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  /* Fix deals container */
+  .deals__container {
+    grid-template-columns: 1fr;
+    padding: 2rem 1rem;
+  }
+
+  .deals__content {
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .deals__countdown {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .deals__countdown__card {
+    height: 60px;
+    width: 60px;
+  }
+
+  .deals__countdown__card h4 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+
+  /* Ensure all grid containers use 1 or 2 columns appropriately */
+  .categories__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .hero__container {
+    grid-template-columns: 1fr;
+  }
+
+  .banner__container {
+    grid-template-columns: 1fr;
+  }
+
+  .blog__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 1rem;
+  }
+
+  .instagram__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  /* Fix nav for mobile */
+  .nav__icons {
+    gap: 0.5rem;
+  }
+
+  .nav__icons span a {
+    font-size: 1rem;
+  }
+
+  .nav__logo a {
+    font-size: 1.5rem;
+  }
+
+  /* Fix product cards */
+  .product__card__content {
+    padding: 0.5rem;
+  }
+
+  .product__card__content h4 {
+    font-size: 1rem;
+  }
+
+  /* Fix category cards */
+  .categories__card img {
+    max-width: 60px;
+  }
+}
+
+/* Fix for absolutely positioned elements that might overflow */
+.hero__card {
+  overflow: hidden;
+  position: relative;
+}
+
+.hero__content {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  max-width: 80%;
+}
+
+/* Ensure images don't overflow */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 :root {
   --primary-color: #ed3849;
   --primary-color-dark: #d23141;
@@ -572,7 +802,7 @@ nav {
   }
 }
 
-.nav__icons span a.dropdown-items{
+.nav__icons span a.dropdown-items {
   font-size: 16px;
 }
 
@@ -586,6 +816,6 @@ input[type="number"]::-webkit-outer-spin-button {
   @apply mt-1 block py-2.5 px-4 w-full rounded-md bg-gray-100 border-gray-300 shadow-sm focus:outline-none focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm
 }
 
-.add-product-btn{
+.add-product-btn {
   @apply mt-5 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
 }
