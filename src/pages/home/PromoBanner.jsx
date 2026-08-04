@@ -7,14 +7,14 @@ const PromoBanner = () => {
         <span><i className="ri-truck-line"></i></span>
         <h4>Free Delivery Policy</h4>
         <p>
-          Free Delivery above shopping of PKR 10000/-
+          Free Delivery above shopping of PKR 5000/-
         </p>
       </div>
       <div className="banner__card">
         <span><i className="ri-money-dollar-circle-line"></i></span>
-        <h4>100% Money Back Guaranty</h4>
+        {/* <h4>100% Money Back Guaranty</h4> */}
         <p>
-          E-commerce have a review system where customers can share feedback.
+          Scarfura have a review system where customers can share feedback.
         </p>
       </div>
       <div className="banner__card">

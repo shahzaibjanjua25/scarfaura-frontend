@@ -10,7 +10,6 @@ import logo from '../../src/assets/logo.png';
 import './navbar.css';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-// import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   // Mobile menu state
@@ -27,11 +26,6 @@ const Navbar = () => {
   const dispatch = useDispatch()
   const [logoutUser] = useLogoutUserMutation();
   const { user } = useSelector((state) => state.auth);
-  // const navigate = useNavigate()
-
-
-
-  // Inside your component
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -57,16 +51,6 @@ const Navbar = () => {
     }
   };
 
-  const home = async () => {
-    try {
-      await logoutUser().unwrap();
-      dispatch(logout());
-      navigate("/home")
-    } catch (err) {
-      console.error("Failed to go to home", err);
-    }
-  };
-
   // Dropdown for user menu
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const handleDropDownToggle = () => {
@@ -83,7 +67,6 @@ const Navbar = () => {
   const userDropdownMenus = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Profile", path: "/dashboard/profile" },
-    // { label: "Payments", path: "/dashboard/payments" },
     { label: "Track my order", path: "/dashboard/orders" },
   ];
 
@@ -103,6 +86,7 @@ const Navbar = () => {
             {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
           </button>
         </div>
+
         <div className="flex items-center gap-4">
           {/* Logo section with proper spacing */}
           <div className="flex items-center gap-4">
@@ -111,7 +95,7 @@ const Navbar = () => {
               <Link to="/">
                 <img
                   src={logo}
-                  alt="Scarfaura  Logo"
+                  alt="Scarfaura Logo"
                   style={{
                     width: '50px',
                     height: '50px',
@@ -132,7 +116,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Desktop Navigation Links (hidden on mobile) */}
+          {/* Desktop Navigation Links */}
           <ul className="hidden md:flex nav__links gap-8">
             <li className="link"><Link to="/">Home</Link></li>
             <li className="link"><Link to="/shop">Shop</Link></li>
@@ -149,12 +133,9 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
+
         {/* Icons (search, cart, user) */}
         <div className="nav__icons relative flex items-center gap-6">
-          {/* <Link to="/search" className="hover:text-primary">
-            <i className="ri-search-line"></i>
-          </Link> */}
-
           <button onClick={handleCartToggle} className='hover:text-primary relative'>
             <i className="ri-shopping-bag-line"></i>
             <sup className="absolute -top-2 -right-2 text-xs inline-block px-1.5 text-white rounded-full bg-primary text-center">
@@ -203,14 +184,51 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu (shown only on mobile when toggled) */}
+        {/* Mobile Menu - Now has the SAME links and features as desktop */}
         {isMobileMenuOpen && (
           <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg z-40 py-4 px-6">
             <ul className="flex flex-col space-y-4">
-              <li><Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 hover:text-primary">Home</Link></li>
-              <li><Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 hover:text-primary">Shop</Link></li>
-              <li><Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 hover:text-primary">Pages</Link></li>
-              <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="block py-2 hover:text-primary">Contact</Link></li>
+              {/* Same nav links as desktop */}
+              <li>
+                <Link 
+                  to="/" 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="block py-2 hover:text-primary"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/shop" 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="block py-2 hover:text-primary"
+                >
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/shop" 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="block py-2 hover:text-primary"
+                >
+                  Categories
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/message/JU2BB6GQGTCBL1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block py-2 hover:text-primary"
+                >
+                  Contact
+                </a>
+              </li>
+
+              {/* Same user dropdown menus as desktop */}
               {user && (
                 <>
                   <hr className="my-2" />

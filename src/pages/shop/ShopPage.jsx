@@ -410,7 +410,7 @@ const ShopPage = () => {
                 <div className="sf-wrap">
                     <ul className="sf-assurances">
                         <li>Cash on delivery across Pakistan</li>
-                        <li>Free delivery over PKR 3,000</li>
+                        <li>Free delivery over PKR 5000</li>
                         {/* <li>7-day exchange</li> */}
                     </ul>
                 </div>
