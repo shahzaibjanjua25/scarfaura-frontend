@@ -59,8 +59,7 @@ const Banner = () => {
           <div className="mt-7 flex max-w-md items-start gap-4">
             <span aria-hidden className="mt-[0.7rem] hidden h-px w-8 shrink-0 bg-[#c9a87c]/50 lg:block" />
             <p className="sa-rise text-[0.95rem] font-light leading-relaxed text-[#5a4f47] sm:text-base lg:text-lg" style={{ animationDelay: '.25s' }}>
-              Timeless pieces from ScarfAura's handcrafted collection — woven
-              slowly, finished by hand, made to be worn for years. Test
+            Elevate your everyday style with premium scarves and hijabs crafted for comfort, elegance, and timeless modesty.
             </p>
           </div>
 

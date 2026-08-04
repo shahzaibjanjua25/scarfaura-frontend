@@ -7,19 +7,14 @@ import UploadImage from './UploadImage';
 import { useNavigate } from 'react-router-dom';
 
 const categories = [
-    { label: 'All Categories', value: 'all' },
     { label: 'Printed Hijabs', value: 'Printed Hijabs' },
     { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },
     { label: 'Modal Hijabs', value: 'Modal Hijabs' },
     { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
     { label: 'Deer Prints', value: 'Deer Prints' },
-    { label: 'Leopard Prints', value: 'Leopard Prints' },
-    { label: 'Brown', value: 'Women-shirts' },
-    { label: 'Chiffon', value: 'Women-casuals' },
-    { label: 'Dark Skin', value: 'Dark Skin' }
+    { label: 'Leopard Prints', value: 'Leopard Prints' }
 ];
 
-// Updated colors with all your colors
 const colors = [
     { label: 'Select Color', value: '' },
     { label: 'Black', value: 'black' },
@@ -42,67 +37,127 @@ const colors = [
     { label: 'Sage Green', value: 'sagegreen' }
 ];
 
+const emptyProduct = {
+    name: '',
+    categories: [],
+    color: '',
+    price: '',
+    oldPrice: '',
+    description: ''
+};
+
 const AddProduct = () => {
     const { user } = useSelector((state) => state.auth);
-    const [product, setProduct] = useState({
-        name: '',
-        category: '',
-        color: '',
-        price: '',
-        oldPrice: '',
-        description: ''
-    });
-    const [image, setImage] = useState('');
+    const [product, setProduct] = useState(emptyProduct);
+    const [images, setImages] = useState([]);
     const [addProduct, { isLoading }] = useAddProductMutation();
     const navigate = useNavigate();
-    const [dialog, setDialog] = useState({
-        show: false,
-        type: '',
-        message: ''
-    });
+    const [dialog, setDialog] = useState({ show: false, type: '', message: '' });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setProduct(prev => ({ ...prev, [name]: value }));
+        setProduct((prev) => ({ ...prev, [name]: value }));
     };
 
-    // ✅ Check if color is required based on category
-    const isColorRequired = product.category === 'Chiffon Hijabs';
+    const handleCategoryToggle = (categoryValue) => {
+        setProduct((prev) => {
+            const current = prev.categories || [];
+            return {
+                ...prev,
+                categories: current.includes(categoryValue)
+                    ? current.filter((c) => c !== categoryValue)
+                    : [...current, categoryValue]
+            };
+        });
+    };
+
+    const makePrimaryCategory = (categoryValue) => {
+        setProduct((prev) => ({
+            ...prev,
+            categories: [categoryValue, ...prev.categories.filter((c) => c !== categoryValue)]
+        }));
+    };
+
+    const isColorRequired = product.categories.includes('Chiffon Hijabs');
+
+    const showError = (message) => setDialog({ show: true, type: 'error', message });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // ✅ Validate based on category
-        if (!product.name || !product.category || !product.price ||
-            !product.description || !image) {
-            setDialog({
-                show: true,
-                type: 'error',
-                message: 'Please fill in all required fields including the image.'
-            });
+        if (!product.name || product.categories.length === 0 || !product.price ||
+            !product.description || images.length === 0) {
+            showError('Please fill in all required fields, select at least one category, and upload at least one image.');
             return;
         }
 
-        // ✅ Only validate color if category is Chiffon Hijabs
         if (isColorRequired && !product.color) {
-            setDialog({
-                show: true,
-                type: 'error',
-                message: 'Color is required for Chiffon Hijabs category. Please select a color.'
-            });
+            showError('Color is required when "Chiffon Hijabs" category is selected.');
             return;
         }
+
+        if (!user?._id) {
+            showError('Your session has expired. Please sign in again.');
+            return;
+        }
+
+        const productData = {
+            name: product.name.trim(),
+            category: product.categories[0],   // primary, single string
+            categories: product.categories,     // full list, array
+            color: product.color || undefined,
+            price: Number(product.price),
+            oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+            description: product.description.trim(),
+            images,                             // full list, array
+            image: images[0],                   // legacy field, single string
+            author: user._id
+        };
+
+        /* ---------------- DEBUG: payload shape ----------------
+           Confirms what leaves the browser. If these say `true`,
+           the frontend is correct and any string/array mismatch in
+           the database is happening in productsApi.js or on the
+           server. Delete this block once the issue is resolved. */
+        console.log('--- OUTGOING PRODUCT PAYLOAD ---');
+        console.log('categories:', productData.categories,
+            '| isArray:', Array.isArray(productData.categories),
+            '| length:', productData.categories.length);
+        console.log('images:', productData.images,
+            '| isArray:', Array.isArray(productData.images),
+            '| length:', productData.images.length);
+        console.log('category (string):', productData.category);
+        console.log('image (string):', productData.image);
+        console.log('JSON as sent:', JSON.stringify(productData));
+        /* ------------------------------------------------------ */
 
         try {
-            const productData = {
-                ...product,
-                image,
-                author: user?._id,
-                price: Number(product.price),
-                oldPrice: product.oldPrice ? Number(product.oldPrice) : null
-            };
+            const result = await addProduct(productData).unwrap();
 
-            await addProduct(productData).unwrap();
+            /* ---------------- DEBUG: what came back -------------- */
+            console.log('--- SERVER RESPONSE ---');
+            console.log('full response:', result);
+            console.log('stored categories:', result?.product?.categories,
+                '| isArray:', Array.isArray(result?.product?.categories));
+            console.log('stored images:', result?.product?.images,
+                '| isArray:', Array.isArray(result?.product?.images));
+            /* ---------------------------------------------------- */
+
+            const savedCategories = result?.product?.categories || [];
+            if (savedCategories.length !== product.categories.length) {
+                console.warn(
+                    'MISMATCH — sent', product.categories.length, 'categories:', product.categories,
+                    'but server stored', savedCategories.length + ':', savedCategories
+                );
+            }
+
+            const savedImages = result?.product?.images || [];
+            if (savedImages.length !== images.length) {
+                console.warn(
+                    'MISMATCH — sent', images.length, 'images but server stored', savedImages.length
+                );
+            }
+
             setDialog({
                 show: true,
                 type: 'success',
@@ -110,48 +165,43 @@ const AddProduct = () => {
             });
 
             setTimeout(() => {
-                setProduct({
-                    name: '',
-                    category: '',
-                    color: '',
-                    price: '',
-                    oldPrice: '',
-                    description: ''
-                });
-                setImage('');
-                navigate("/shop");
+                setProduct(emptyProduct);
+                setImages([]);
+                navigate('/shop');
             }, 2000);
         } catch (err) {
-            setDialog({
-                show: true,
-                type: 'error',
-                message: err.data?.message || 'Failed to add product. Please try again.'
-            });
+            console.error('Add product error:', err);
+            console.error('Server said:', err.data);
+            showError(err.data?.message || 'Failed to add product. Please try again.');
         }
     };
 
-    const closeDialog = () => {
-        setDialog(prev => ({ ...prev, show: false }));
-    };
+    const closeDialog = () => setDialog((prev) => ({ ...prev, show: false }));
 
     return (
         <div className="container mx-auto mt-8 px-4">
-            {/* Notification Dialog */}
             {dialog.show && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className={`bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto border-t-4 ${dialog.type === 'success' ? 'border-green-500' : 'border-red-500'
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+                    role="alertdialog"
+                    aria-modal="true"
+                >
+                    <div className={`bg-white p-6 rounded-lg shadow-lg max-w-sm w-full border-t-4 ${
+                        dialog.type === 'success' ? 'border-green-500' : 'border-red-500'
+                    }`}>
+                        <h3 className={`text-xl font-semibold ${
+                            dialog.type === 'success' ? 'text-green-600' : 'text-red-600'
                         }`}>
-                        <h3 className={`text-xl font-semibold ${dialog.type === 'success' ? 'text-green-600' : 'text-red-600'
-                            }`}>
                             {dialog.type === 'success' ? 'Success!' : 'Error'}
                         </h3>
-                        <p className="mt-2 mb-4">{dialog.message}</p>
+                        <p className="mt-2 mb-4 text-gray-700">{dialog.message}</p>
                         <button
                             onClick={closeDialog}
-                            className={`w-full py-2 rounded-md ${dialog.type === 'success'
+                            className={`w-full py-2 rounded-md text-white transition-colors ${
+                                dialog.type === 'success'
                                     ? 'bg-green-500 hover:bg-green-600'
                                     : 'bg-red-500 hover:bg-red-600'
-                                } text-white transition-colors`}
+                            }`}
                         >
                             OK
                         </button>
@@ -160,26 +210,72 @@ const AddProduct = () => {
             )}
 
             <h2 className="text-2xl font-bold mb-6">Add New Product</h2>
-            <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
+
+            <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl">
                 <TextInput
                     label="Product Name"
                     name="name"
-                    placeholder="Ex: Mustart Yellow"
+                    placeholder="Ex: Mustard Yellow"
                     value={product.name}
                     onChange={handleChange}
                     required
                 />
 
-                <SelectInput
-                    label="Category"
-                    name="category"
-                    value={product.category}
-                    onChange={handleChange}
-                    options={categories}
-                    required
-                />
+                <fieldset>
+                    <legend className="block text-sm font-medium text-gray-700 mb-2">
+                        Categories <span className="text-red-500">*</span>
+                    </legend>
 
-                {/* ✅ Color field with conditional required indicator */}
+                    <div className="space-y-1 bg-gray-50 p-3 rounded-md border border-gray-200">
+                        {categories.map((category) => {
+                            const checked = product.categories.includes(category.value);
+                            const isPrimary = product.categories[0] === category.value;
+
+                            return (
+                                <div
+                                    key={category.value}
+                                    className="flex items-center justify-between gap-2 py-1"
+                                >
+                                    <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900 transition-colors">
+                                        <input
+                                            type="checkbox"
+                                            checked={checked}
+                                            onChange={() => handleCategoryToggle(category.value)}
+                                            className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        />
+                                        <span>{category.label}</span>
+                                    </label>
+
+                                    {checked && (
+                                        isPrimary ? (
+                                            <span className="text-[10px] font-semibold uppercase tracking-wide text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+                                                Primary
+                                            </span>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={() => makePrimaryCategory(category.value)}
+                                                className="text-[11px] text-gray-500 hover:text-indigo-600 underline"
+                                            >
+                                                Make primary
+                                            </button>
+                                        )
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {product.categories.length > 0 && (
+                        <p className="text-xs text-gray-500 mt-2">
+                            {product.categories.length}{' '}
+                            {product.categories.length === 1 ? 'category' : 'categories'} selected
+                            {' — '}
+                            <span className="text-gray-600">{product.categories.join(', ')}</span>
+                        </p>
+                    )}
+                </fieldset>
+
                 <div>
                     <SelectInput
                         label="Color"
@@ -189,14 +285,13 @@ const AddProduct = () => {
                         options={colors}
                         required={isColorRequired}
                     />
-                    {isColorRequired && (
+                    {isColorRequired ? (
                         <p className="text-xs text-amber-600 mt-1">
-                            ⚠️ Color is required for Chiffon Hijabs category
+                            Color is required when "Chiffon Hijabs" is selected
                         </p>
-                    )}
-                    {!isColorRequired && product.category && (
+                    ) : product.categories.length > 0 && (
                         <p className="text-xs text-gray-400 mt-1">
-                            ℹ️ Color is optional for this category
+                            Color is optional for the selected categories
                         </p>
                     )}
                 </div>
@@ -227,13 +322,14 @@ const AddProduct = () => {
                 </div>
 
                 <UploadImage
-                    setImage={setImage}
+                    images={images}
+                    setImages={setImages}
                     required
                 />
 
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                        Description
+                        Description <span className="text-red-500">*</span>
                     </label>
                     <textarea
                         rows={6}
@@ -256,8 +352,8 @@ const AddProduct = () => {
                         {isLoading ? (
                             <span className="flex items-center justify-center">
                                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                 </svg>
                                 Adding Product...
                             </span>

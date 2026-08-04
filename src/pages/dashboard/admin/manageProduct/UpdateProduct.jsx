@@ -7,16 +7,12 @@ import SelectInput from '../addProduct/SelectInput';
 import { useFetchProductByIdQuery, useUpdateProductMutation } from '../../../../redux/features/products/productsApi';
 
 const categories = [
-    { label: 'All Categories', value: 'all' },
     { label: 'Printed Hijabs', value: 'Printed Hijabs' },
     { label: 'Chiffon Hijabs', value: 'Chiffon Hijabs' },
     { label: 'Modal Hijabs', value: 'Modal Hijabs' },
     { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
     { label: 'Deer Prints', value: 'Deer Prints' },
-    { label: 'Leopard Prints', value: 'Leopard Prints' },
-    { label: 'Brown', value: 'Women-shirts' },
-    { label: 'Chiffon', value: 'Women-casuals' },
-    { label: 'Mustart Yellow', value: 'Mustart Yellow' }
+    { label: 'Leopard Prints', value: 'Leopard Prints' }
 ];
 
 const colors = [
@@ -48,7 +44,7 @@ const UpdateProduct = () => {
 
     const [product, setProduct] = useState({
         name: '',
-        category: '',
+        categories: [], // ✅ Changed to array for multi-select
         color: '',
         price: '',
         oldPrice: '',
@@ -64,10 +60,11 @@ const UpdateProduct = () => {
 
     useEffect(() => {
         if (productData?.product) {
-            const { name, category, color, price, oldPrice, description, image } = productData.product;
+            const { name, categories, color, price, oldPrice, description, image } = productData.product;
             setProduct({
                 name: name || '',
-                category: category || '',
+                // ✅ Handle both array and single category
+                categories: Array.isArray(categories) ? categories : (categories ? [categories] : []),
                 color: color || '',
                 price: price || '',
                 oldPrice: oldPrice || '',
@@ -82,22 +79,37 @@ const UpdateProduct = () => {
         setProduct((prev) => ({ ...prev, [name]: value }));
     };
 
+    // ✅ Handle category toggle (multi-select)
+    const handleCategoryToggle = (categoryValue) => {
+        setProduct(prev => {
+            const currentCategories = prev.categories || [];
+            if (currentCategories.includes(categoryValue)) {
+                // Remove category
+                const updated = currentCategories.filter(c => c !== categoryValue);
+                return { ...prev, categories: updated };
+            } else {
+                // Add category
+                return { ...prev, categories: [...currentCategories, categoryValue] };
+            }
+        });
+    };
+
     const handleImageChange = (image) => {
         setNewImage(image);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { name, category, color, price, oldPrice, description } = product;
+        const { name, categories, color, price, oldPrice, description } = product;
 
-        // ✅ Color is only required for Chiffon Hijabs
-        const isColorRequired = category === 'Chiffon Hijabs';
-
-        if (!name || !category || !price || !description) {
-            setNotification({ show: true, type: 'error', message: 'Please fill in all required fields' });
+        // ✅ Check if at least one category is selected
+        if (!name || !categories || categories.length === 0 || !price || !description) {
+            setNotification({ show: true, type: 'error', message: 'Please fill in all required fields and select at least one category' });
             return;
         }
 
+        // ✅ Color is only required if "Chiffon Hijabs" is selected
+        const isColorRequired = categories.includes('Chiffon Hijabs');
         if (isColorRequired && !color) {
             setNotification({ show: true, type: 'error', message: 'Color is required for Chiffon Hijabs category' });
             return;
@@ -106,6 +118,7 @@ const UpdateProduct = () => {
         try {
             const updatedProduct = {
                 ...product,
+                categories: product.categories, // ✅ Send as array
                 image: newImage || product.image,
                 author: user?._id
             };
@@ -136,6 +149,8 @@ const UpdateProduct = () => {
         );
     }
 
+    const isColorRequired = product.categories.includes('Chiffon Hijabs');
+
     return (
         <div className="container mx-auto mt-8 px-4">
             {notification.show && (
@@ -149,7 +164,31 @@ const UpdateProduct = () => {
 
             <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
                 <TextInput label="Product Name" name="name" value={product.name} onChange={handleChange} required />
-                <SelectInput label="Category" name="category" value={product.category} onChange={handleChange} options={categories} required />
+
+                {/* ✅ Multi-category selection */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Categories <span className="text-red-500">*</span>
+                    </label>
+                    <div className="space-y-2">
+                        {categories.map((category) => (
+                            <label key={category.value} className="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900">
+                                <input
+                                    type="checkbox"
+                                    checked={product.categories.includes(category.value)}
+                                    onChange={() => handleCategoryToggle(category.value)}
+                                    className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span>{category.label}</span>
+                            </label>
+                        ))}
+                    </div>
+                    {product.categories.length > 0 && (
+                        <p className="text-xs text-gray-500 mt-2">
+                            {product.categories.length} category{product.categories.length > 1 ? 'ies' : ''} selected
+                        </p>
+                    )}
+                </div>
 
                 {/* Color field with conditional required indicator */}
                 <div>
@@ -159,16 +198,16 @@ const UpdateProduct = () => {
                         value={product.color}
                         onChange={handleChange}
                         options={colors}
-                        required={product.category === 'Chiffon Hijabs'}
+                        required={isColorRequired}
                     />
-                    {product.category === 'Chiffon Hijabs' && (
+                    {isColorRequired && (
                         <p className="text-xs text-amber-600 mt-1">
-                            ⚠️ Color is required for Chiffon Hijabs category
+                            ⚠️ Color is required when "Chiffon Hijabs" is selected
                         </p>
                     )}
-                    {product.category && product.category !== 'Chiffon Hijabs' && (
+                    {product.categories.length > 0 && !isColorRequired && (
                         <p className="text-xs text-gray-400 mt-1">
-                            ℹ️ Color is optional for this category
+                            ℹ️ Color is optional for selected categories
                         </p>
                     )}
                 </div>

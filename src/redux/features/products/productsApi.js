@@ -16,7 +16,6 @@ export const productsApi = createApi({
           color: color || '',
           minPrice: minPrice || 0,
           maxPrice: maxPrice || '',
-          // age: age || '',
           page: page.toString(),
           limit: limit.toString()
         }).toString();
@@ -26,7 +25,6 @@ export const productsApi = createApi({
       providesTags: ["Products"],
     }),
 
-    // ✅ NEW: Fetch sorted products (e.g. for trending by rating)
     getSortedProducts: builder.query({
       query: ({ sortBy = "rating", order = "desc", limit = 8 }) =>
         `/?sortBy=${sortBy}&order=${order}&limit=${limit}`,
@@ -39,12 +37,15 @@ export const productsApi = createApi({
     }),
 
     AddProduct: builder.mutation({
-      query: (newProduct) => ({
-        url: "/create-product",
-        method: "POST",
-        body: newProduct,
-        credentials: "include",
-      }),
+      query: (newProduct) => {
+        console.log('📤 API Sending product:', newProduct);
+        return {
+          url: "/create-product",
+          method: "POST",
+          body: newProduct,
+          credentials: "include",
+        };
+      },
       invalidatesTags: ["Products"],
     }),
 
@@ -73,7 +74,6 @@ export const productsApi = createApi({
   }),
 });
 
-// ✅ Export new hook here
 export const {
   useFetchAllProductsQuery,
   useFetchProductByIdQuery,
@@ -81,7 +81,7 @@ export const {
   useUpdateProductMutation,
   useDeleteProductMutation,
   useFetchRelatedBlogsQuery,
-  useGetSortedProductsQuery, // ✅ this is the new export
+  useGetSortedProductsQuery,
 } = productsApi;
 
 export default productsApi;

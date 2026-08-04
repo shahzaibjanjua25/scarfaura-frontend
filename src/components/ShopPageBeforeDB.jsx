@@ -11,10 +11,7 @@ const filters = {
         'Modal Hijabs',
         'Jersey Hijabs',
         'Deer Prints',
-        'Leoprd Prints'
-        // 'Brown',
-        // 'Chiffon'
-        // 'Dark Brown'
+        'Leopard Prints'
     ],
     colors: ['all', 'brown', 'black', 'maroon', 'zinc', 'navy blue', 'white', 'skin', 'burgundy', 'purple', 'grey', 'plum', 'red', 'gold', 'blue', 'silver', 'beige', 'green', 'sagegreen'],
     priceRanges: [
@@ -23,25 +20,28 @@ const filters = {
         { label: 'PKR 1500 - PKR 3000', min: 1500, max: 3000 },
         { label: 'PKR 3000 and above', min: 3000, max: Infinity }
     ],
-    //  age: ['all', '1-2', '3-4', '5-6', '7-8', '9-10']
 };
 
 const ShopPage = () => {
     const [products, setProducts] = useState(productsData);
     const [filtersState, setFiltersState] = useState({
-        category: 'all',
+        categories: ['all'], // ✅ Changed to array for multi-select
         color: 'all',
         priceRange: ''
-        // age:''
     });
 
+    // ShopPage.jsx - Updated applyFilters
     const applyFilters = () => {
         let filteredProducts = productsData;
 
-        // Filter by category
-        if (filtersState.category && filtersState.category !== 'all') {
+        // ✅ Filter by multiple categories
+        if (filtersState.categories && !filtersState.categories.includes('all')) {
             filteredProducts = filteredProducts.filter(
-                product => product.category === filtersState.category
+                product => {
+                    // Check if product has categories array
+                    const productCategories = product.categories || [product.category];
+                    return productCategories.some(cat => filtersState.categories.includes(cat));
+                }
             );
         }
 
@@ -51,11 +51,6 @@ const ShopPage = () => {
                 product => product.color === filtersState.color
             );
         }
-        //  if (filtersState.age && filtersState.age !== 'all') {
-        //     filteredProducts = filteredProducts.filter(
-        //         product => product.age === filtersState.age
-        //     );
-        // }
 
         // Filter by price range
         if (filtersState.priceRange) {
@@ -74,13 +69,11 @@ const ShopPage = () => {
 
     const clearFilters = () => {
         setFiltersState({
-            category: 'all',
+            categories: ['all'],
             color: 'all',
             priceRange: ''
-            // age: ''
         });
     };
-
 
     return (
         <>
@@ -94,15 +87,18 @@ const ShopPage = () => {
             <section className='section__container'>
                 <div className='flex flex-col md:flex-row md:gap-12 gap-8'>
                     {/* left side */}
-                    <ShopFiltering filters={filters} filtersState={filtersState} setFiltersState={setFiltersState} clearFilters={clearFilters} />
+                    <ShopFiltering
+                        filters={filters}
+                        filtersState={filtersState}
+                        setFiltersState={setFiltersState}
+                        clearFilters={clearFilters}
+                    />
 
                     {/* right side */}
                     <div>
                         <h3 className='text-xl font-medium mb-4'>Products Available: {products.length}</h3>
                         <ProductCards products={products} />
-
                     </div>
-
                 </div>
             </section>
         </>

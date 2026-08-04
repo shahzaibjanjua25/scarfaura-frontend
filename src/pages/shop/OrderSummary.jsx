@@ -229,9 +229,9 @@ const OrderSummary = () => {
 
       {/* Main Container */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 md:py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Order Summary Card */}
-          <div className="lg:col-span-2 order-2 lg:order-1">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+          {/* Order Summary Card - Full Width */}
+          <div className="order-1">
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               {/* Header */}
               <div className="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
@@ -319,48 +319,6 @@ const OrderSummary = () => {
                 </button>
               </div>
             </div>
-          </div>
-
-          {/* Sidebar - Order Tips */}
-          <div className="lg:col-span-1 order-1 lg:order-2">
-            {/* <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-6">
-              <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Order Information</h3>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Secure Checkout</p>
-                    <p className="text-xs text-gray-400">Your information is protected</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Cash on Delivery</p>
-                    <p className="text-xs text-gray-400">Pay when you receive</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Free Returns</p>
-                    <p className="text-xs text-gray-400">14-day return policy</p>
-                  </div>
-                </li>
-              </ul>
-            </div> */}
           </div>
         </div>
       </div>
