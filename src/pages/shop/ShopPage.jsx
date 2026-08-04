@@ -398,7 +398,7 @@ const ShopPage = () => {
                 <div className="sf-wrap">
                     <p className="sf-eyebrow">The Collection</p>
                     <h1 className="sf-display sf-masthead__title">
-                        Hijabs cut for<em> everyday wear</em>
+                      <em>  Hijabs cut for everyday wear</em>
                     </h1>
                     <p className="sf-masthead__lede">
                         Modal, jersey and georgette, dyed in small runs. Filter by fabric,
@@ -406,12 +406,10 @@ const ShopPage = () => {
                     </p>
                 </div>
 
-                {/* Edit these three to match your real policy before launch. */}
                 <div className="sf-wrap">
                     <ul className="sf-assurances">
                         <li>Cash on delivery across Pakistan</li>
                         <li>Free delivery over PKR 5000</li>
-                        {/* <li>7-day exchange</li> */}
                     </ul>
                 </div>
             </header>
@@ -603,8 +601,8 @@ const ShopPage = () => {
 };
 
 /* ------------------------------------------------------------------
-   Tokens, scoped under .sf-shop. Change --sf-nav if your header
-   height changes; it drives both page padding and sticky offsets.
+   Tokens, scoped under .sf-shop. 
+   Updated with centered text in masthead.
 ------------------------------------------------------------------- */
 
 const TOKENS = `
@@ -630,15 +628,38 @@ const TOKENS = `
 .sf-eyebrow { font-size: 0.688rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sf-muted); font-weight: 600; }
 .sf-shop .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Masthead */
-.sf-masthead { padding: 2.5rem 0 0; }
-.sf-masthead__title { font-size: clamp(2.25rem, 5.5vw, 4rem); line-height: 1.04; margin: 0.6rem 0 0; max-width: 15ch; }
+/* Masthead - Centered */
+.sf-masthead { 
+  padding: 2.5rem 0 0; 
+  text-align: center;
+}
+.sf-masthead__title { 
+  font-size: clamp(2.25rem, 5.5vw, 4rem); 
+  line-height: 1.04; 
+  margin: 0.6rem auto 0;
+  max-width: 15ch; 
+}
 .sf-masthead__title em { font-style: italic; color: var(--sf-plum); }
-.sf-masthead__lede { margin-top: 1.25rem; max-width: 46ch; color: var(--sf-muted); line-height: 1.7; }
+.sf-masthead__lede { 
+  margin-top: 1.25rem; 
+  ax-width: 246ch; 
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--sf-muted); 
+  line-height: 1.7; 
+}
 .sf-assurances {
-  display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; list-style: none;
-  margin: 2.5rem 0 0; padding: 1rem 0; font-size: 0.813rem; color: var(--sf-muted);
-  border-top: 1px solid var(--sf-rule); border-bottom: 1px solid var(--sf-rule);
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 0.5rem 1.75rem; 
+  list-style: none;
+  margin: 2.5rem auto 0;
+  padding: 1rem 0; 
+  font-size: 0.813rem; 
+  color: var(--sf-muted);
+  border-top: 1px solid var(--sf-rule); 
+  border-bottom: 1px solid var(--sf-rule);
+  justify-content: center;
 }
 .sf-assurances li { position: relative; padding-left: 1.1rem; }
 .sf-assurances li::before {
