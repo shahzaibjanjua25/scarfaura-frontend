@@ -4,7 +4,7 @@ const initialState = {
   products: [],
   selectedItems: 0,
   totalPrice: 0,
-  deliveryCharge: 200, // 💰 fixed delivery charge
+  deliveryCharge: 250, // 💰 fixed delivery charge
   grandTotal: 0,
 };
 
