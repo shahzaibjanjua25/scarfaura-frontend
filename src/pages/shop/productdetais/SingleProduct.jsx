@@ -267,8 +267,8 @@ const SingleProduct = () => {
 
     return (
         <>
-            {/* Enhanced Breadcrumb */}
-            <section className="relative bg-gradient-to-r from-primary-light via-primary/5 to-white py-8">
+            {/* Enhanced Breadcrumb - Now starts under navbar */}
+            <section className="relative bg-gradient-to-r from-primary-light via-primary/5 to-white py-6 mt-0">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
                         <h1 className="text-3xl md:text-4xl font-serif font-bold text-gray-800">
@@ -304,7 +304,7 @@ const SingleProduct = () => {
 
                         {/* Product Details */}
                         <div className="w-full lg:w-1/2 space-y-6">
-                            {/* Product Name with badge */}
+                            {/* Product Name */}
                             <div>
                                 <h1 className="text-3xl md:text-4xl font-serif font-bold text-gray-800 leading-tight">
                                     {singleProduct.name}

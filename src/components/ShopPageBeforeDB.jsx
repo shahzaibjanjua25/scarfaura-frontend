@@ -7,7 +7,7 @@ const filters = {
     categories: [
         'all',
         'Printed Hijabs',
-        'Geo569rgette Hijabs',
+        'Georgette  Hijabs',
         'Modal Hijabs',
         'Jersey Hijabs',
         'Deer Prints',

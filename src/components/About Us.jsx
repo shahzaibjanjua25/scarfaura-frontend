@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './AboutUs.css'; // We'll create this CSS file next
+import './AboutUs.css';
 
 const AboutUs = () => {
   return (
     <div className="about-us-container">
       <section className="about-hero">
         <div className="hero-content">
-          <h1>About Scarfaura </h1>
+          <h1>About Scarfaura</h1>
           <p>Where comfort meets style for your little ones!</p>
         </div>
       </section>
@@ -15,48 +15,64 @@ const AboutUs = () => {
       <section className="about-content">
         <div className="container">
           <div className="about-intro">
-            <h2>Welcome to Our Story</h2>
+            <h2>Welcome to Scarfaura</h2>
             <p>
-              At Scarfaura, we specialize in high-quality, affordable clothing for children of all ages. 
-              From everyday Printed Hijabs to formal wear and festive outfits, our handpicked collections are 
-              designed to keep your Women looking stylish and feeling comfortable — all year round.
+              Rooted in elegance and minimalist design, Scarfaura is built on the belief that true style is effortless and refined. 
+              Every piece is curated to offer understated luxury and a quiet confidence that elevates your everyday wardrobe.
+            </p>
+            <p>
+              Thank you for being part of our beginning. Explore our collection and let Scarfaura become a part of your story.
             </p>
           </div>
 
           <div className="why-choose-us">
-            <h2>Why Choose Us?</h2>
+            <h2>Why Choose Scarfaura?</h2>
             <div className="features-grid">
               <div className="feature-card">
+                <div className="feature-icon elegance-icon"></div>
+                <h3>Understated Elegance</h3>
+                <p>
+                  Our pieces are thoughtfully designed with a minimalist aesthetic, offering a refined and 
+                  sophisticated look for any wardrobe.
+                </p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon versatility-icon"></div>
+                <h3>Effortless Versatility</h3>
+                <p>
+                  We curate styles that seamlessly transition from everyday wear to special moments, ensuring 
+                  you always feel polished and put-together.
+                </p>
+              </div>
+              <div className="feature-card">
                 <div className="feature-icon quality-icon"></div>
-                <h3>Quality & Comfort</h3>
-                <p>We use soft, child-friendly fabrics that are gentle on the skin and made to last.</p>
+                <h3>Quality &amp; Intention</h3>
+                <p>
+                  Every item is crafted with a focus on premium detail, durability, and timeless appeal 
+                  rather than fleeting trends.
+                </p>
               </div>
-              <div className="feature-card">
-                <div className="feature-icon trendy-icon"></div>
-                <h3>Trendy & Traditional</h3>
-                <p>Whether you're looking for modern fashion or cultural elegance, our range blends classic charm with current trends.</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon affordable-icon"></div>
-                <h3>Affordable Fashion</h3>
-                <p>Great style shouldn't come with a high price tag. We offer fashionable Women's Hijab wear that fits your budget.</p>
-              </div>
+              {/* <div className="feature-card">
+                <div className="feature-icon personal-icon"></div>
+                <h3>A Personal Touch</h3>
+                <p>
+                  As a brand built on passion and individual expression, we are dedicated to helping you 
+                  find pieces that feel uniquely yours.
+                </p>
+              </div> */}
             </div>
           </div>
 
           <div className="visit-us">
-            <h2>Visit Us</h2>
+            <h2>Contact Us</h2>
             <div className="contact-info">
-              <p><span className="icon location-icon"></span> Dheri Hassanabad, Rawalpindi</p>
-              <p><span className="icon phone-icon"></span> Call or WhatsApp: +9231302677570</p>
+              <p><span className="icon location-icon"></span> Rawalpindi, Pakistan</p>
+              <p><span className="icon phone-icon"></span> Call or WhatsApp: +923165972409</p>
               <p><span className="icon email-icon"></span> Email: sch19435@gmail.com</p>
             </div>
           </div>
 
           <div className="closing-message">
-            <p>
-              Thank you for choosing Scarfaura — where every child's outfit tells a story of love, care, and color.
-            </p>
             <Link to="/shop" className="cta-button">Explore Our Collection</Link>
           </div>
         </div>

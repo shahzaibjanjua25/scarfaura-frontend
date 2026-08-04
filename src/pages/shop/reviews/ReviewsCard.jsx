@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import CommentorIcon from "../../../assets/avatar.png";
 import { formatDate } from '../../../utils/dateFormater';
 import PostAReview from './PostAReview';
@@ -6,8 +8,13 @@ import RatingStars from '../../../components/RatingStars';
 
 const ReviewsCard = ({ productReviews }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { user } = useSelector((state) => state.auth);
 
     const handleOpenReviewModal = () => {
+        // Check if user is logged in before opening modal
+        if (!user) {
+            return;
+        }
         setIsModalOpen(true);
     };
 
@@ -52,21 +59,36 @@ const ReviewsCard = ({ productReviews }) => {
                 )}
             </div>
 
-            {/* Add comment section */}
+            {/* Add comment section - Only show if user is logged in */}
             <div className='mt-12'>
-                <button
-                    onClick={handleOpenReviewModal}
-                    className="px-6 py-3 bg-primary text-white rounded-md flex items-center gap-2"
-                >
-                    <i className="ri-pencil-line mr-2"></i> Add A Comment
-                </button>
+                {user ? (
+                    <button
+                        onClick={handleOpenReviewModal}
+                        className="px-6 py-3 bg-primary text-white rounded-md flex items-center gap-2 hover:bg-primary-dark transition-colors"
+                    >
+                        <i className="ri-pencil-line mr-2"></i> Add A Comment
+                    </button>
+                ) : (
+                    <div className="bg-gray-50 rounded-lg p-6 text-center border border-gray-200">
+                        <p className="text-gray-600 mb-3">Please login to post a review</p>
+                        <Link 
+                            to="/login" 
+                            state={{ from: window.location.pathname }}
+                            className="inline-block bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                        >
+                            Login to Review
+                        </Link>
+                    </div>
+                )}
             </div>
 
-            {/* PostAReview Modal */}
-            <PostAReview
-                isModalOpen={isModalOpen}
-                handleClose={handleCloseReviewModal}
-            />
+            {/* PostAReview Modal - Only render if user is logged in */}
+            {user && (
+                <PostAReview
+                    isModalOpen={isModalOpen}
+                    handleClose={handleCloseReviewModal}
+                />
+            )}
         </div>
     );
 };

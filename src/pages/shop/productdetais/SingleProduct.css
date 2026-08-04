@@ -21,3 +21,12 @@
     margin-left: auto;
     margin-right: auto;
 }
+/* Ensure the page starts under the navbar */
+.single-product-page {
+    padding-top: 80px; /* Adjust based on your navbar height */
+}
+
+/* If you want to apply globally, add to your main CSS */
+body {
+    padding-top: 80px; /* Adjust based on your navbar height */
+}

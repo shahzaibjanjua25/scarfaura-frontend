@@ -12,7 +12,7 @@ const Footer = () => {
                     <h4>CONTACT INFO</h4>
                     <p>
                         <span><i className="ri-map-pin-2-fill"></i></span>
-                        Dheri Hassanabad, Rawalpindi
+                        Rawalpindi, Pakistan
                     </p>
                     <p>
                         <span><i className="ri-mail-fill"></i></span>
@@ -20,7 +20,7 @@ const Footer = () => {
                     </p>
                     <p>
                         <span><i className="ri-phone-fill"></i></span>
-                        +9231302677570
+                        +923165972409
                     </p>
                 </div>
                 <div className="footer__col">
