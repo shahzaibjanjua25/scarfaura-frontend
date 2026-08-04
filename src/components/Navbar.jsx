@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import CartModal from '../pages/shop/CartModal';
 import avatarImg from "../assets/avatar.png";
+
+// Import SocialMediaLinks if you need to use it as a component
+// import SocialMediaLinks from '../blogs/SocialMediaLinks';
 import { logout } from '../redux/features/auth/authSlice';
 import { useLogoutUserMutation } from '../redux/features/auth/authApi';
 import { FaBars, FaTimes } from 'react-icons/fa';
@@ -122,15 +125,14 @@ const Navbar = () => {
             <li className="link"><Link to="/shop">Shop</Link></li>
             {/* ✅ Updated Categories link to go to NewArrival page */}
             <li className="link"><Link to="/categories/new-arrivals">Categories</Link></li>
+            {/* ✅ UPDATED: Contact button now navigates to SocialMediaLinks page */}
             <li className="link">
-              <a
-                href="https://wa.me/message/JU2BB6GQGTCBL1"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link 
+                to="/contact" 
                 className="link"
               >
                 Contact
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
@@ -218,16 +220,15 @@ const Navbar = () => {
                   Categories
                 </Link>
               </li>
+              {/* ✅ UPDATED: Contact button in mobile menu */}
               <li>
-                <a
-                  href="https://wa.me/message/JU2BB6GQGTCBL1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <Link 
+                  to="/contact" 
+                  onClick={() => setIsMobileMenuOpen(false)} 
                   className="block py-2 hover:text-primary"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
 
               {/* Same user dropdown menus as desktop */}

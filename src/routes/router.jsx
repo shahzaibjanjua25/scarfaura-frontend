@@ -25,6 +25,8 @@ import UpdateProduct from '../pages/dashboard/admin/manageProduct/UpdateProduct'
 import ManageUser from '../pages/dashboard/admin/users/ManageUser';
 import ManageOrders from '../pages/dashboard/admin/manageOrders/ManageOrders';
 import AboutUs from "../pages/AboutUs";
+// ✅ Import SocialMediaLinks component
+import SocialMediaLinks from '../../src/pages/blogs/SocialMediaLinks';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,8 @@ const router = createBrowserRouter([
       { path: '/shop/:id', element: <SingleProduct /> },
       { path: '/orders/:orderId', element: <OrderDetails /> },
       { path: '/about-us', element: <AboutUs /> },
+      // ✅ ADDED: Contact route for SocialMediaLinks
+      { path: '/contact', element: <SocialMediaLinks /> },
     ],
   },
   { path: '/login', element: <Login /> },

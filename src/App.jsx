@@ -12,6 +12,7 @@ function App() {
     <>
       <Navbar />
       <ToastContainer />
+      {/* <Contact /> */}
       <Outlet />
       <Footer />
     </>
