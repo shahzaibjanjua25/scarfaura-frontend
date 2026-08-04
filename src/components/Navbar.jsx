@@ -131,7 +131,7 @@ const Navbar = () => {
                 to="/contact" 
                 className="link"
               >
-                Contact
+                Contact Us
               </Link>
             </li>
           </ul>
