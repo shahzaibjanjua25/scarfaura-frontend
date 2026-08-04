@@ -8,7 +8,7 @@ const AboutUs = () => {
       <section className="about-hero">
         <div className="hero-content">
           <h1>About Scarfaura</h1>
-          <p>Where comfort meets style for your little ones!</p>
+          <p>Where comfort meets style for your loved ones!</p>
         </div>
       </section>
 
@@ -68,7 +68,7 @@ const AboutUs = () => {
             <div className="contact-info">
               <p><span className="icon location-icon"></span> Rawalpindi, Pakistan</p>
               <p><span className="icon phone-icon"></span> Call or WhatsApp: +923165972409</p>
-              <p><span className="icon email-icon"></span> Email: sch19435@gmail.com</p>
+              <p><span className="icon email-icon"></span> Email: scarfauraa@gmail.com</p>
             </div>
           </div>
 

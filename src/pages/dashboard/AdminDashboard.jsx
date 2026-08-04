@@ -38,7 +38,7 @@ const AdminDashboard = () => {
         <ul className="space-y-5 pt-5">
           <li>
             <NavLink
-              to="/dashboard/admin"
+              to="/dashboard/admin2"
               className={({ isActive }) =>
                 isActive ? "text-blue-600 font-bold" : "text-black"
               }

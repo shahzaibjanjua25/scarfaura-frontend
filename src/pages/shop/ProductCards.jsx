@@ -3,12 +3,24 @@ import RatingStars from '../../components/RatingStars'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/features/cart/cartSlice';
+import { toast } from 'react-toastify';
 
 const ProductCards = ({ products }) => {
     const dispatch = useDispatch();
 
     const handleAddToCart = (product) => {
-        dispatch(addToCart(product))
+        dispatch(addToCart(product));
+        // Show success toast notification
+        toast.success(`🛒 ${product.name} added to cart!`, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
     }
     
     return (

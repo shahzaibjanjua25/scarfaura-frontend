@@ -47,7 +47,6 @@ const OrderSummary = () => {
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
-    if (!formData.postalCode.trim()) newErrors.postalCode = "Postal code is required";
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
@@ -111,8 +110,20 @@ const OrderSummary = () => {
     setIsSubmitting(true);
 
     try {
+      // ✅ Fix: Send "N/A" for empty postal code
+      const zipCodeValue = formData.postalCode.trim() || "N/A";
+
       const orderData = {
         ...(user?._id && { user: user._id }),
+        customerName: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        shippingAddress: {
+          address: formData.address.trim(),
+          city: formData.city.trim(),
+          state: formData.state.trim(),
+          zipCode: zipCodeValue // ✅ Send "N/A" if empty
+        },
         products: products.map((product) => ({
           productId: product._id || product.id,
           name: product.name || "Unnamed Product",
@@ -120,19 +131,14 @@ const OrderSummary = () => {
           quantity: Number(product.quantity) || 1,
           image: product.image || ""
         })),
-        email: formData.email.trim(),
-        phone: formData.phone.trim(),
-        shippingAddress: {
-          address: formData.address.trim(),
-          city: formData.city.trim(),
-          state: formData.state.trim(),
-          zipCode: formData.postalCode.trim()
-        },
-        customerName: formData.name.trim(),
-        amount: Number(totalPrice) + Number(deliveryCharge),
-        specialInstructions: formData.notes?.trim() || "",
-        paymentMethod: "Cash on Delivery"
+        paymentMethod: "Cash on Delivery",
+        totalAmount: Number(totalPrice),
+        deliveryCharge: Number(deliveryCharge),
+        grandTotal: Number(grandTotal),
+        notes: formData.notes?.trim() || ""
       };
+
+      console.log("📦 Sending order data:", orderData);
 
       const response = await fetch('https://scarfaura.vercel.app/api/orders/create-order', {
         method: "POST",
@@ -144,25 +150,36 @@ const OrderSummary = () => {
         body: JSON.stringify(orderData)
       });
 
-      const responseData = await response.json();
+      const responseText = await response.text();
+      let responseData;
+      try {
+        responseData = JSON.parse(responseText);
+      } catch (e) {
+        console.error("Failed to parse response:", responseText);
+        throw new Error("Server returned an invalid response");
+      }
 
       if (!response.ok) {
         const errorMsg = responseData.error || responseData.message || `HTTP error! status: ${response.status}`;
+        console.error("Server error response:", responseData);
         throw new Error(errorMsg);
       }
 
-      const emailResult = await sendOrderNotification({
-        ...orderData,
-        orderId: responseData.orderId || responseData._id
-      });
-
-      if (!emailResult.success) {
-        console.warn("Email notification failed:", emailResult.error);
+      try {
+        const emailResult = await sendOrderNotification({
+          ...orderData,
+          orderId: responseData.orderId || responseData._id
+        });
+        if (!emailResult.success) {
+          console.warn("Email notification failed:", emailResult.error);
+        }
+      } catch (emailError) {
+        console.warn("Email notification error:", emailError);
       }
 
       setOrderDetails({
         orderId: responseData.orderId || responseData._id,
-        amount: orderData.amount.toFixed(2)
+        amount: grandTotal.toFixed(2)
       });
       setShowModal(false);
       setShowSuccess(true);
@@ -447,20 +464,19 @@ const OrderSummary = () => {
                 </div>
               </div>
 
-              {/* Postal Code */}
+              {/* Postal Code - Optional */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Postal Code <span className="text-red-400">*</span>
+                  Postal Code <span className="text-gray-400 font-normal">(Optional)</span>
                 </label>
                 <input
                   type="text"
                   name="postalCode"
                   value={formData.postalCode}
                   onChange={handleInputChange}
-                  placeholder="46000"
-                  className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.postalCode ? 'border-red-300' : 'border-gray-200'} rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm`}
+                  placeholder="46000 (optional)"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-200 focus:border-gray-400 focus:bg-white transition-all outline-none text-sm"
                 />
-                {errors.postalCode && <p className="text-red-400 text-xs mt-1">{errors.postalCode}</p>}
               </div>
 
               {/* Notes */}

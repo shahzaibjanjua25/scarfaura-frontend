@@ -8,7 +8,7 @@
 
 .about-hero {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-              url('https://images.unsplash.com/photo-1605152276897-4f618f831968?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+              url('../assets/banner.png');
   background-size: cover;
   background-position: center;
   height: 300px;
@@ -66,26 +66,7 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-.feature-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 15px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.quality-icon {
-  background-image: url('../assets/quality-icon.png');
-}
-
-.trendy-icon {
-  background-image: url('../assets/trendy-icon.png');
-}
-
-.affordable-icon {
-  background-image: url('../assets/affordable-icon.png');
-}
+/* Removed feature-icon styles */
 
 .feature-card h3 {
   font-size: 1.3rem;
@@ -107,25 +88,7 @@
   align-items: center;
 }
 
-.icon {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-  background-size: contain;
-}
-
-.location-icon {
-  background-image: url('../assets/location-icon.png');
-}
-
-.phone-icon {
-  background-image: url('../assets/phone-icon.png');
-}
-
-.email-icon {
-  background-image: url('../assets/email-icon.png');
-}
+/* Removed icon styles */
 
 .closing-message {
   text-align: center;

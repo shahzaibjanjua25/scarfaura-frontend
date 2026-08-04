@@ -69,7 +69,7 @@ const Checkout = () => {
           address: formData.address,
           city: formData.city || "N/A",
           state: formData.state || "N/A",
-          zipCode: formData.zipCode || "N/A"
+          zipCode: formData.zipCode || "" // Allow empty zip code
         },
         products: cartItems.map((product) => ({
           productId: product._id || product.id,
@@ -104,7 +104,7 @@ const Checkout = () => {
         throw new Error(responseData.error || responseData.message || "Failed to create order");
       }
 
-      // Clear cart and navigate to confirmation k hal a maraa
+      // Clear cart and navigate to confirmation
       dispatch(clearCart());
       navigate(`/order-confirmation/${responseData.orderId || responseData._id}`);
 
@@ -234,14 +234,17 @@ const Checkout = () => {
               </div>
             </div>
 
+            {/* ZIP / Postal Code - Now Optional */}
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">ZIP / Postal Code</label>
+              <label className="block text-gray-700 mb-2">
+                ZIP / Postal Code <span className="text-gray-400 font-normal">(Optional)</span>
+              </label>
               <input
                 type="text"
                 name="zipCode"
                 value={formData.zipCode}
                 onChange={handleChange}
-                placeholder="Postal code"
+                placeholder="Postal code (optional)"
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
