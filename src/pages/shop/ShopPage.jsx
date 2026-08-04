@@ -398,7 +398,7 @@ const ShopPage = () => {
                 <div className="sf-wrap">
                     <p className="sf-eyebrow">The Collection</p>
                     <h1 className="sf-display sf-masthead__title">
-                      <em>  Hijabs cut for everyday wear</em>
+                       Hijabs cut <em> for everyday wear</em>
                     </h1>
                     <p className="sf-masthead__lede">
                         Modal, jersey and georgette, dyed in small runs. Filter by fabric,
