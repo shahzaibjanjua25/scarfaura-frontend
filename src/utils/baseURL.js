@@ -5,7 +5,7 @@ export const getBaseUrl = () => {
     // return 'http://localhost:5000';
   };
   
-utils/baseURL.js
+// utils/baseURL.js
 // export const getBaseUrl = () => "http://localhost:5000";
 
 // export default getBaseUrl;
