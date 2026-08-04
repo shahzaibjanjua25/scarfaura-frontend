@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "../redux/features/auth/authApi";
 import emailjs from '@emailjs/browser';
@@ -12,9 +12,11 @@ const Register = () => {
     confirmPassword: "",
     otp: ""
   });
+  
   const [otpSent, setOtpSent] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [message, setMessage] = useState("");
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [registerUser, { isLoading }] = useRegisterUserMutation();
   const [dialog, setDialog] = useState({
     show: false,
@@ -24,6 +26,18 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+  // ✅ Debug: Log EmailJS environment variables on component mount
+  useEffect(() => {
+    console.log('🔍 ===== EMAILJS DEBUG INFO =====');
+    console.log('📧 VITE_EMAILJS_OTP_SERVICE_ID:', import.meta.env.VITE_EMAILJS_OTP_SERVICE_ID);
+    console.log('📧 VITE_EMAILJS_OTP_TEMPLATE_ID:', import.meta.env.VITE_EMAILJS_OTP_TEMPLATE_ID);
+    console.log('📧 VITE_EMAILJS_OTP_PUBLIC_KEY:', import.meta.env.VITE_EMAILJS_OTP_PUBLIC_KEY);
+    console.log('📧 VITE_EMAILJS_SERVICE_ID:', import.meta.env.VITE_EMAILJS_SERVICE_ID);
+    console.log('📧 VITE_EMAILJS_TEMPLATE_ID:', import.meta.env.VITE_EMAILJS_TEMPLATE_ID);
+    console.log('📧 VITE_EMAILJS_PUBLIC_KEY:', import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+    console.log('🔍 ===== END DEBUG INFO =====');
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -32,84 +46,186 @@ const Register = () => {
   const generateOTP = () => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     setGeneratedOtp(otp);
+    console.log('🔐 Generated OTP:', otp);
     return otp;
   };
 
   const sendOTP = async (email) => {
+    setIsSendingOtp(true);
+    console.log('📧 ===== SENDING OTP =====');
+    console.log('📧 Email:', email);
+    console.log('📧 Username:', formData.username);
+    
     try {
       const otp = generateOTP();
       const templateParams = {
         to_email: email,
         otp: otp,
-        username: formData.username
+        username: formData.username || "Valued Customer"
       };
+      
+      console.log('📧 Template Params:', templateParams);
+      console.log('📧 Service ID:', import.meta.env.VITE_EMAILJS_OTP_SERVICE_ID);
+      console.log('📧 Template ID:', import.meta.env.VITE_EMAILJS_OTP_TEMPLATE_ID);
+      console.log('📧 Public Key:', import.meta.env.VITE_EMAILJS_OTP_PUBLIC_KEY);
 
-      await emailjs.send(
+      // ✅ Try sending with EmailJS
+      const response = await emailjs.send(
         import.meta.env.VITE_EMAILJS_OTP_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_OTP_TEMPLATE_ID,
         templateParams,
         import.meta.env.VITE_EMAILJS_OTP_PUBLIC_KEY
       );
 
+      console.log('✅ EmailJS Response:', response);
+      console.log('✅ OTP sent successfully to:', email);
+
       setOtpSent(true);
       setMessage("OTP sent to your email!");
-      alert("OTP sent to your email");
+      setDialog({
+        show: true,
+        type: "success",
+        message: "✅ OTP sent successfully! Please check your email."
+      });
+      
     } catch (error) {
-      console.error('Error sending OTP:', error);
+      console.error('❌ ===== EMAILJS ERROR =====');
+      console.error('❌ Error Status:', error.status);
+      console.error('❌ Error Text:', error.text);
+      console.error('❌ Full Error:', error);
+      
+      // ✅ Detailed error handling
+      let errorMessage = "Failed to send OTP. Please try again.";
+      
+      if (error.status === 404) {
+        errorMessage = "Email service not found. Please check your Service ID.";
+        console.error('🔍 Service ID used:', import.meta.env.VITE_EMAILJS_OTP_SERVICE_ID);
+      } else if (error.status === 401 || error.status === 403) {
+        errorMessage = "Authentication failed. Please check your Public Key.";
+        console.error('🔍 Public Key used:', import.meta.env.VITE_EMAILJS_OTP_PUBLIC_KEY);
+      } else if (error.text) {
+        errorMessage = `EmailJS Error: ${error.text}`;
+      }
+      
       setDialog({
         show: true,
         type: "error",
-        message: "Failed to send OTP. Please try again."
+        message: errorMessage
       });
+      
+    } finally {
+      setIsSendingOtp(false);
+      console.log('📧 ===== SEND OTP COMPLETE =====');
     }
   };
 
   const handleSendOTP = (e) => {
     e.preventDefault();
+    console.log('🔍 Send OTP button clicked');
+    console.log('📧 Email entered:', formData.email);
+    
     if (!formData.email) {
+      console.warn('⚠️ No email provided');
       setMessage("Please enter your email first");
+      setDialog({
+        show: true,
+        type: "error",
+        message: "Please enter your email first"
+      });
       return;
     }
+    
+    // ✅ Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      console.warn('⚠️ Invalid email format:', formData.email);
+      setDialog({
+        show: true,
+        type: "error",
+        message: "Please enter a valid email address"
+      });
+      return;
+    }
+    
     sendOTP(formData.email);
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    console.log('🔍 ===== REGISTRATION ATTEMPT =====');
+    console.log('📧 Email:', formData.email);
+    console.log('👤 Username:', formData.username);
+    console.log('🔐 OTP Sent:', otpSent);
+    console.log('🔐 Entered OTP:', formData.otp);
+    console.log('🔐 Generated OTP:', generatedOtp);
 
     if (!otpSent) {
+      console.warn('⚠️ OTP not sent');
       setMessage("Please request an OTP first");
+      setDialog({
+        show: true,
+        type: "error",
+        message: "Please request an OTP first"
+      });
       return;
     }
 
     if (formData.otp !== generatedOtp) {
+      console.warn('⚠️ OTP mismatch - Entered:', formData.otp, 'Generated:', generatedOtp);
       setMessage("Invalid OTP. Please try again.");
+      setDialog({
+        show: true,
+        type: "error",
+        message: "Invalid OTP. Please try again."
+      });
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
+      console.warn('⚠️ Password mismatch');
       setMessage("Passwords do not match");
+      setDialog({
+        show: true,
+        type: "error",
+        message: "Passwords do not match"
+      });
       return;
     }
 
     try {
       const { confirmPassword, ...userData } = formData;
+      console.log('📤 Registering user:', { email: userData.email, username: userData.username });
+      
       await registerUser(userData).unwrap();
+      console.log('✅ Registration successful!');
+      
       setDialog({
         show: true,
         type: "success",
         message: "Registration successful! Redirecting to login..."
       });
-      setTimeout(() => navigate('/login'), 2000);
+      
+      setTimeout(() => {
+        console.log('🔄 Redirecting to login...');
+        navigate('/login');
+      }, 2000);
+      
     } catch (err) {
+      console.error('❌ Registration error:', err);
+      console.error('❌ Error data:', err.data);
+      
       setDialog({
         show: true,
         type: "error",
         message: err.data?.message || "Registration failed. User Already Exists"
       });
     }
+    
+    console.log('🔍 ===== REGISTRATION COMPLETE =====');
   };
 
   const closeDialog = () => {
+    console.log('🔍 Closing dialog');
     setDialog(prev => ({ ...prev, show: false }));
   };
 
@@ -140,14 +256,13 @@ const Register = () => {
         {/* Logo Header with Pink Background */}
         <div className="bg-gradient-to-r from-pink-600 to-pink-400 py-8 px-6 flex flex-col items-center">
           <div className="relative">
-            <img 
-              src={logo} 
-              alt="Company Logo" 
-              className="h-20 w-20 rounded-full object-cover border-4 border-white shadow-md" 
+            <img
+              src={logo}
+              alt="Company Logo"
+              className="h-20 w-20 rounded-full object-cover border-4 border-white shadow-md"
             />
           </div>
           <h1 className="mt-4 text-2xl font-bold text-white">Create Your Account</h1>
-          {/* <p className="mt-1 text-pink-100">Join our community</p> */}
         </div>
 
         <div className="p-8">
@@ -187,10 +302,16 @@ const Register = () => {
               </div>
               {!otpSent && (
                 <button
+                  type="button"
                   onClick={handleSendOTP}
-                  className="px-4 py-3 bg-gradient-to-r from-pink-600 to-pink-500 text-white rounded-lg hover:from-pink-700 hover:to-pink-600 transition-colors"
+                  disabled={isSendingOtp}
+                  className={`px-4 py-3 text-white rounded-lg transition-colors ${
+                    isSendingOtp 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600'
+                  }`}
                 >
-                  Send OTP
+                  {isSendingOtp ? 'Sending...' : 'Send OTP'}
                 </button>
               )}
             </div>
@@ -254,7 +375,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white font-medium rounded-lg shadow-md transition-all"
+              className="w-full py-3 px-4 bg-gradient-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white font-medium rounded-lg shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
