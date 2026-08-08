@@ -21,12 +21,89 @@
     margin-left: auto;
     margin-right: auto;
 }
+
 /* Ensure the page starts under the navbar */
 .single-product-page {
-    padding-top: 80px; /* Adjust based on your navbar height */
+    padding-top: 80px;
 }
 
-/* If you want to apply globally, add to your main CSS */
-body {
-    padding-top: 80px; /* Adjust based on your navbar height */
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+    .product-name {
+        font-size: 1.25rem !important;
+        line-height: 1.75rem !important;
+    }
+    
+    .product-price {
+        font-size: 1.25rem !important;
+        line-height: 1.75rem !important;
+    }
+    
+    .product-old-price {
+        font-size: 0.875rem !important;
+        line-height: 1.25rem !important;
+    }
+    
+    .product-description {
+        font-size: 0.875rem !important;
+        line-height: 1.5rem !important;
+    }
+    
+    .section-spacing {
+        gap: 1rem !important;
+    }
+    
+    .product-details-spacing {
+        gap: 1rem !important;
+    }
+    
+    .border-padding {
+        padding-top: 1rem !important;
+    }
+    
+    .category-badge {
+        padding: 0.25rem 0.625rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .color-swatch {
+        width: 2rem !important;
+        height: 2rem !important;
+    }
+    
+    .color-text {
+        font-size: 0.875rem !important;
+    }
+    
+    .rating-text {
+        font-size: 0.75rem !important;
+    }
+    
+    .add-to-cart-btn {
+        padding: 0.75rem 1.5rem !important;
+        font-size: 0.875rem !important;
+    }
+    
+    .trust-badges {
+        gap: 0.75rem !important;
+        font-size: 0.625rem !important;
+    }
+    
+    .breadcrumb-title {
+        font-size: 1.5rem !important;
+        line-height: 2rem !important;
+    }
+}
+
+/* Tablet responsive adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .product-name {
+        font-size: 1.5rem !important;
+        line-height: 2rem !important;
+    }
+    
+    .product-price {
+        font-size: 1.5rem !important;
+        line-height: 2rem !important;
+    }
 }

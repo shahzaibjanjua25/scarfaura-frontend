@@ -169,8 +169,8 @@ const ProductGallery = ({ images, productName }) => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className={`relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${i === index
-                                        ? 'border-primary shadow-lg scale-105'
-                                        : 'border-transparent opacity-60 hover:opacity-100 hover:border-gray-300'
+                                    ? 'border-primary shadow-lg scale-105'
+                                    : 'border-transparent opacity-60 hover:opacity-100 hover:border-gray-300'
                                     }`}
                             >
                                 <img
@@ -271,7 +271,7 @@ const SingleProduct = () => {
             <section className="relative bg-gradient-to-r from-primary-light via-primary/5 to-white py-6 mt-0">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
-                        <h1 className="text-3xl md:text-4xl font-serif font-bold text-gray-800">
+                        <h1 className="breadcrumb-title text-3xl md:text-4xl font-serif font-bold text-gray-800">
                             {singleProduct.name}
                         </h1>
                         <nav className="flex items-center space-x-2 text-sm mt-2 md:mt-0">
@@ -303,26 +303,26 @@ const SingleProduct = () => {
                         </div>
 
                         {/* Product Details */}
-                        <div className="w-full lg:w-1/2 space-y-6">
-                            {/* Product Name */}
+                        <div className="product-details-spacing w-full lg:w-1/2 space-y-6">
+                            {/* Product Name - REDUCED SIZE */}
                             <div>
-                                <h1 className="text-3xl md:text-4xl font-serif font-bold text-gray-800 leading-tight">
+                                <h1 className="product-name text-2xl md:text-2xl font-serif font-bold text-gray-800 leading-tight">
                                     {singleProduct.name}
                                 </h1>
                             </div>
 
-                            {/* Price Section */}
+                            {/* Price Section - REDUCED SIZE */}
                             <div className="flex items-center gap-4">
-                                <span className="text-3xl md:text-4xl font-bold text-primary">
+                                <span className="product-price text-2xl md:text-xl font-bold text-gray-700">
                                     PKR {singleProduct.price}
                                 </span>
                                 {singleProduct.oldPrice && (
                                     <>
-                                        <span className="text-lg text-gray-400 line-through">
+                                        <span className="product-old-price text-base text-red-400 line-through">
                                             PKR {singleProduct.oldPrice}
                                         </span>
                                         {discount > 0 && (
-                                            <span className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                                            <span className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2.5 py-0.5 rounded-full text-xs font-semibold shadow-lg">
                                                 -{discount}%
                                             </span>
                                         )}
@@ -331,15 +331,15 @@ const SingleProduct = () => {
                             </div>
 
                             {/* Description */}
-                            <div className="border-t border-gray-100 pt-6">
+                            <div className="border-t border-gray-100 border-padding pt-6">
                                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Description</h3>
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="product-description text-gray-600 leading-relaxed">
                                     {singleProduct.description}
                                 </p>
                             </div>
 
                             {/* Product Details Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 pt-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 border-padding pt-6">
                                 {/* Categories */}
                                 <div>
                                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Categories</h3>
@@ -350,7 +350,7 @@ const SingleProduct = () => {
                                                     key={index}
                                                     to="/shop"
                                                     state={{ category: cat }}
-                                                    className="group inline-flex items-center gap-1 bg-gray-50 hover:bg-primary/10 text-gray-700 hover:text-primary px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 border border-gray-200 hover:border-primary/20"
+                                                    className="category-badge group inline-flex items-center gap-1 bg-gray-50 hover:bg-primary/10 text-gray-700 hover:text-primary px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 border border-gray-200 hover:border-primary/20"
                                                 >
                                                     {cat}
                                                     <svg className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -370,21 +370,21 @@ const SingleProduct = () => {
                                         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Color</h3>
                                         <div className="flex items-center gap-3">
                                             <div
-                                                className="w-10 h-10 rounded-full border-2 border-gray-200 shadow-md"
+                                                className="color-swatch w-10 h-10 rounded-full border-2 border-gray-200 shadow-md"
                                                 style={{ backgroundColor: getColorHex(singleProduct.color) }}
                                             />
-                                            <span className="text-gray-700 font-medium capitalize">{singleProduct.color}</span>
+                                            <span className="color-text text-gray-700 font-medium capitalize">{singleProduct.color}</span>
                                         </div>
                                     </div>
                                 )}
                             </div>
 
                             {/* Rating */}
-                            <div className="border-t border-gray-100 pt-6">
+                            <div className="border-t border-gray-100 border-padding pt-6">
                                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Customer Rating</h3>
                                 <div className="flex items-center gap-4">
                                     <RatingStars rating={singleProduct.rating} />
-                                    <span className="text-sm text-gray-500">
+                                    <span className="rating-text text-sm text-gray-500">
                                         ({productReviews.length} reviews)
                                     </span>
                                 </div>
@@ -395,7 +395,7 @@ const SingleProduct = () => {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => handleAddToCart(singleProduct)}
-                                className="w-full py-4 px-8 rounded-xl font-semibold text-white shadow-lg transition-all duration-300 flex items-center justify-center gap-3 bg-gradient-to-r from-primary to-primary-dark hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                                className="add-to-cart-btn w-full py-4 px-8 rounded-xl font-semibold text-white shadow-lg transition-all duration-300 flex items-center justify-center gap-3 bg-gradient-to-r from-primary to-primary-dark hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -404,7 +404,7 @@ const SingleProduct = () => {
                             </motion.button>
 
                             {/* Trust Badges */}
-                            <div className="flex items-center justify-center gap-6 pt-4 text-xs text-gray-400">
+                            <div className="trust-badges flex items-center justify-center gap-6 pt-4 text-xs text-gray-400">
                                 <div className="flex items-center gap-2">
                                     <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -415,7 +415,7 @@ const SingleProduct = () => {
                                     <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
-                                    {/* 30-Day Returns */}
+                                    30-Day Returns
                                 </div>
                             </div>
                         </div>
