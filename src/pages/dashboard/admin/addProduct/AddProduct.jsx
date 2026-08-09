@@ -119,28 +119,28 @@ const AddProduct = () => {
            the frontend is correct and any string/array mismatch in
            the database is happening in productsApi.js or on the
            server. Delete this block once the issue is resolved. */
-        console.log('--- OUTGOING PRODUCT PAYLOAD ---');
-        console.log('categories:', productData.categories,
-            '| isArray:', Array.isArray(productData.categories),
-            '| length:', productData.categories.length);
-        console.log('images:', productData.images,
-            '| isArray:', Array.isArray(productData.images),
-            '| length:', productData.images.length);
-        console.log('category (string):', productData.category);
-        console.log('image (string):', productData.image);
-        console.log('JSON as sent:', JSON.stringify(productData));
+        // console.log('--- OUTGOING PRODUCT PAYLOAD ---');
+        // console.log('categories:', productData.categories,
+        //     '| isArray:', Array.isArray(productData.categories),
+        //     '| length:', productData.categories.length);
+        // console.log('images:', productData.images,
+        //     '| isArray:', Array.isArray(productData.images),
+        //     '| length:', productData.images.length);
+        // console.log('category (string):', productData.category);
+        // console.log('image (string):', productData.image);
+        // console.log('JSON as sent:', JSON.stringify(productData));
         /* ------------------------------------------------------ */
 
         try {
             const result = await addProduct(productData).unwrap();
 
             /* ---------------- DEBUG: what came back -------------- */
-            console.log('--- SERVER RESPONSE ---');
-            console.log('full response:', result);
-            console.log('stored categories:', result?.product?.categories,
-                '| isArray:', Array.isArray(result?.product?.categories));
-            console.log('stored images:', result?.product?.images,
-                '| isArray:', Array.isArray(result?.product?.images));
+            // console.log('--- SERVER RESPONSE ---');
+            // console.log('full response:', result);
+            // console.log('stored categories:', result?.product?.categories,
+            //     '| isArray:', Array.isArray(result?.product?.categories));
+            // console.log('stored images:', result?.product?.images,
+            //     '| isArray:', Array.isArray(result?.product?.images));
             /* ---------------------------------------------------- */
 
             const savedCategories = result?.product?.categories || [];

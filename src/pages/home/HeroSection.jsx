@@ -122,8 +122,8 @@ colorCards.forEach(color => {
   }
 });
 
-console.log('🟢 uniqueColors:', uniqueColors);
-console.log('🟢 uniqueColors length:', uniqueColors.length);
+// console.log('🟢 uniqueColors:', uniqueColors);
+// console.log('🟢 uniqueColors length:', uniqueColors.length);
 
 const HeroSection = () => {
   const navigate = useNavigate();

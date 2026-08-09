@@ -30,7 +30,7 @@ const Login = () => {
         navigate('/');
       }, 2000);
     } catch (err) {
-      console.error('Login failed:', err);
+      // console.error('Login failed:', err);
       if (err.status === 500) {
         setMessage("Server error - please try again later");
       } else {

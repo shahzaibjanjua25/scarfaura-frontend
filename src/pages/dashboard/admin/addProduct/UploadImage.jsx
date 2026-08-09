@@ -8,10 +8,10 @@ const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 const MAX_IMAGES = 6;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
-console.log("ENV:", import.meta.env);
-console.log("CLOUD:", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
-console.log("PRESET:", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
-console.log("EMAILJS (control):", import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+// console.log("ENV:", import.meta.env);
+// console.log("CLOUD:", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+// console.log("PRESET:", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+// console.log("EMAILJS (control):", import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 const UploadImage = ({
     name = 'images',
     images = [],
