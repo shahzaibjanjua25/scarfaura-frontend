@@ -43,7 +43,7 @@ const Banner = () => {
           <div className="sa-rise flex items-center gap-4" style={{ animationDelay: '.05s' }}>
             <span className="h-px w-10 bg-[#c9a87c]" />
             <span className="text-[10px] font-light uppercase tracking-[0.45em] text-[#c9a87c] sm:text-[11px]">
-              New Arrivals
+              Categories
             </span>
           </div>
 

@@ -1,5 +1,5 @@
 /* ============================================================
-   New Arrivals / Deals Grid — ScarfAura
+   New Arrivals or Categories/Deals Grid — ScarfAura
    Palette: ink #2c241e · muted #5a4f47 · gold #c9a87c · 
    gold-dark #b8966a · sand #d4c5b0 · cream #faf8f5
    ============================================================ */
@@ -12,10 +12,9 @@
   --sa-sand: #d4c5b0;
   --sa-cream: #faf8f5;
   
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 4rem 1.25rem;
-  /* background-color: var(--sa-cream); */
 }
 
 /* ---------- Header ---------------------------------------- */
@@ -92,7 +91,7 @@
   opacity: 0.5;
 }
 
-/* ---------- Grid ------------------------------------------ */
+/* ---------- Grid - Mobile First ------------------------------------------ */
 
 .deals-grid__grid {
   display: grid;
@@ -104,7 +103,6 @@
 
 .deals-grid__card {
   background: #ffffff;
-  /* height: ; */
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(44, 36, 30, 0.06);
@@ -122,6 +120,10 @@
 
 .deals-grid__card:nth-child(2) {
   animation-delay: 0.5s;
+}
+
+.deals-grid__card:nth-child(3) {
+  animation-delay: 0.7s;
 }
 
 .deals-grid__card:hover {
@@ -202,6 +204,10 @@
 
 .deals-grid__card:nth-child(2) .deals-grid__badge {
   animation-delay: 0.8s;
+}
+
+.deals-grid__card:nth-child(3) .deals-grid__badge {
+  animation-delay: 1s;
 }
 
 .deals-grid__badge--sale {
@@ -338,7 +344,7 @@
   }
 }
 
-/* ---------- Responsive ------------------------------------ */
+/* ---------- Responsive - Tablet (640px+) ------------------------------------ */
 
 @media (min-width: 640px) {
   .deals-grid__wrapper {
@@ -351,8 +357,12 @@
   }
 }
 
+/* ---------- Responsive - Laptop/Desktop (1024px+) ---------------------------- */
+/* ALL THREE CARDS IN A SINGLE LINE WITH SMALLER CARDS */
+
 @media (min-width: 1024px) {
   .deals-grid__wrapper {
+    max-width: 1400px;
     padding: 6rem 3rem;
   }
   
@@ -360,12 +370,76 @@
     margin-bottom: 4rem;
   }
   
+  /* 3 columns in a single line */
+  .deals-grid__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  
+  /* Make cards smaller for laptop */
+  .deals-grid__image-wrapper {
+    aspect-ratio: 2 / 3;
+  }
+  
+  .deals-grid__content {
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+  
+  .deals-grid__title-card {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .deals-grid__description {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+  
+  .deals-grid__button {
+    font-size: 0.55rem;
+    padding: 0.4rem 1.2rem;
+    letter-spacing: 0.25em;
+  }
+  
+  .deals-grid__badge {
+    font-size: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    top: 0.75rem;
+    left: 0.75rem;
+  }
+}
+
+/* ---------- Responsive - Large Screens (1280px+) ---------------------------- */
+
+@media (min-width: 1280px) {
+  .deals-grid__grid {
+    gap: 2rem;
+  }
+  
+  .deals-grid__content {
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+  
+  .deals-grid__title-card {
+    font-size: 1.2rem;
+  }
+}
+
+/* ---------- Responsive - Extra Large Screens (1440px+) ---------------------- */
+
+@media (min-width: 1440px) {
+  .deals-grid__wrapper {
+    max-width: 1600px;
+    padding: 6rem 4rem;
+  }
+  
   .deals-grid__grid {
     gap: 2.5rem;
   }
   
-  .deals-grid__content {
-    padding: 2rem 2rem 2.25rem;
+  .deals-grid__image-wrapper {
+    aspect-ratio: 3 / 4;
   }
 }
 
