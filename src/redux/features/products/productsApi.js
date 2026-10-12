@@ -12,12 +12,12 @@ export const productsApi = createApi({
     fetchAllProducts: builder.query({
       query: ({ category, color, age, minPrice, maxPrice, page = 1, limit = 10 }) => {
         const queryParams = new URLSearchParams({
-          category: category || '',
-          color: color || '',
+          category: category || "",
+          color: color || "",
           minPrice: minPrice || 0,
-          maxPrice: maxPrice || '',
+          maxPrice: maxPrice || "",
           page: page.toString(),
-          limit: limit.toString()
+          limit: limit.toString(),
         }).toString();
 
         return `/?${queryParams}`;
@@ -37,15 +37,12 @@ export const productsApi = createApi({
     }),
 
     AddProduct: builder.mutation({
-      query: (newProduct) => {
-        // console.log('📤 API Sending product:', newProduct);
-        return {
-          url: "/create-product",
-          method: "POST",
-          body: newProduct,
-          credentials: "include",
-        };
-      },
+      query: (newProduct) => ({
+        url: "/create-product",
+        method: "POST",
+        body: newProduct,
+        credentials: "include",
+      }),
       invalidatesTags: ["Products"],
     }),
 

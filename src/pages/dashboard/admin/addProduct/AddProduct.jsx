@@ -7,362 +7,571 @@ import UploadImage from './UploadImage';
 import { useNavigate } from 'react-router-dom';
 
 const categories = [
-    { label: 'Printed Hijabs', value: 'Printed Hijabs' },
-    { label: 'Georgette  Hijabs', value: 'Georgette  Hijabs' },
-    { label: 'Modal Hijabs', value: 'Modal Hijabs' },
-    { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
-    { label: 'Deer Prints', value: 'Deer Prints' },
-    { label: 'Leopard Prints', value: 'Leopard Prints' }
+  { label: 'Printed Hijabs', value: 'Printed Hijabs' },
+  { label: 'Georgette Hijabs', value: 'Georgette Hijabs' },
+  { label: 'Modal Hijabs', value: 'Modal Hijabs' },
+  { label: 'Jersey Hijabs', value: 'Jersey Hijabs' },
+  { label: 'Deer Prints', value: 'Deer Prints' },
+  { label: 'Leopard Prints', value: 'Leopard Prints' },
 ];
 
 const colors = [
-    { label: 'Select Color', value: '' },
-    { label: 'Black', value: 'black' },
-    { label: 'Brown', value: 'brown' },
-    { label: 'Maroon', value: 'maroon' },
-    { label: 'Zinc', value: 'zinc' },
-    { label: 'Navy Blue', value: 'navy blue' },
-    { label: 'White', value: 'white' },
-    { label: 'Skin', value: 'skin' },
-    { label: 'Burgundy', value: 'burgundy' },
-    { label: 'Purple', value: 'purple' },
-    { label: 'Grey', value: 'grey' },
-    { label: 'Plum', value: 'plum' },
-    { label: 'Red', value: 'red' },
-    { label: 'Gold', value: 'gold' },
-    { label: 'Blue', value: 'blue' },
-    { label: 'Silver', value: 'silver' },
-    { label: 'Beige', value: 'beige' },
-    { label: 'Green', value: 'green' },
-    { label: 'Sage Green', value: 'sagegreen' }
+  { label: 'Select Color', value: '' },
+  { label: 'Black', value: 'black' },
+  { label: 'Brown', value: 'brown' },
+  { label: 'Maroon', value: 'maroon' },
+  { label: 'Zinc', value: 'zinc' },
+  { label: 'Navy Blue', value: 'navy blue' },
+  { label: 'White', value: 'white' },
+  { label: 'Skin', value: 'skin' },
+  { label: 'Burgundy', value: 'burgundy' },
+  { label: 'Purple', value: 'purple' },
+  { label: 'Grey', value: 'grey' },
+  { label: 'Plum', value: 'plum' },
+  { label: 'Red', value: 'red' },
+  { label: 'Gold', value: 'gold' },
+  { label: 'Blue', value: 'blue' },
+  { label: 'Silver', value: 'silver' },
+  { label: 'Beige', value: 'beige' },
+  { label: 'Green', value: 'green' },
+  { label: 'Sage Green', value: 'sagegreen' },
 ];
 
 const emptyProduct = {
-    name: '',
-    categories: [],
-    color: '',
-    price: '',
-    oldPrice: '',
-    description: ''
+  name: '',
+  categories: [],
+  color: '',
+  price: '',
+  oldPrice: '',
+  description: '',
 };
 
 const AddProduct = () => {
-    const { user } = useSelector((state) => state.auth);
-    const [product, setProduct] = useState(emptyProduct);
-    const [images, setImages] = useState([]);
-    const [addProduct, { isLoading }] = useAddProductMutation();
-    const navigate = useNavigate();
-    const [dialog, setDialog] = useState({ show: false, type: '', message: '' });
+  const { user } = useSelector((state) => state.auth);
+  const [product, setProduct] = useState(emptyProduct);
+  const [images, setImages] = useState([]);
+  const [addProduct, { isLoading }] = useAddProductMutation();
+  const navigate = useNavigate();
+  const [dialog, setDialog] = useState({ show: false, type: '', message: '' });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProduct((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCategoryToggle = (categoryValue) => {
+    setProduct((prev) => {
+      const current = prev.categories || [];
+      return {
+        ...prev,
+        categories: current.includes(categoryValue)
+          ? current.filter((c) => c !== categoryValue)
+          : [...current, categoryValue],
+      };
+    });
+  };
+
+  const makePrimaryCategory = (categoryValue) => {
+    setProduct((prev) => ({
+      ...prev,
+      categories: [categoryValue, ...prev.categories.filter((c) => c !== categoryValue)],
+    }));
+  };
+
+  const isColorRequired = product.categories.includes('Georgette Hijabs');
+
+  const showError = (message) => setDialog({ show: true, type: 'error', message });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !product.name ||
+      product.categories.length === 0 ||
+      !product.price ||
+      !product.description ||
+      images.length === 0
+    ) {
+      showError(
+        'Please fill in all required fields, select at least one category, and upload at least one image.'
+      );
+      return;
+    }
+
+    if (isColorRequired && !product.color) {
+      showError('Color is required when "Georgette Hijabs" category is selected.');
+      return;
+    }
+
+    if (!user?._id) {
+      showError('Your session has expired. Please sign in again.');
+      return;
+    }
+
+    const productData = {
+      name: product.name.trim(),
+      category: product.categories[0],
+      categories: product.categories,
+      color: product.color || undefined,
+      price: Number(product.price),
+      oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
+      description: product.description.trim(),
+      images,
+      image: images[0],
+      author: user._id,
     };
 
-    const handleCategoryToggle = (categoryValue) => {
-        setProduct((prev) => {
-            const current = prev.categories || [];
-            return {
-                ...prev,
-                categories: current.includes(categoryValue)
-                    ? current.filter((c) => c !== categoryValue)
-                    : [...current, categoryValue]
-            };
-        });
-    };
+    try {
+      const result = await addProduct(productData).unwrap();
 
-    const makePrimaryCategory = (categoryValue) => {
-        setProduct((prev) => ({
-            ...prev,
-            categories: [categoryValue, ...prev.categories.filter((c) => c !== categoryValue)]
-        }));
-    };
+      const savedCategories = result?.product?.categories || [];
+      if (savedCategories.length !== product.categories.length) {
+        console.warn(
+          'MISMATCH — sent',
+          product.categories.length,
+          'categories:',
+          product.categories,
+          'but server stored',
+          savedCategories.length + ':',
+          savedCategories
+        );
+      }
 
-    const isColorRequired = product.categories.includes('Georgette  Hijabs');
+      const savedImages = result?.product?.images || [];
+      if (savedImages.length !== images.length) {
+        console.warn('MISMATCH — sent', images.length, 'images but server stored', savedImages.length);
+      }
 
-    const showError = (message) => setDialog({ show: true, type: 'error', message });
+      setDialog({
+        show: true,
+        type: 'success',
+        message: 'Product added successfully! Redirecting to shop…',
+      });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+      setTimeout(() => {
+        setProduct(emptyProduct);
+        setImages([]);
+        navigate('/shop');
+      }, 2000);
+    } catch (err) {
+      console.error('Add product error:', err);
+      showError(err.data?.message || 'Failed to add product. Please try again.');
+    }
+  };
 
-        if (!product.name || product.categories.length === 0 || !product.price ||
-            !product.description || images.length === 0) {
-            showError('Please fill in all required fields, select at least one category, and upload at least one image.');
-            return;
+  const closeDialog = () => setDialog((prev) => ({ ...prev, show: false }));
+
+  return (
+    <div className="ap-page">
+      <style>{`
+        .ap-page {
+          --ink: #241C1E;
+          --paper: #FAF7F5;
+          --card: #FFFFFF;
+          --plum: #5A1A2B;
+          --rule: #E7DFDA;
+          --muted: #8A7F7B;
+          --hush: #F2ECE8;
+          min-height: 100vh;
+          background: var(--paper);
+          padding: 2.5rem 1.25rem 4rem;
+          font-family: 'Karla', system-ui, sans-serif;
+          -webkit-font-smoothing: antialiased;
         }
-
-        if (isColorRequired && !product.color) {
-            showError('Color is required when "Georgette  Hijabs" category is selected.');
-            return;
+        .ap-wrap {
+          max-width: 720px;
+          margin: 0 auto;
         }
-
-        if (!user?._id) {
-            showError('Your session has expired. Please sign in again.');
-            return;
+        .ap-header {
+          margin-bottom: 2.25rem;
         }
-
-        const productData = {
-            name: product.name.trim(),
-            category: product.categories[0],   // primary, single string
-            categories: product.categories,     // full list, array
-            color: product.color || undefined,
-            price: Number(product.price),
-            oldPrice: product.oldPrice ? Number(product.oldPrice) : undefined,
-            description: product.description.trim(),
-            images,                             // full list, array
-            image: images[0],                   // legacy field, single string
-            author: user._id
-        };
-
-        /* ---------------- DEBUG: payload shape ----------------
-           Confirms what leaves the browser. If these say `true`,
-           the frontend is correct and any string/array mismatch in
-           the database is happening in productsApi.js or on the
-           server. Delete this block once the issue is resolved. */
-        // console.log('--- OUTGOING PRODUCT PAYLOAD ---');
-        // console.log('categories:', productData.categories,
-        //     '| isArray:', Array.isArray(productData.categories),
-        //     '| length:', productData.categories.length);
-        // console.log('images:', productData.images,
-        //     '| isArray:', Array.isArray(productData.images),
-        //     '| length:', productData.images.length);
-        // console.log('category (string):', productData.category);
-        // console.log('image (string):', productData.image);
-        // console.log('JSON as sent:', JSON.stringify(productData));
-        /* ------------------------------------------------------ */
-
-        try {
-            const result = await addProduct(productData).unwrap();
-
-            /* ---------------- DEBUG: what came back -------------- */
-            // console.log('--- SERVER RESPONSE ---');
-            // console.log('full response:', result);
-            // console.log('stored categories:', result?.product?.categories,
-            //     '| isArray:', Array.isArray(result?.product?.categories));
-            // console.log('stored images:', result?.product?.images,
-            //     '| isArray:', Array.isArray(result?.product?.images));
-            /* ---------------------------------------------------- */
-
-            const savedCategories = result?.product?.categories || [];
-            if (savedCategories.length !== product.categories.length) {
-                console.warn(
-                    'MISMATCH — sent', product.categories.length, 'categories:', product.categories,
-                    'but server stored', savedCategories.length + ':', savedCategories
-                );
-            }
-
-            const savedImages = result?.product?.images || [];
-            if (savedImages.length !== images.length) {
-                console.warn(
-                    'MISMATCH — sent', images.length, 'images but server stored', savedImages.length
-                );
-            }
-
-            setDialog({
-                show: true,
-                type: 'success',
-                message: 'Product added successfully! Redirecting to shop...'
-            });
-
-            setTimeout(() => {
-                setProduct(emptyProduct);
-                setImages([]);
-                navigate('/shop');
-            }, 2000);
-        } catch (err) {
-            console.error('Add product error:', err);
-            console.error('Server said:', err.data);
-            showError(err.data?.message || 'Failed to add product. Please try again.');
+        .ap-eyebrow {
+          font-size: 0.7rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--muted);
+          font-weight: 600;
+          margin: 0 0 0.5rem;
         }
-    };
+        .ap-title {
+          font-family: 'Fraunces', Georgia, serif;
+          font-size: clamp(1.85rem, 4vw, 2.4rem);
+          font-weight: 500;
+          color: var(--ink);
+          margin: 0;
+          letter-spacing: -0.02em;
+        }
+        .ap-card {
+          background: var(--card);
+          border-radius: 20px;
+          box-shadow: 0 1px 3px rgba(36,28,30,0.04), 0 12px 32px rgba(36,28,30,0.06);
+          padding: 2rem 1.75rem 2.25rem;
+          border: 1px solid rgba(231,223,218,0.6);
+        }
+        @media (min-width: 640px) {
+          .ap-card { padding: 2.35rem 2.5rem 2.75rem; }
+        }
+        .ap-form { display: flex; flex-direction: column; gap: 1.65rem; }
+        .ap-label {
+          display: block;
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: var(--ink);
+          margin-bottom: 0.45rem;
+          letter-spacing: 0.01em;
+        }
+        .ap-label .req { color: var(--plum); margin-left: 2px; }
+        .ap-hint {
+          font-size: 0.75rem;
+          color: var(--muted);
+          margin-top: 0.4rem;
+        }
+        .ap-hint--warn { color: #B45309; }
+        .ap-fieldset {
+          border: none;
+          padding: 0;
+          margin: 0;
+        }
+        .ap-cats {
+          background: var(--hush);
+          border-radius: 14px;
+          padding: 1rem 1.1rem;
+          border: 1px solid var(--rule);
+        }
+        .ap-cat-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.75rem;
+          padding: 0.45rem 0;
+        }
+        .ap-cat-label {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          cursor: pointer;
+          font-size: 0.9rem;
+          color: var(--ink);
+          transition: color 0.15s;
+        }
+        .ap-cat-label:hover { color: var(--plum); }
+        .ap-cat-label input {
+          width: 1.05rem;
+          height: 1.05rem;
+          accent-color: var(--plum);
+          cursor: pointer;
+        }
+        .ap-primary-tag {
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--plum);
+          background: rgba(90,26,43,0.08);
+          padding: 0.25rem 0.55rem;
+          border-radius: 999px;
+        }
+        .ap-make-primary {
+          font-size: 0.72rem;
+          color: var(--muted);
+          background: none;
+          border: none;
+          cursor: pointer;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          padding: 0;
+        }
+        .ap-make-primary:hover { color: var(--plum); }
+        .ap-cat-summary {
+          font-size: 0.78rem;
+          color: var(--muted);
+          margin-top: 0.65rem;
+        }
+        .ap-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.25rem;
+        }
+        @media (min-width: 560px) {
+          .ap-grid-2 { grid-template-columns: 1fr 1fr; }
+        }
+        .ap-textarea {
+          width: 100%;
+          padding: 0.85rem 1rem;
+          border: 1.5px solid var(--rule);
+          border-radius: 12px;
+          font-family: inherit;
+          font-size: 0.95rem;
+          color: var(--ink);
+          background: #fff;
+          resize: vertical;
+          min-height: 140px;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .ap-textarea:focus {
+          outline: none;
+          border-color: var(--plum);
+          box-shadow: 0 0 0 3px rgba(90,26,43,0.12);
+        }
+        .ap-textarea::placeholder { color: #B0A8A4; }
+        .ap-submit {
+          width: 100%;
+          margin-top: 0.5rem;
+          padding: 1rem 1.5rem;
+          background: linear-gradient(135deg, #5A1A2B 0%, #7A2A3B 100%);
+          color: #fff;
+          font-size: 0.88rem;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          border: none;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+          box-shadow: 0 4px 16px rgba(90,26,43,0.28);
+        }
+        .ap-submit:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(90,26,43,0.35);
+        }
+        .ap-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+        .ap-submit-inner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.6rem;
+        }
+        .ap-spinner {
+          width: 1.15rem;
+          height: 1.15rem;
+          border: 2px solid rgba(255,255,255,0.3);
+          border-top-color: #fff;
+          border-radius: 50%;
+          animation: ap-spin 0.7s linear infinite;
+        }
+        @keyframes ap-spin { to { transform: rotate(360deg); } }
 
-    const closeDialog = () => setDialog((prev) => ({ ...prev, show: false }));
+        /* Dialog */
+        .ap-dialog-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(36,28,30,0.5);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 100;
+          padding: 1.25rem;
+          animation: ap-fade 0.2s ease;
+        }
+        @keyframes ap-fade { from { opacity: 0; } to { opacity: 1; } }
+        .ap-dialog {
+          background: #fff;
+          border-radius: 18px;
+          padding: 1.75rem 1.6rem 1.5rem;
+          max-width: 360px;
+          width: 100%;
+          box-shadow: 0 20px 50px rgba(36,28,30,0.18);
+          border-top: 4px solid;
+          animation: ap-up 0.28s cubic-bezier(0.22,1,0.36,1);
+        }
+        @keyframes ap-up {
+          from { opacity: 0; transform: translateY(12px) scale(0.97); }
+          to { opacity: 1; transform: none; }
+        }
+        .ap-dialog--success { border-top-color: #059669; }
+        .ap-dialog--error { border-top-color: #DC2626; }
+        .ap-dialog-title {
+          font-family: 'Fraunces', Georgia, serif;
+          font-size: 1.35rem;
+          margin: 0 0 0.5rem;
+        }
+        .ap-dialog--success .ap-dialog-title { color: #059669; }
+        .ap-dialog--error .ap-dialog-title { color: #DC2626; }
+        .ap-dialog-msg {
+          color: #4B4543;
+          font-size: 0.95rem;
+          line-height: 1.55;
+          margin: 0 0 1.35rem;
+        }
+        .ap-dialog-btn {
+          width: 100%;
+          padding: 0.75rem;
+          border: none;
+          border-radius: 10px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #fff;
+          cursor: pointer;
+          transition: background 0.18s;
+        }
+        .ap-dialog--success .ap-dialog-btn { background: #059669; }
+        .ap-dialog--success .ap-dialog-btn:hover { background: #047857; }
+        .ap-dialog--error .ap-dialog-btn { background: #DC2626; }
+        .ap-dialog--error .ap-dialog-btn:hover { background: #B91C1C; }
+      `}</style>
 
-    return (
-        <div className="container mx-auto mt-8 px-4">
-            {dialog.show && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-                    role="alertdialog"
-                    aria-modal="true"
-                >
-                    <div className={`bg-white p-6 rounded-lg shadow-lg max-w-sm w-full border-t-4 ${
-                        dialog.type === 'success' ? 'border-green-500' : 'border-red-500'
-                    }`}>
-                        <h3 className={`text-xl font-semibold ${
-                            dialog.type === 'success' ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                            {dialog.type === 'success' ? 'Success!' : 'Error'}
-                        </h3>
-                        <p className="mt-2 mb-4 text-gray-700">{dialog.message}</p>
-                        <button
-                            onClick={closeDialog}
-                            className={`w-full py-2 rounded-md text-white transition-colors ${
-                                dialog.type === 'success'
-                                    ? 'bg-green-500 hover:bg-green-600'
-                                    : 'bg-red-500 hover:bg-red-600'
-                            }`}
-                        >
-                            OK
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            <h2 className="text-2xl font-bold mb-6">Add New Product</h2>
-
-            <form onSubmit={handleSubmit} className="space-y-5 max-w-2xl">
-                <TextInput
-                    label="Product Name"
-                    name="name"
-                    placeholder="Ex: Mustard Yellow"
-                    value={product.name}
-                    onChange={handleChange}
-                    required
-                />
-
-                <fieldset>
-                    <legend className="block text-sm font-medium text-gray-700 mb-2">
-                        Categories <span className="text-red-500">*</span>
-                    </legend>
-
-                    <div className="space-y-1 bg-gray-50 p-3 rounded-md border border-gray-200">
-                        {categories.map((category) => {
-                            const checked = product.categories.includes(category.value);
-                            const isPrimary = product.categories[0] === category.value;
-
-                            return (
-                                <div
-                                    key={category.value}
-                                    className="flex items-center justify-between gap-2 py-1"
-                                >
-                                    <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-gray-900 transition-colors">
-                                        <input
-                                            type="checkbox"
-                                            checked={checked}
-                                            onChange={() => handleCategoryToggle(category.value)}
-                                            className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                        />
-                                        <span>{category.label}</span>
-                                    </label>
-
-                                    {checked && (
-                                        isPrimary ? (
-                                            <span className="text-[10px] font-semibold uppercase tracking-wide text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
-                                                Primary
-                                            </span>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                onClick={() => makePrimaryCategory(category.value)}
-                                                className="text-[11px] text-gray-500 hover:text-indigo-600 underline"
-                                            >
-                                                Make primary
-                                            </button>
-                                        )
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
-
-                    {product.categories.length > 0 && (
-                        <p className="text-xs text-gray-500 mt-2">
-                            {product.categories.length}{' '}
-                            {product.categories.length === 1 ? 'category' : 'categories'} selected
-                            {' — '}
-                            <span className="text-gray-600">{product.categories.join(', ')}</span>
-                        </p>
-                    )}
-                </fieldset>
-
-                <div>
-                    <SelectInput
-                        label="Color"
-                        name="color"
-                        value={product.color}
-                        onChange={handleChange}
-                        options={colors}
-                        required={isColorRequired}
-                    />
-                    {isColorRequired ? (
-                        <p className="text-xs text-amber-600 mt-1">
-                            Color is required when "Georgette  Hijabs" is selected
-                        </p>
-                    ) : product.categories.length > 0 && (
-                        <p className="text-xs text-gray-400 mt-1">
-                            Color is optional for the selected categories
-                        </p>
-                    )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <TextInput
-                        label="Current Price (PKR)"
-                        name="price"
-                        type="number"
-                        placeholder="1200"
-                        value={product.price}
-                        onChange={handleChange}
-                        min="0"
-                        step="1"
-                        required
-                    />
-
-                    <TextInput
-                        label="Old Price (PKR) - Optional"
-                        name="oldPrice"
-                        type="number"
-                        placeholder="1500"
-                        value={product.oldPrice}
-                        onChange={handleChange}
-                        min="0"
-                        step="1"
-                    />
-                </div>
-
-                <UploadImage
-                    images={images}
-                    setImages={setImages}
-                    required
-                />
-
-                <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                        Description <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                        rows={6}
-                        name="description"
-                        id="description"
-                        value={product.description}
-                        placeholder="Write a product description"
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        required
-                    />
-                </div>
-
-                <div className="pt-2">
-                    <button
-                        type="submit"
-                        className="w-full bg-primary hover:bg-indigo-600 text-white font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-70"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? (
-                            <span className="flex items-center justify-center">
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                                </svg>
-                                Adding Product...
-                            </span>
-                        ) : 'Add Product'}
-                    </button>
-                </div>
-            </form>
+      {dialog.show && (
+        <div
+          className="ap-dialog-overlay"
+          role="alertdialog"
+          aria-modal="true"
+          onClick={closeDialog}
+        >
+          <div
+            className={`ap-dialog ap-dialog--${dialog.type}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="ap-dialog-title">
+              {dialog.type === 'success' ? 'Success' : 'Something went wrong'}
+            </h3>
+            <p className="ap-dialog-msg">{dialog.message}</p>
+            <button type="button" className="ap-dialog-btn" onClick={closeDialog}>
+              OK
+            </button>
+          </div>
         </div>
-    );
+      )}
+
+      <div className="ap-wrap">
+        <header className="ap-header">
+          <p className="ap-eyebrow">Admin · Inventory</p>
+          <h1 className="ap-title">Add New Product</h1>
+        </header>
+
+        <div className="ap-card">
+          <form onSubmit={handleSubmit} className="ap-form">
+            <TextInput
+              label="Product Name"
+              name="name"
+              placeholder="e.g. Mustard Yellow Modal"
+              value={product.name}
+              onChange={handleChange}
+              required
+            />
+
+            <fieldset className="ap-fieldset">
+              <legend className="ap-label">
+                Categories <span className="req">*</span>
+              </legend>
+              <div className="ap-cats">
+                {categories.map((category) => {
+                  const checked = product.categories.includes(category.value);
+                  const isPrimary = product.categories[0] === category.value;
+
+                  return (
+                    <div key={category.value} className="ap-cat-row">
+                      <label className="ap-cat-label">
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => handleCategoryToggle(category.value)}
+                        />
+                        <span>{category.label}</span>
+                      </label>
+
+                      {checked &&
+                        (isPrimary ? (
+                          <span className="ap-primary-tag">Primary</span>
+                        ) : (
+                          <button
+                            type="button"
+                            className="ap-make-primary"
+                            onClick={() => makePrimaryCategory(category.value)}
+                          >
+                            Make primary
+                          </button>
+                        ))}
+                    </div>
+                  );
+                })}
+              </div>
+              {product.categories.length > 0 && (
+                <p className="ap-cat-summary">
+                  {product.categories.length}{' '}
+                  {product.categories.length === 1 ? 'category' : 'categories'} selected —{' '}
+                  <span style={{ color: '#241C1E' }}>{product.categories.join(', ')}</span>
+                </p>
+              )}
+            </fieldset>
+
+            <div>
+              <SelectInput
+                label="Color"
+                name="color"
+                value={product.color}
+                onChange={handleChange}
+                options={colors}
+                required={isColorRequired}
+              />
+              {isColorRequired ? (
+                <p className="ap-hint ap-hint--warn">
+                  Color is required when “Georgette Hijabs” is selected
+                </p>
+              ) : (
+                product.categories.length > 0 && (
+                  <p className="ap-hint">Color is optional for the selected categories</p>
+                )
+              )}
+            </div>
+
+            <div className="ap-grid-2">
+              <TextInput
+                label="Current Price (PKR)"
+                name="price"
+                type="number"
+                placeholder="1200"
+                value={product.price}
+                onChange={handleChange}
+                min="0"
+                step="1"
+                required
+              />
+              <TextInput
+                label="Old Price (PKR) — Optional"
+                name="oldPrice"
+                type="number"
+                placeholder="1500"
+                value={product.oldPrice}
+                onChange={handleChange}
+                min="0"
+                step="1"
+              />
+            </div>
+
+            <UploadImage images={images} setImages={setImages} required />
+
+            <div>
+              <label htmlFor="description" className="ap-label">
+                Description <span className="req">*</span>
+              </label>
+              <textarea
+                rows={6}
+                name="description"
+                id="description"
+                value={product.description}
+                placeholder="Describe the fabric, drape, and care notes…"
+                onChange={handleChange}
+                className="ap-textarea"
+                required
+              />
+            </div>
+
+            <button type="submit" className="ap-submit" disabled={isLoading}>
+              {isLoading ? (
+                <span className="ap-submit-inner">
+                  <span className="ap-spinner" aria-hidden="true" />
+                  Adding product…
+                </span>
+              ) : (
+                'Add Product'
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default AddProduct;
